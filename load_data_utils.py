@@ -1,5 +1,5 @@
 from owslib.wfs import WebFeatureService
-from data import services, data_wfs
+from data_informations import services, data_wfs
 
 def connection_wfs(url, service_name, version):
     """ Return a wfs object after connecting to a service thanks the url provided """
@@ -33,4 +33,3 @@ def load_data(url, service_name, version, data_list, path):
         file = open(f"{path}/{d_name}.gml", "wb")
         file.write(new_data.read())
         file.close()
-

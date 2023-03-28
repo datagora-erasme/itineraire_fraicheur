@@ -15,18 +15,23 @@ data_wfs = {
         "startIndex" : 0
     }, 
     "toilettes_publiques" : {
-        "wfs_key": 'ms:gin_nettoiement.gintoilettepublique'
+        "wfs_key": 'ms:gin_nettoiement.gintoilettepublique',
+        "service" : "data.grandlyon_wfs",
     },
     "fontaines_ornementales": {
-        "wfs_key": 'ms:adr_voie_lieu.adrfontaineornem_latest'
+        "wfs_key": 'ms:adr_voie_lieu.adrfontaineornem_latest',
+        "service" : "data.grandlyon_wfs",
     },
     "parcs_jardins_metropole": {
-        "wfs_key": 'ms:com_donnees_communales.comparcjardinpct'
+        "wfs_key": 'ms:com_donnees_communales.comparcjardin_1_0_0',
+        "service" : "data.grandlyon_wfs",
     },
     "bancs": {
-        "wfs_key" : 'ms:adr_voie_lieu.adrbanc_latest'
+        "wfs_key" : 'ms:adr_voie_lieu.adrbanc_latest',
+        "service" : "data.grandlyon_wfs",
     },
     "arbres_alignement" : {
-        "wfs_key" : 'ms:abr_arbres_alignement.abrarbre'
+        "wfs_key" : 'ms:abr_arbres_alignement.abrarbre',
+        "service" : "data.grandlyon_wfs",
     },
 }

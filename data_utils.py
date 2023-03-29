@@ -1,6 +1,7 @@
 from owslib.wfs import WebFeatureService
 import geopandas as gpd
 import os
+import json
 
 def connection_wfs(url, service_name, version):
     """ Return a wfs object after connecting to a service thanks the url provided """
@@ -15,32 +16,54 @@ def connection_wfs(url, service_name, version):
     return wfs
 
 
-def download_data(url, service_name, version, data_list, path):
+def download_data(service_name, version, path):
     """ load a list of data from one specific service 
-        data_list is a dictionnary wich elements have the folowing form : 
+        the data are stored in a json file as a dictionnary wich elements have the folowing form : 
 
         "data_name" : {
             "wfs_key" : 'key',
-            "service" : 'service_name'
+            "service" : 'service_name',
+            "download_path": "path/file.gml"
         }
     """
-    wfs = connection_wfs(url, service_name, version)
 
-    for d_name, d_info in data_list.items():
+    with open("data_informations.json", "r") as f:
+        data_informations = json.load(f)
+
+    data_wfs = data_informations["data_wfs"]
+    services = data_informations["services"]
+
+    wfs = connection_wfs(services[f"{service_name}"], service_name, version)
+
+    for d_name, d_info in data_wfs.items():
         if(d_info["service"] == service_name):
+
             print(f"### {d_name} ###")
+
+            # the boundingBox define the area where the data should belong to
             box = wfs.contents[f"{d_info['wfs_key']}"].boundingBoxWGS84
-            print(f"get {d_name} ..")
+
+            print(f"fetching {d_name} ..")
             try:
                 new_data = wfs.getfeature(typename=f"{d_info['wfs_key']}", bbox=box)
                 print(f"SUCCESS")
             except NameError:
                 print(f"Error while fetching {d_name} from {service_name}... : {NameError}")
 
+
             print(f"writing {d_name} GML file into {path} \n")
+
+            #write file into given folder (path)
             file = open(f"{path}/{d_name}.gml", "wb")
             file.write(new_data.read())
             file.close()
+
+            #store download path into data_informations.json
+            data_informations["data_wfs"][d_name]["download_path"] = f"{path}/{d_name}.gml"
+
+    # re-write data_informations.json => store all download path
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)
 
 def gml_to_shapefile(input_path, output_path, folder=False):
     """Convert GML file into shapefile.
@@ -67,6 +90,24 @@ def gml_to_shapefile(input_path, output_path, folder=False):
         gdf.to_file(output_path, driver='ESRI Shapefile')
 
     print("Done, all GML files converted into Shapefile")
+
+def convert_all_gml_data_to_shapefile(output_path_folder):
+
+    """Convert all data stored in data_informations from GML to Shapefile"""
+
+    with open("data_informations.json", "r") as f:
+        data_informations = json.load(f)
+    
+    data_wfs = data_informations['data_wfs']
+    for d_name, d_info in data_wfs.items():
+        download_path = d_info["download_path"]
+        if(download_path.endswith(".gml")):
+            shp_path = f"{output_path_folder}{d_name}.shp"
+            gml_to_shapefile(download_path, shp_path)
+            data_informations["data_wfs"][d_name]["shp_path"] = shp_path
+
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)
 
 def points_to_polygon(point_path, polygon_path, buffer_size):
     """

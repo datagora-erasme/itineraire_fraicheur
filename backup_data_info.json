@@ -15,47 +15,42 @@
             "startIndex": 0,
             "download_path": "./data/gml/fontaines_potables.gml",
             "shp_path": "./data/shp/fontaines_potables.shp",
-            "buffer_size": 10,
-            "buffered_shp_path": "./data/shp_buffered/fontaines_potables_buffered.shp"
+            "buffer_size" : 0.001
         },
         "toilettes_publiques": {
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/toilettes_publiques.gml",
             "shp_path": "./data/shp/toilettes_publiques.shp",
-            "buffer_size": 10,
-            "buffered_shp_path": "./data/shp_buffered/toilettes_publiques_buffered.shp"
+            "buffer_size" : 0.001
         },
         "fontaines_ornementales": {
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/fontaines_ornementales.gml",
             "shp_path": "./data/shp/fontaines_ornementales.shp",
-            "buffer_size": 10,
-            "buffered_shp_path": "./data/shp_buffered/fontaines_ornementales_buffered.shp"
+            "buffer_size" : 0.001
         },
         "parcs_jardins_metropole": {
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/parcs_jardins_metropole.gml",
             "shp_path": "./data/shp/parcs_jardins_metropole.shp",
-            "buffer_size": 10
+            "buffer_size" : 0.001
         },
         "bancs": {
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/bancs.gml",
             "shp_path": "./data/shp/bancs.shp",
-            "buffer_size": 10,
-            "buffered_shp_path": "./data/shp_buffered/bancs_buffered.shp"
+            "buffer_size" : 0.001
         },
         "arbres_alignement": {
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/arbres_alignement.gml",
             "shp_path": "./data/shp/arbres_alignement.shp",
-            "buffer_size": 10,
-            "buffered_shp_path": "./data/shp_buffered/arbres_alignement_buffered.shp"
+            "buffer_size" : 0.001
         }
     }
 }

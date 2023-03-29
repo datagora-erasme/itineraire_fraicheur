@@ -1,7 +1,15 @@
+import os
+os.environ['USE_PYGEOS'] = '0'
 from owslib.wfs import WebFeatureService
 import geopandas as gpd
-import os
 import json
+
+def create_folder(folder_path):
+    exist = os.path.exists(folder_path)
+    if not exist:
+        os.makedirs(folder_path)
+        print(f"{folder_path} created")
+
 
 def connection_wfs(url, service_name, version):
     """ Return a wfs object after connecting to a service thanks the url provided """
@@ -113,19 +121,42 @@ def points_to_polygon(point_path, polygon_path, buffer_size):
     """
         Computes the convex hull of a point shapefile and converts it to a polygon shapefile
     """
-    print("converting ... ")
 
     points = gpd.read_file(point_path)
 
+    # change temporarily the CRS (projection system) because buffering need meter
+    points.to_crs(epsg=3857)
+
     # Create a buffer around each point
-    buffered_points = points.buffer(buffer_size)
+    buffered_points = points.to_crs(epsg=3857).buffer(buffer_size)
 
     # Convert the buffered points to polygons
     polygons = buffered_points.geometry.apply(lambda x: x.convex_hull)
 
     # Create a new GeoDataFrame with the polygon geometry and any additional attributes from the original points shapefile
-    polygon_gdf = gpd.GeoDataFrame(points.drop('geometry', axis=1), geometry=polygons)
+    polygon_gdf = gpd.GeoDataFrame(points.drop('geometry', axis=1), geometry=polygons, crs=3857)
 
-    polygon_gdf.to_file(polygon_path)
+    final_polygon = polygon_gdf.to_crs(epsg=4171)
 
-#points_to_polygon("./data/shp/bancs.shp", "./data/shp/bancs_buffered.shp", buffer_size=0.001)
+    final_polygon.to_file(polygon_path)
+
+def convert_all_points_into_polygons(output_path_folder):
+    """ Convert all shapefile with Points Type into Polygons """
+
+    with open("data_informations.json", "r") as f:
+        data_informations = json.load(f)
+
+    for d_name, d_info in data_informations["data_wfs"].items():
+        original_shp_file = gpd.read_file(d_info["shp_path"])
+        if(original_shp_file.geom_type[0] == "Point"):
+            buffered_shp_path = f"{output_path_folder}{d_name}_buffered.shp"
+
+            print(f"Converting {d_name} into Polygons ... ")
+
+            points_to_polygon(d_info["shp_path"], buffered_shp_path, d_info["buffer_size"])
+            data_informations["data_wfs"][d_name]["buffered_shp_path"] = buffered_shp_path
+    
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)
+            
+

@@ -282,5 +282,21 @@ def add_attributes(input_path, output_path, attributes_to_add):
 
 
 
-def remove_and_add_attributes():
-    """  """
+def remove_and_add_attributes(output_path_folder):
+    """ """
+
+    with open("data_informations.json", "r") as f:
+        data_informations = json.load(f)
+
+    data_wfs = data_informations["data_wfs"]
+    for d_name, d_info in data_wfs.items():
+        print(f"Remove and Add attributes for {d_name}")
+        input_path = d_info["gpkg_path"]
+        output_path = f"{output_path_folder}{d_name}_cleaned.gpkg"
+        remove_attributes(input_path, output_path, d_info["attributes_to_remove"])
+        add_attributes(output_path, output_path, d_info["attributes_to_add"])
+
+        data_informations["data_wfs"][d_name]["cleaned_data_path"] = output_path
+    
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)

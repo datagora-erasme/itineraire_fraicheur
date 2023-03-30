@@ -160,3 +160,77 @@ def convert_all_points_into_polygons(output_path_folder):
         json.dump(data_informations, f, indent=4)
             
 
+def get_attributes_list(file_path):
+    file = gpd.read_file(file_path)
+    attribute_list = list(file.columns)
+    return(attribute_list)
+
+def write_all_atributes():
+    """ Write into data_informations.json all attributes of the layer """
+
+    print("Writing all attributes into data_informations.json file ...")
+
+    with open("data_informations.json", "r") as f:
+        data_informations = json.load(f)
+
+    data_wfs = data_informations['data_wfs']
+    for d_name, d_info in data_wfs.items():
+        #the shape file is the original file containing all attributes
+        file_path = data_wfs[d_name]["shp_path"]
+        attribute_list = get_attributes_list(file_path)
+        data_informations["data_wfs"][d_name]["all_attributes"] = attribute_list
+
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)
+
+    print("DONE")
+
+def write_attributes_to_add_and_remove(data_name, attributes_to_add, attributes_to_remove):
+    """ Write into data_informations.json all attributes to add or remove for one data
+        attributes_to_add is a dictionnary with the pair key, values, 
+        attributes_to_remove is a list of attributes
+
+        attributes_to_add = {
+            attribute1 : default_value1
+            attribute2 : default_value2
+        }
+        attributes_to_remove = ["attribute1", "attribute2"]
+    """
+
+    with open("data_informations.json", "r") as f: 
+        data_informations = json.load(f)
+
+    data_informations['data_wfs'][data_name]['attributes_to_remove'] = attributes_to_remove
+    data_informations['data_wfs'][data_name]['attributes_to_add'] = attributes_to_add
+
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)
+    
+
+
+
+def remove_attributes(input_path, output_path, attributes_to_remove):
+    file = gpd.read_file(input_path)
+    file = file.drop(attributes_to_remove, axis=1)
+    file.to_file(output_path)
+
+def add_attributes(input_path, output_path, attributes_to_add):
+    """attributes_to_add should be a dictionnary with the following structure : 
+    
+    attributes_to_add = {
+        'new_attribute1': [1, 2, 3],
+        'new_attribute2': ['a', 'b', 'c']
+    }
+    
+    """
+    file = gpd.read_file(input_path)
+
+    for attribute_name, values in attributes_to_add.items():
+        file[attribute_name] = values
+    
+    file.to_file(output_path)
+
+
+
+def remove_and_add_attributes():
+    """  """

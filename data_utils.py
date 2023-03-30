@@ -4,6 +4,55 @@ from owslib.wfs import WebFeatureService
 import geopandas as gpd
 import json
 
+def create_data_informations_file():
+    """ Fonction to instantiate data_informations.json file """
+
+    data_informations = {
+        "services" : {
+            "data.grandlyon_wfs": "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0"
+        },
+        "data_wfs" : {
+            "fontaines_potables": {
+                "wfs_key": "ms:epo_eau_potable.epobornefont",
+                "service": "data.grandlyon_wfs",
+                "buffer_size" : 10
+            },
+            "toilettes_publiques": {
+                "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
+                "service": "data.grandlyon_wfs",
+                "buffer_size" : 10
+            },
+            "fontaines_ornementales": {
+                "wfs_key": "ms:adr_voie_lieu.adrfontaineornem_latest",
+                "service": "data.grandlyon_wfs",
+                "buffer_size" : 10
+            },
+            "parcs_jardins_metropole": {
+                "wfs_key": "ms:com_donnees_communales.comparcjardin_1_0_0",
+                "service": "data.grandlyon_wfs",
+                "buffer_size" : 10
+            },
+            "bancs": {
+                "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
+                "service": "data.grandlyon_wfs",
+                "buffer_size" : 10
+            },
+            "arbres_alignement": {
+                "wfs_key": "ms:abr_arbres_alignement.abrarbre",
+                "service": "data.grandlyon_wfs",
+                "buffer_size" : 10
+            },
+            # à mettre dans un second temps 
+            # "hauteur_batiment": {
+            #     "wfs_key": "ms:fpc_fond_plan_communaut.fpctoit_2018",
+            #     "service": "data.grandlyon_wfs"
+            # }
+                
+        }
+    }
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)
+
 def create_folder(folder_path):
     exist = os.path.exists(folder_path)
     if not exist:

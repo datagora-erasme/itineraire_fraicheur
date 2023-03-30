@@ -17,7 +17,16 @@
                 "anneepose",
                 "gid",
                 "geometry"
-            ]
+            ],
+            "attributes_to_remove": [
+                "nom",
+                "gestionnaire",
+                "anneepose"
+            ],
+            "attributes_to_add": {
+                "IF": 100
+            },
+            "cleaned_data_path": "./data/cleaned_data/fontaines_potables_cleaned.gpkg"
         },
         "toilettes_publiques": {
             "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
@@ -36,7 +45,19 @@
                 "identifiant",
                 "gid",
                 "geometry"
-            ]
+            ],
+            "attributes_to_remove": [
+                "commune",
+                "voie",
+                "numerodansvoie",
+                "gestionnaire",
+                "observation",
+                "identifiant"
+            ],
+            "attributes_to_add": {
+                "IF": 100
+            },
+            "cleaned_data_path": "./data/cleaned_data/toilettes_publiques_cleaned.gpkg"
         },
         "fontaines_ornementales": {
             "wfs_key": "ms:adr_voie_lieu.adrfontaineornem_latest",
@@ -54,7 +75,18 @@
                 "source",
                 "gid",
                 "geometry"
-            ]
+            ],
+            "attributes_to_remove": [
+                "nom",
+                "address",
+                "commune",
+                "insee",
+                "source"
+            ],
+            "attributes_to_add": {
+                "IF": 100
+            },
+            "cleaned_data_path": "./data/cleaned_data/fontaines_ornementales_cleaned.gpkg"
         },
         "parcs_jardins_metropole": {
             "wfs_key": "ms:com_donnees_communales.comparcjardin_1_0_0",
@@ -94,7 +126,40 @@
                 "horaires",
                 "openinghoursspecification",
                 "geometry"
-            ]
+            ],
+            "attributes_to_remove": [
+                "nom",
+                "num",
+                "voie",
+                "codepost",
+                "commune",
+                "code_insee",
+                "surf_tot_m2",
+                "gestion",
+                "clos",
+                "acces",
+                "label",
+                "type_equip",
+                "eau",
+                "toilettes",
+                "chien",
+                "esp_can",
+                "openinghours",
+                "timePosition",
+                "numvoie",
+                "precision_horaires",
+                "reglement",
+                "ann_ouvert",
+                "circulation",
+                "photo",
+                "id_ariane",
+                "horaires",
+                "openinghoursspecification"
+            ],
+            "attributes_to_add": {
+                "IF": 100
+            },
+            "cleaned_data_path": "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg"
         },
         "bancs": {
             "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
@@ -111,7 +176,16 @@
                 "source",
                 "gid",
                 "geometry"
-            ]
+            ],
+            "attributes_to_remove": [
+                "dossier",
+                "insee",
+                "source"
+            ],
+            "attributes_to_add": {
+                "IF": 100
+            },
+            "cleaned_data_path": "./data/cleaned_data/bancs_cleaned.gpkg"
         },
         "arbres_alignement": {
             "wfs_key": "ms:abr_arbres_alignement.abrarbre",
@@ -148,7 +222,25 @@
                 "gid",
                 "surfacecadre_m2",
                 "geometry"
-            ]
+            ],
+            "attributes_to_remove": [
+                "timePosition",
+                "architecture",
+                "localisation",
+                "naturerevetement",
+                "mobilierurbain",
+                "anneeplantation",
+                "commune",
+                "codeinsee",
+                "nomvoie",
+                "codefuv",
+                "identifiant",
+                "numero"
+            ],
+            "attributes_to_add": {
+                "IF": 100
+            },
+            "cleaned_data_path": "./data/cleaned_data/arbres_alignement_cleaned.gpkg"
         }
     }
 }

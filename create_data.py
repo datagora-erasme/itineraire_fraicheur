@@ -14,9 +14,6 @@ print("#### Converting GML into Shapefile #### \n \n")
 create_folder("./data/gpkg")
 convert_all_gml("./data/gpkg/")
 
-print("#### Converting Points Shapefile into Polygons #### \n \n")
-create_folder("./data/gpkg_buffered")
-convert_all_points_into_polygons("./data/gpkg_buffered/")
 
 write_all_atributes()
 
@@ -57,6 +54,9 @@ write_attributes_to_add_and_remove("parcs_jardins_metropole", parcs_jardins_metr
 write_attributes_to_add_and_remove("bancs", bancs_add, bancs_rm)
 write_attributes_to_add_and_remove("arbres_alignement", arbres_alignement_add, arbres_alignement_rm)
 
-
 create_folder("./data/cleaned_data")
 remove_and_add_attributes("./data/cleaned_data/")
+
+print("#### Converting Points Shapefile into Polygons #### \n \n")
+create_folder("./data/gpkg_buffered")
+convert_all_points_into_polygons("./data/gpkg_buffered/")

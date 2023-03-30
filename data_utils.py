@@ -141,12 +141,14 @@ def convert_gml(input_path, output_path, driver, extension='.gpkg', folder=False
                 
                 # Write GeoDataFrame to output Shapefile
                 gdf.to_file(new_output_path, driver=driver)
+
+                print("Done, all GML files converted into GPKG")
     else:
 
         gdf = gpd.read_file(input_path)
         gdf.to_file(output_path, driver=driver)
-
-    print("Done, all GML files converted into Shapefile")
+        print(f"Done, {input_path} converted into GPKG")
+    
 
 def convert_all_gml(output_path_folder):
 
@@ -196,14 +198,14 @@ def convert_all_points_into_polygons(output_path_folder):
         data_informations = json.load(f)
 
     for d_name, d_info in data_informations["data_wfs"].items():
-        original_gpkg_file = gpd.read_file(d_info["gpkg_path"])
+        original_gpkg_file = gpd.read_file(d_info["cleaned_data_path"])
         if(original_gpkg_file.geom_type[0] == "Point"):
-            buffered_gpkg_path = f"{output_path_folder}{d_name}_buffered.gpkg"
+            buffered_path = f"{output_path_folder}{d_name}_buffered.gpkg"
 
             print(f"Converting {d_name} into Polygons ... ")
 
-            points_to_polygon(d_info["gpkg_path"], buffered_gpkg_path, d_info["buffer_size"])
-            data_informations["data_wfs"][d_name]["buffered_gpkg_path"] = buffered_gpkg_path
+            points_to_polygon(d_info["cleaned_data_path"], buffered_path, d_info["buffer_size"])
+            data_informations["data_wfs"][d_name]["buffered_path"] = buffered_path
     
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)

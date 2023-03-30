@@ -73,7 +73,7 @@ def download_data(service_name, version, path):
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
 
-def gml_to_shapefile(input_path, output_path, folder=False):
+def convert_gml(input_path, output_path, driver, extension='.gpkg', folder=False):
     """Convert GML file into shapefile.
     If folder = TRUE, all of the GML files of the given folder are converted to shapefile. 
     Careful about the path : either a folder or a file one. 
@@ -87,19 +87,19 @@ def gml_to_shapefile(input_path, output_path, folder=False):
                 gdf = gpd.read_file(os.path.join(input_path, filename))
                 
                 # Set output file path and name
-                output_name = filename.replace('.gml', '.shp')
+                output_name = filename.replace('.gml', extension)
                 new_output_path = os.path.join(output_path, output_name)
                 
                 # Write GeoDataFrame to output Shapefile
-                gdf.to_file(new_output_path, driver='ESRI Shapefile')
+                gdf.to_file(new_output_path, driver=driver)
     else:
 
         gdf = gpd.read_file(input_path)
-        gdf.to_file(output_path, driver='ESRI Shapefile')
+        gdf.to_file(output_path, driver=driver)
 
     print("Done, all GML files converted into Shapefile")
 
-def convert_all_gml_data_to_shapefile(output_path_folder):
+def convert_all_gml(output_path_folder):
 
     """Convert all data stored in data_informations from GML to Shapefile"""
 
@@ -110,9 +110,9 @@ def convert_all_gml_data_to_shapefile(output_path_folder):
     for d_name, d_info in data_wfs.items():
         download_path = d_info["download_path"]
         if(download_path.endswith(".gml")):
-            shp_path = f"{output_path_folder}{d_name}.shp"
-            gml_to_shapefile(download_path, shp_path)
-            data_informations["data_wfs"][d_name]["shp_path"] = shp_path
+            gpkg_path = f"{output_path_folder}{d_name}.gpkg"
+            convert_gml(download_path, gpkg_path, driver="GPKG")
+            data_informations["data_wfs"][d_name]["gpkg_path"] = gpkg_path
 
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
@@ -138,7 +138,7 @@ def points_to_polygon(point_path, polygon_path, buffer_size):
 
     final_polygon = polygon_gdf.to_crs(epsg=4171)
 
-    final_polygon.to_file(polygon_path)
+    final_polygon.to_file(polygon_path, driver="GPKG")
 
 def convert_all_points_into_polygons(output_path_folder):
     """ Convert all shapefile with Points Type into Polygons """
@@ -147,14 +147,14 @@ def convert_all_points_into_polygons(output_path_folder):
         data_informations = json.load(f)
 
     for d_name, d_info in data_informations["data_wfs"].items():
-        original_shp_file = gpd.read_file(d_info["shp_path"])
-        if(original_shp_file.geom_type[0] == "Point"):
-            buffered_shp_path = f"{output_path_folder}{d_name}_buffered.shp"
+        original_gpkg_file = gpd.read_file(d_info["gpkg_path"])
+        if(original_gpkg_file.geom_type[0] == "Point"):
+            buffered_gpkg_path = f"{output_path_folder}{d_name}_buffered.gpkg"
 
             print(f"Converting {d_name} into Polygons ... ")
 
-            points_to_polygon(d_info["shp_path"], buffered_shp_path, d_info["buffer_size"])
-            data_informations["data_wfs"][d_name]["buffered_shp_path"] = buffered_shp_path
+            points_to_polygon(d_info["gpkg_path"], buffered_gpkg_path, d_info["buffer_size"])
+            data_informations["data_wfs"][d_name]["buffered_gpkg_path"] = buffered_gpkg_path
     
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
@@ -176,8 +176,9 @@ def write_all_atributes():
     data_wfs = data_informations['data_wfs']
     for d_name, d_info in data_wfs.items():
         #the shape file is the original file containing all attributes
-        file_path = data_wfs[d_name]["shp_path"]
+        file_path = data_wfs[d_name]["gpkg_path"]
         attribute_list = get_attributes_list(file_path)
+        print(f"{d_name} = {attribute_list}")
         data_informations["data_wfs"][d_name]["all_attributes"] = attribute_list
 
     with open("data_informations.json", "w") as f:

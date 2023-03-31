@@ -224,10 +224,8 @@
             "attributes_to_remove": [
                 "timePosition",
                 "architecture",
-                "localisation",
                 "naturerevetement",
                 "mobilierurbain",
-                "anneeplantation",
                 "commune",
                 "codeinsee",
                 "nomvoie",

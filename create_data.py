@@ -29,22 +29,28 @@ arbres_alignement_rm = ['timePosition','architecture', 'localisation', 'naturere
 ## Add 
 #IF = Indicateur Fraicheur
 fontaines_potables_add = {
-    "IF" : 100
+    "IF" : 100,
+    "buffer_size" : 10
 }
 toilettes_publiques_add = {
-    "IF" : 100
+    "IF" : 100,
+    "buffer_size" : 10
 }
 fontaines_ornementales_add = {
-    "IF" : 100
+    "IF" : 100,
+    "buffer_size" : 10
 }
 parcs_jardins_metropole_add = {
-    "IF" : 100
+    "IF" : 100,
+    "buffer_size" : 10
 }
 bancs_add = {
-    "IF" : 100
+    "IF" : 100,
+    "buffer_size" : 10
 }
 arbres_alignement_add = {
-    "IF" : 100
+    "IF" : 100,
+    "buffer_size" : 10
 }
 
 write_attributes_to_add_and_remove("fontaines_potables", fontaines_potables_add, fontaines_potables_rm)

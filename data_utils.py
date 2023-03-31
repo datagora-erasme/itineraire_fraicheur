@@ -15,32 +15,26 @@ def create_data_informations_file():
             "fontaines_potables": {
                 "wfs_key": "ms:epo_eau_potable.epobornefont",
                 "service": "data.grandlyon_wfs",
-                "buffer_size" : 10
             },
             "toilettes_publiques": {
                 "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
                 "service": "data.grandlyon_wfs",
-                "buffer_size" : 10
             },
             "fontaines_ornementales": {
                 "wfs_key": "ms:adr_voie_lieu.adrfontaineornem_latest",
                 "service": "data.grandlyon_wfs",
-                "buffer_size" : 10
             },
             "parcs_jardins_metropole": {
                 "wfs_key": "ms:com_donnees_communales.comparcjardin_1_0_0",
                 "service": "data.grandlyon_wfs",
-                "buffer_size" : 10
             },
             "bancs": {
                 "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
                 "service": "data.grandlyon_wfs",
-                "buffer_size" : 10
             },
             "arbres_alignement": {
                 "wfs_key": "ms:abr_arbres_alignement.abrarbre",
                 "service": "data.grandlyon_wfs",
-                "buffer_size" : 10
             },
             # à mettre dans un second temps 
             # "hauteur_batiment": {
@@ -168,7 +162,7 @@ def convert_all_gml(output_path_folder):
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
 
-def points_to_polygon(point_path, polygon_path, buffer_size):
+def points_to_polygon(point_path, polygon_path):
     """
         Computes the convex hull of a point shapefile and converts it to a polygon shapefile
     """
@@ -179,7 +173,7 @@ def points_to_polygon(point_path, polygon_path, buffer_size):
     points.to_crs(epsg=3857)
 
     # Create a buffer around each point
-    buffered_points = points.to_crs(epsg=3857).buffer(buffer_size)
+    buffered_points = points.to_crs(epsg=3857).buffer(points["buffer_size"])
 
     # Convert the buffered points to polygons
     polygons = buffered_points.geometry.apply(lambda x: x.convex_hull)
@@ -204,7 +198,7 @@ def convert_all_points_into_polygons(output_path_folder):
 
             print(f"Converting {d_name} into Polygons ... ")
 
-            points_to_polygon(d_info["cleaned_data_path"], buffered_path, d_info["buffer_size"])
+            points_to_polygon(d_info["cleaned_data_path"], buffered_path)
             data_informations["data_wfs"][d_name]["buffered_path"] = buffered_path
     
     with open("data_informations.json", "w") as f:

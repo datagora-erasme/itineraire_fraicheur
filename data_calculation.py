@@ -5,6 +5,7 @@ from fancyimpute import IterativeImputer
 import numpy as np
 from sklearn.metrics import r2_score
 import pandas as pd
+import json
 
 ##### PCA IMPUTATION FOR Nan values ######
 """
@@ -53,3 +54,32 @@ def trees_calculate_buffer_size(file_path, default_buffer_size = 10, default=Fal
 
 ##### Freshness Indicator #####
 
+""" Some data have a more complex freshness Indicator such as the trees
+"""
+
+
+##### Merge Data #####
+
+def merge_data():
+
+    with open("./data_informations.json", "r") as f: 
+        data_informations = json.load(f)
+    
+    file_paths = []
+
+    for d_name, d_info in data_informations["data_wfs"].items():
+        file_paths.append(d_info["buffered_path"])
+
+    merged_data = gpd.GeoDataFrame()
+
+    # iterate over each file and append to merged_data
+    for file_path in file_paths:
+        # read in the data
+        data = gpd.read_file(file_path)
+        # append to merged_data
+        merged_data = merged_data.append(data)
+
+    # write merged data to a new file
+    merged_data.to_file('./data/merged.gpkg', driver='GPKG')
+
+merge_data()

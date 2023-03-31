@@ -34,27 +34,33 @@ arbres_alignement_rm = ['timePosition','architecture', 'naturerevetement', 'mobi
 ## Add 
 #IF = Indicateur Fraicheur
 fontaines_potables_add = {
-    "IF" : 100,
+    "data_type": "fontaines_potables",
+    "IF_fontaines_potables" : 140,
     "buffer_size" : 10
 }
 toilettes_publiques_add = {
-    "IF" : 100,
+    "data_type": "toilettes_publiques",
+    "IF_toilettes_publiques" : 110,
     "buffer_size" : 10
 }
 fontaines_ornementales_add = {
-    "IF" : 100,
+    "data_type": "fontaines_ornementales",
+    "IF_fontaines_ornementales" : 120,
     "buffer_size" : 10
 }
 parcs_jardins_metropole_add = {
-    "IF" : 100,
+    "data_type": "parcs_jardins_metropole",
+    "IF_parcs_jardins_metropole" : 130,
     "buffer_size" : 10
 }
 bancs_add = {
-    "IF" : 100,
+    "data_type": "bancs",
+    "IF_bancs" : 110,
     "buffer_size" : 10
 }
 arbres_alignement_add = {
-    "IF" : 100,
+    "data_type": "arbres_alignement",
+    "IF_arbres_alignement" : 130,
     "buffer_size" : 10
 }
 

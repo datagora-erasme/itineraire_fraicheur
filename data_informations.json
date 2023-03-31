@@ -159,7 +159,8 @@
                 "IF": 100,
                 "buffer_size": 10
             },
-            "cleaned_data_path": "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg"
+            "cleaned_data_path": "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg",
+            "buffered_path" : "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg"
         },
         "bancs": {
             "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",

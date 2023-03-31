@@ -3,6 +3,7 @@ os.environ['USE_PYGEOS'] = '0'
 from owslib.wfs import WebFeatureService
 import geopandas as gpd
 import json
+import fiona
 
 def create_data_informations_file():
     """ Fonction to instantiate data_informations.json file """
@@ -292,3 +293,13 @@ def remove_and_add_attributes(output_path_folder):
     
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
+
+
+def print_layers_name(folder_path):
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".gpkg"):
+            file_path = os.path.join(folder_path, filename)
+            print(file_path)
+            with fiona.open(file_path) as gpkg:
+                layer_names = fiona.listlayers(file_path)
+                print(f"{filename} : {layer_names}")

@@ -6,7 +6,6 @@
         "fontaines_potables": {
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
-            "buffer_size": 10,
             "download_path": "./data/gml/fontaines_potables.gml",
             "gpkg_path": "./data/gpkg/fontaines_potables.gpkg",
             "all_attributes": [
@@ -23,7 +22,8 @@
                 "anneepose"
             ],
             "attributes_to_add": {
-                "IF": 100
+                "IF": 100,
+                "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/fontaines_potables_cleaned.gpkg",
             "buffered_path": "./data/gpkg_buffered/fontaines_potables_buffered.gpkg"
@@ -31,7 +31,6 @@
         "toilettes_publiques": {
             "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
             "service": "data.grandlyon_wfs",
-            "buffer_size": 10,
             "download_path": "./data/gml/toilettes_publiques.gml",
             "gpkg_path": "./data/gpkg/toilettes_publiques.gpkg",
             "all_attributes": [
@@ -54,7 +53,8 @@
                 "identifiant"
             ],
             "attributes_to_add": {
-                "IF": 100
+                "IF": 100,
+                "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/toilettes_publiques_cleaned.gpkg",
             "buffered_path": "./data/gpkg_buffered/toilettes_publiques_buffered.gpkg"
@@ -62,7 +62,6 @@
         "fontaines_ornementales": {
             "wfs_key": "ms:adr_voie_lieu.adrfontaineornem_latest",
             "service": "data.grandlyon_wfs",
-            "buffer_size": 10,
             "download_path": "./data/gml/fontaines_ornementales.gml",
             "gpkg_path": "./data/gpkg/fontaines_ornementales.gpkg",
             "all_attributes": [
@@ -83,7 +82,8 @@
                 "source"
             ],
             "attributes_to_add": {
-                "IF": 100
+                "IF": 100,
+                "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/fontaines_ornementales_cleaned.gpkg",
             "buffered_path": "./data/gpkg_buffered/fontaines_ornementales_buffered.gpkg"
@@ -91,7 +91,6 @@
         "parcs_jardins_metropole": {
             "wfs_key": "ms:com_donnees_communales.comparcjardin_1_0_0",
             "service": "data.grandlyon_wfs",
-            "buffer_size": 10,
             "download_path": "./data/gml/parcs_jardins_metropole.gml",
             "gpkg_path": "./data/gpkg/parcs_jardins_metropole.gpkg",
             "all_attributes": [
@@ -157,14 +156,14 @@
                 "openinghoursspecification"
             ],
             "attributes_to_add": {
-                "IF": 100
+                "IF": 100,
+                "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg"
         },
         "bancs": {
             "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
             "service": "data.grandlyon_wfs",
-            "buffer_size": 10,
             "download_path": "./data/gml/bancs.gml",
             "gpkg_path": "./data/gpkg/bancs.gpkg",
             "all_attributes": [
@@ -182,7 +181,8 @@
                 "source"
             ],
             "attributes_to_add": {
-                "IF": 100
+                "IF": 100,
+                "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/bancs_cleaned.gpkg",
             "buffered_path": "./data/gpkg_buffered/bancs_buffered.gpkg"
@@ -190,7 +190,6 @@
         "arbres_alignement": {
             "wfs_key": "ms:abr_arbres_alignement.abrarbre",
             "service": "data.grandlyon_wfs",
-            "buffer_size": 10,
             "download_path": "./data/gml/arbres_alignement.gml",
             "gpkg_path": "./data/gpkg/arbres_alignement.gpkg",
             "all_attributes": [
@@ -237,7 +236,8 @@
                 "numero"
             ],
             "attributes_to_add": {
-                "IF": 100
+                "IF": 100,
+                "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/arbres_alignement_cleaned.gpkg",
             "buffered_path": "./data/gpkg_buffered/arbres_alignement_buffered.gpkg"

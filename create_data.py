@@ -1,7 +1,12 @@
 import os
 from data_utils import *
+from data_calculation import *
 #from data_informations import services, data_wfs
 import geopandas as gpd
+import time
+
+
+start_time = time.time()
 
 print("### CREATION of data_informations.json file ### ")
 create_data_informations_file()
@@ -25,7 +30,7 @@ toilettes_publiques_rm = ['commune', 'voie', 'numerodansvoie', 'gestionnaire', '
 fontaines_ornementales_rm = ['nom', 'address', 'commune', 'insee', 'source']
 parcs_jardins_metropole_rm = ['nom', 'num', 'voie', 'codepost', 'commune', 'code_insee', 'surf_tot_m2', 'gestion', 'clos', 'acces', 'label', 'type_equip', 'eau', 'toilettes', 'chien', 'esp_can', 'openinghours', 'timePosition', 'numvoie', 'precision_horaires', 'reglement', 'ann_ouvert', 'circulation', 'photo', 'id_ariane', 'horaires', 'openinghoursspecification']
 bancs_rm = ['dossier', 'insee', 'source']
-arbres_alignement_rm = ['timePosition','architecture', 'localisation', 'naturerevetement', 'mobilierurbain', 'anneeplantation', 'commune', 'codeinsee', 'nomvoie', 'codefuv', 'identifiant', 'numero']
+arbres_alignement_rm = ['timePosition','architecture', 'naturerevetement', 'mobilierurbain', 'commune', 'codeinsee', 'nomvoie', 'codefuv', 'identifiant', 'numero']
 ## Add 
 #IF = Indicateur Fraicheur
 fontaines_potables_add = {
@@ -63,6 +68,26 @@ write_attributes_to_add_and_remove("arbres_alignement", arbres_alignement_add, a
 create_folder("./data/cleaned_data")
 remove_and_add_attributes("./data/cleaned_data/")
 
+
+print("#### Calculating areas of influence (buffer_size) ####")
+
+pca_multiple_imputation("./data/cleaned_data/arbres_alignement_cleaned.gpkg", "rayoncouronne_m")
+
+trees_calculate_buffer_size("./data/cleaned_data/arbres_alignement_cleaned.gpkg")
+
 print("#### Converting Points Shapefile into Polygons #### \n \n")
 create_folder("./data/gpkg_buffered")
 convert_all_points_into_polygons("./data/gpkg_buffered/")
+
+print("#### Calculating freshness indicators (IF) #### ")
+
+print("#### DATA merge #### ")
+
+print("#### Network OSM extraction ####")
+
+print("#### Merge Network and IF layer")
+
+end_time = time.time()
+
+execution_time = (end_time - start_time)/60
+print(f"Temps d'exécution : {execution_time}")

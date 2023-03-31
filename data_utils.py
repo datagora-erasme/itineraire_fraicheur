@@ -116,6 +116,7 @@ def download_data(service_name, version, path):
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
 
+
 def convert_gml(input_path, output_path, driver, extension='.gpkg', folder=False):
     """Convert GML file into shapefile.
     If folder = TRUE, all of the GML files of the given folder are converted to shapefile. 
@@ -142,7 +143,6 @@ def convert_gml(input_path, output_path, driver, extension='.gpkg', folder=False
         gdf = gpd.read_file(input_path)
         gdf.to_file(output_path, driver=driver)
         print(f"Done, {input_path} converted into GPKG")
-    
 
 def convert_all_gml(output_path_folder):
 
@@ -223,7 +223,7 @@ def write_all_atributes():
         #the shape file is the original file containing all attributes
         file_path = data_wfs[d_name]["gpkg_path"]
         attribute_list = get_attributes_list(file_path)
-        print(f"{d_name} = {attribute_list}")
+        #print(f"{d_name} = {attribute_list}")
         data_informations["data_wfs"][d_name]["all_attributes"] = attribute_list
 
     with open("data_informations.json", "w") as f:
@@ -253,8 +253,6 @@ def write_attributes_to_add_and_remove(data_name, attributes_to_add, attributes_
         json.dump(data_informations, f, indent=4)
     
 
-
-
 def remove_attributes(input_path, output_path, attributes_to_remove):
     file = gpd.read_file(input_path)
     file = file.drop(attributes_to_remove, axis=1)
@@ -275,8 +273,6 @@ def add_attributes(input_path, output_path, attributes_to_add):
         file[attribute_name] = values
     
     file.to_file(output_path)
-
-
 
 def remove_and_add_attributes(output_path_folder):
     """ """

@@ -194,13 +194,14 @@ def convert_all_points_into_polygons(output_path_folder):
 
     for d_name, d_info in data_informations["data_wfs"].items():
         original_gpkg_file = gpd.read_file(d_info["cleaned_data_path"])
-        if(original_gpkg_file.geom_type[0] == "Point"):
-            buffered_path = f"{output_path_folder}{d_name}_buffered.gpkg"
+        #if(original_gpkg_file.geom_type[0] == "Point"):
+        buffered_path = f"{output_path_folder}{d_name}_buffered.gpkg"
 
-            print(f"Converting {d_name} into Polygons ... ")
+        print(f"Converting {d_name} into Polygons ... ")
 
-            points_to_polygon(d_info["cleaned_data_path"], buffered_path)
-            data_informations["data_wfs"][d_name]["buffered_path"] = buffered_path
+        points_to_polygon(d_info["cleaned_data_path"], buffered_path)
+        data_informations["data_wfs"][d_name]["buffered_path"] = buffered_path
+
     
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
@@ -266,6 +267,8 @@ def add_attributes(input_path, output_path, attributes_to_add):
         'new_attribute1': [1, 2, 3],
         'new_attribute2': ['a', 'b', 'c']
     }
+
+    This function can be used to update the attributes
     
     """
     file = gpd.read_file(input_path)

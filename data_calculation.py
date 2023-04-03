@@ -61,7 +61,7 @@ def trees_calculate_buffer_size(file_path, default_buffer_size = 10, default=Fal
 ##### Merge Data #####
 
 def merge_data():
-
+    print("Merging data into one file ... ")
     with open("./data_informations.json", "r") as f: 
         data_informations = json.load(f)
     
@@ -77,7 +77,7 @@ def merge_data():
         # read in the data
         data = gpd.read_file(file_path)
         # append to merged_data
-        merged_data = merged_data.append(data)
+        merged_data = gpd.GeoDataFrame(pd.concat([merged_data, data], ignore_index=True))
 
     # write merged data to a new file
     merged_data.to_file('./data/merged.gpkg', driver='GPKG')

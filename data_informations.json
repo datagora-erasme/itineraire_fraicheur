@@ -22,7 +22,8 @@
                 "anneepose"
             ],
             "attributes_to_add": {
-                "IF": 100,
+                "data_type": "fontaines_potables",
+                "IF_fontaines_potables": 140,
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/fontaines_potables_cleaned.gpkg",
@@ -53,7 +54,8 @@
                 "identifiant"
             ],
             "attributes_to_add": {
-                "IF": 100,
+                "data_type": "toilettes_publiques",
+                "IF_toilettes_publiques": 110,
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/toilettes_publiques_cleaned.gpkg",
@@ -82,7 +84,8 @@
                 "source"
             ],
             "attributes_to_add": {
-                "IF": 100,
+                "data_type": "fontaines_ornementales",
+                "IF_fontaines_ornementales": 120,
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/fontaines_ornementales_cleaned.gpkg",
@@ -156,11 +159,12 @@
                 "openinghoursspecification"
             ],
             "attributes_to_add": {
-                "IF": 100,
+                "data_type": "parcs_jardins_metropole",
+                "IF_parcs_jardins_metropole": 130,
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg",
-            "buffered_path" : "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg"
+            "buffered_path": "./data/gpkg_buffered/parcs_jardins_metropole_buffered.gpkg"
         },
         "bancs": {
             "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
@@ -182,7 +186,8 @@
                 "source"
             ],
             "attributes_to_add": {
-                "IF": 100,
+                "data_type": "bancs",
+                "IF_bancs": 110,
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/bancs_cleaned.gpkg",
@@ -235,7 +240,8 @@
                 "numero"
             ],
             "attributes_to_add": {
-                "IF": 100,
+                "data_type": "arbres_alignement",
+                "IF_arbres_alignement": 130,
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/arbres_alignement_cleaned.gpkg",

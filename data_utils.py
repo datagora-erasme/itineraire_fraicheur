@@ -306,3 +306,16 @@ def print_layers_name(folder_path):
             with fiona.open(file_path) as gpkg:
                 layer_names = fiona.listlayers(file_path)
                 print(f"{filename} : {layer_names}")
+
+
+def extract_attributes(gdf, index):
+    attributes = {}
+    for column in gdf.columns:
+        if column != "geometry":
+            attributes[column] = gdf.loc[index, column]
+    return attributes
+
+
+def filter_dictionnary(dictionnary, filter):
+    """the filter is a string contains or not into the dictionnary keys"""
+    return {k:v for k,v in dictionnary.items() if filter in k}

@@ -89,6 +89,8 @@ print("#### Calculating freshness indicators (IF) #### ")
 
 print("#### DATA merge #### ")
 
+merge_data()
+
 print("#### Network OSM extraction ####")
 
 print("#### Merge Network and IF layer")

@@ -63,7 +63,7 @@ def trees_calculate_buffer_size(file_path, default_buffer_size = 10, default=Fal
 
 ##### Merge Data #####
 
-def merge_data():
+def merge_data(chunksize):
     print("Merging data into one file ... ")
     with open("./data_informations.json", "r") as f: 
         data_informations = json.load(f)
@@ -73,14 +73,17 @@ def merge_data():
     for d_name, d_info in data_informations["data_wfs"].items():
         file_paths.append(d_info["buffered_path"])
 
+    for d_name, d_info in data_informations["raw_data"].items():
+        file_paths.append(d_info["path"])
+
     merged_data = gpd.GeoDataFrame()
 
     # iterate over each file and append to merged_data
     for file_path in file_paths:
         # read in the data
-        data = gpd.read_file(file_path)
+        for chunk in gpd.read_file(file_path, chunksize=chunksize, driver="GPKG"):
         # append to merged_data
-        merged_data = gpd.GeoDataFrame(pd.concat([merged_data, data], ignore_index=True))
+            merged_data = gpd.GeoDataFrame(pd.concat([merged_data, chunk], ignore_index=True))
 
     # write merged data to a new file
     merged_data.to_file('./data/merged.gpkg', driver='GPKG')
@@ -151,5 +154,14 @@ def extract_difference(input_path, output_path):
     intersections.to_file(output_path)
 
 
-extract_intersection("./data/merged.gpkg", "./data/merged_inter.gpkg")
-extract_difference("./data/merged.gpkg", "./data/merged_diff.gpkg")
+# extract_intersection("./data/merged.gpkg", "./data/merged_inter.gpkg")
+# extract_difference("./data/merged.gpkg", "./data/merged_diff.gpkg")
+
+start_time = time.time()
+merge_data(10000)
+end_time = time.time()
+
+duration = (end_time - start_time) / 60
+
+print(f'duration : {duration}')
+

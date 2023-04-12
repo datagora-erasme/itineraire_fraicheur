@@ -1,6 +1,7 @@
 import os
 os.environ['USE_PYGEOS'] = '0'
 from owslib.wfs import WebFeatureService
+from owslib.wms import WebMapService
 import geopandas as gpd
 import json
 import fiona
@@ -10,7 +11,8 @@ def create_data_informations_file():
 
     data_informations = {
         "services" : {
-            "data.grandlyon_wfs": "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0"
+            "data.grandlyon_wfs": "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0",
+            "data.grandlyon_wms" : "https://download.data.grandlyon.com/wms/grandlyon?VERSION=1.3.0&SERVICE=WMS"
         },
         "data_wfs" : {
             "fontaines_potables": {
@@ -33,18 +35,38 @@ def create_data_informations_file():
                 "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
                 "service": "data.grandlyon_wfs",
             },
-            "arbres_alignement": {
-                "wfs_key": "ms:abr_arbres_alignement.abrarbre",
-                "service": "data.grandlyon_wfs",
-            },
+            # "arbres_alignement": {
+            #     "wfs_key": "ms:abr_arbres_alignement.abrarbre",
+            #     "service": "data.grandlyon_wfs",
+            # },
             # à mettre dans un second temps 
             # "hauteur_batiment": {
             #     "wfs_key": "ms:fpc_fond_plan_communaut.fpctoit_2018",
             #     "service": "data.grandlyon_wfs"
             # }
                 
+        },
+        "data_wms": {
+            "vegetation_stratifie" : {
+                "wms_key": "MNC_class_2022_INT1U",
+                "service" : "data.grandlyon_wms",
+                "width" : 3500,
+                "height": 3640,
+                "format" : "png",
+                "transparent" : True,
+                "srs": "EPSG:4171"
+            }
+        },
+        "raw_data" : {
+            "vegetation_stratifie_raw" : {
+                "path": "./data/raw_data/vegetation_stratifie.gpkg"
+            },
+            "temp_surface_road_raw": {
+                "path": "./data/raw_data/temp_surface_road.gpkg"
+            }
         }
     }
+
     with open("data_informations.json", "w") as f:
         json.dump(data_informations, f, indent=4)
 
@@ -67,8 +89,19 @@ def connection_wfs(url, service_name, version):
 
     return wfs
 
+def connection_wms(url, service_name, version):
+    """ Return a wms object after connecting to a service thanks the url provided """
+    print(f"Connecting {service_name} WMS ... ")
+    wms=None
+    try:
+        wms = WebMapService(url, version)
+        print(f"SUCCESS : Connected to {service_name}")
+    except NameError:
+        print(f"Error while connecting to {service_name} ... : {NameError}")
 
-def download_data(service_name, version, path):
+    return wms
+
+def download_data_wfs(service_name, version, path):
     """ load a list of data from one specific service 
         the data are stored in a json file as a dictionnary wich elements have the folowing form : 
 
@@ -112,6 +145,57 @@ def download_data(service_name, version, path):
 
             #store download path into data_informations.json
             data_informations["data_wfs"][d_name]["download_path"] = f"{path}/{d_name}.gml"
+
+    # re-write data_informations.json => store all download path
+    with open("data_informations.json", "w") as f:
+        json.dump(data_informations, f, indent=4)
+
+
+def download_data_wms(service_name, version, path):
+    """ load a list of data from one specific service 
+        the data are stored in a json file as a dictionnary wich elements have the folowing form : 
+
+        "data_name" : {
+            "wfs_key" : 'key',
+            "service" : 'service_name',
+            "download_path": "path/file.gml"
+        }
+    """
+
+    with open("data_informations.json", "r") as f:
+        data_informations = json.load(f)
+
+    data_wms = data_informations["data_wms"]
+    services = data_informations["services"]
+
+    wms = connection_wms(services[f"{service_name}"], service_name, version)
+
+    for d_name, d_info in data_wms.items():
+        if(d_info["service"] == service_name):
+
+            print(f"### {d_name} ###")
+
+            # the boundingBox define the area where the data should belong to
+            box = wms.contents[f"{d_info['wms_key']}"].boundingBoxWGS84
+
+            print(f"fetching {d_name} ..")
+            print(d_info['wms_key'])
+            try:
+                img = wms.getmap(layers=[f"{d_info['wms_key']}"], bbox=box, size=(d_info["width"], d_info["height"]), srs=d_info["srs"], format=f"image/{d_info['format']}" , transparent=d_info["transparent"])
+                print(f"SUCCESS")
+            except NameError:
+                print(f"Error while fetching {d_name} from {service_name}... : {NameError}")
+
+
+            print(f"writing {d_name} Raster file into {path} \n")
+
+            #write file into given folder (path)
+            file = open(f"{path}/{d_name}.{d_info['format']}", "wb")
+            file.write(img.read())
+            file.close()
+
+            #store download path into data_informations.json
+            data_informations["data_wms"][d_name]["download_path"] = f"{path}/{d_name}.{d_info['format']}"
 
     # re-write data_informations.json => store all download path
     with open("data_informations.json", "w") as f:

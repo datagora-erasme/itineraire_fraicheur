@@ -13,7 +13,10 @@ create_data_informations_file()
 
 print("#### LOADING ALL DATA #### \n \n")
 create_folder("./data/gml")
-download_data("data.grandlyon_wfs", "2.0.0", "./data/gml")
+download_data_wfs("data.grandlyon_wfs", "2.0.0", "./data/gml")
+
+create_folder("./data/raster")
+download_data_wms("data.grandlyon_wms", "1.1.1", "./data/raster")
 
 print("#### Converting GML into Shapefile #### \n \n")
 create_folder("./data/gpkg")
@@ -30,7 +33,7 @@ toilettes_publiques_rm = ['commune', 'voie', 'numerodansvoie', 'gestionnaire', '
 fontaines_ornementales_rm = ['nom', 'address', 'commune', 'insee', 'source']
 parcs_jardins_metropole_rm = ['nom', 'num', 'voie', 'codepost', 'commune', 'code_insee', 'surf_tot_m2', 'gestion', 'clos', 'acces', 'label', 'type_equip', 'eau', 'toilettes', 'chien', 'esp_can', 'openinghours', 'timePosition', 'numvoie', 'precision_horaires', 'reglement', 'ann_ouvert', 'circulation', 'photo', 'id_ariane', 'horaires', 'openinghoursspecification']
 bancs_rm = ['dossier', 'insee', 'source']
-arbres_alignement_rm = ['timePosition','architecture', 'naturerevetement', 'mobilierurbain', 'commune', 'codeinsee', 'nomvoie', 'codefuv', 'identifiant', 'numero']
+#arbres_alignement_rm = ['timePosition','architecture', 'naturerevetement', 'mobilierurbain', 'commune', 'codeinsee', 'nomvoie', 'codefuv', 'identifiant', 'numero']
 ## Add 
 #IF = Indicateur Fraicheur
 fontaines_potables_add = {
@@ -58,18 +61,18 @@ bancs_add = {
     "IF_bancs" : 110,
     "buffer_size" : 10
 }
-arbres_alignement_add = {
-    "data_type": "arbres_alignement",
-    "IF_arbres_alignement" : 130,
-    "buffer_size" : 10
-}
+# arbres_alignement_add = {
+#     "data_type": "arbres_alignement",
+#     "IF_arbres_alignement" : 130,
+#     "buffer_size" : 10
+# }
 
 write_attributes_to_add_and_remove("fontaines_potables", fontaines_potables_add, fontaines_potables_rm)
 write_attributes_to_add_and_remove("toilettes_publiques", toilettes_publiques_add, toilettes_publiques_rm)
 write_attributes_to_add_and_remove("fontaines_ornementales", fontaines_ornementales_add, fontaines_ornementales_rm)
 write_attributes_to_add_and_remove("parcs_jardins_metropole", parcs_jardins_metropole_add, parcs_jardins_metropole_rm)
 write_attributes_to_add_and_remove("bancs", bancs_add, bancs_rm)
-write_attributes_to_add_and_remove("arbres_alignement", arbres_alignement_add, arbres_alignement_rm)
+#write_attributes_to_add_and_remove("arbres_alignement", arbres_alignement_add, arbres_alignement_rm)
 
 create_folder("./data/cleaned_data")
 remove_and_add_attributes("./data/cleaned_data/")
@@ -77,9 +80,9 @@ remove_and_add_attributes("./data/cleaned_data/")
 
 print("#### Calculating areas of influence (buffer_size) ####")
 
-pca_multiple_imputation("./data/cleaned_data/arbres_alignement_cleaned.gpkg", "rayoncouronne_m")
+#pca_multiple_imputation("./data/cleaned_data/arbres_alignement_cleaned.gpkg", "rayoncouronne_m")
 
-trees_calculate_buffer_size("./data/cleaned_data/arbres_alignement_cleaned.gpkg")
+#trees_calculate_buffer_size("./data/cleaned_data/arbres_alignement_cleaned.gpkg")
 
 print("#### Converting Points Shapefile into Polygons #### \n \n")
 create_folder("./data/gpkg_buffered")

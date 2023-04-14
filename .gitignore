@@ -1,6 +1,7 @@
 #Project files to ignore
 
 data/
+cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

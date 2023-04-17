@@ -59,34 +59,21 @@ def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destin
     gdf_edges = gdf_edges.set_index(['u', 'v', 'key'])
     gdf_nodes = gdf_nodes.set_index(['osmid'])
 
-    print(gdf_nodes.columns)
-    print(gdf_nodes.index)
-
-    print(gdf_nodes.loc[208769027])
-    print(gdf_nodes.loc[208769047])
     G = ox.graph_from_gdfs(gdf_nodes, gdf_edges)
 
-    origin_node = ox.nearest_nodes(G, X=origin_point[1], Y=origin_point[0])
-    destination_node = ox.nearest_nodes(G, X=destination_point[1], Y=destination_point[0])
+    G2 = nx.Graph(G)
 
-    print(origin_node)
-    print(destination_node)
-
-    print("type G : ", type(G))
+    origin_node = ox.nearest_nodes(G2, X=origin_point[1], Y=origin_point[0])
+    destination_node = ox.nearest_nodes(G2, X=destination_point[1], Y=destination_point[0])
 
     try:
-        # Calculate the shortest path astar's algorithm
-        #shortest_path = nx.astar_path(G, origin_node, destination_node, heuristic=manhattan_distance, weight="length")
         # Calculate the shortest path using Dijkstra's algorithm
-        shortest_path = nx.shortest_path(G, source=origin_node, target=destination_node, weight="length")
+        shortest_path = nx.shortest_path(G2, source=origin_node, target=destination_node, weight="length")
 
+        G3 = nx.MultiDiGraph(G2)
 
-        print(type(shortest_path))
-        print(shortest_path)
+        route_edges = ox.utils_graph.get_route_edge_attributes(G3, shortest_path)
 
-        # Convert the shortest path to a LineString geometry
-        route_edges = ox.utils_graph.get_route_edge_attributes(G, shortest_path)
-        
         gdf_route_edges = gpd.GeoDataFrame(route_edges, crs=G.graph['crs'], geometry='geometry')
 
         gdf_route_edges.to_file(shortest_path_file_path, driver='GPKG')
@@ -99,7 +86,9 @@ def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destin
 
 #create_folder("./data/osm/shortest_path/")
 
-origin_point = (45.7587161, 4.8737715)
-destination_point = (45.7596251,4.8743205)
+origin_point = (45.752999, 4.8451306)
+destination_point = (45.7555206,4.8478426)
 
-shortest_path("./data/osm/bbox_default_crs.gpkg", "./data/osm/shortest_path/_bbox_first_trial.gpkg", origin_point=origin_point, destination_point=destination_point)
+#destination_point = (45.7531827,4.8478752)
+
+shortest_path("./data/osm/lyon_drive.gpkg", "./data/osm/shortest_path/lyon_drive_shortest_path.gpkg", origin_point=origin_point, destination_point=destination_point)

@@ -79,7 +79,7 @@ def merge_network_data(network_file, data_file, output_file):
     ox.save_graph_geopackage(G, filepath=output_file)
     print("done")
 
-#merge_network_data("./data/osm/lyon_drive_default_crs.gpkg", "./data/raw_data/temp_surface_road_fixed_geometry.gpkg", "./data/osm/weighted_network_only_temp.gpkg")
+#merge_network_data("./data/osm/lyon_drive_default_crs.gpkg", "./data/raw_data/joined_if_3946.gpkg", "./data/osm/weighted_network_3946.gpkg")
 
 
 def manhattan_distance(node1, node2):
@@ -130,10 +130,13 @@ def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destin
 
 #create_folder("./data/osm/shortest_path/")
 
-origin_point = (45.752999, 4.8451306)
-destination_point = (45.7555206,4.8478426)
+origin_point = (45.73424, 4.8593181)
+destination_point = (45.7751805,4.8437929)
 
 #destination_point = (45.7531827,4.8478752)
 
-#shortest_path("./data/osm/weighted_network_only_temp.gpkg", "./data/osm/shortest_path/temp_shortest_path_2.gpkg", origin_point=origin_point, destination_point=destination_point, weight="C")
+# shortest_path("./data/osm/weighted_network_3946.gpkg", "./data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", origin_point=origin_point, destination_point=destination_point, weight="IF")
+# shortest_path("./data/osm/weighted_network_3946.gpkg", "./data/osm/shortest_path/big_shortest_path_C_3946.gpkg", origin_point=origin_point, destination_point=destination_point, weight="C")
+# shortest_path("./data/osm/weighted_network_3946.gpkg", "./data/osm/shortest_path/big_shortest_path_length_3946.gpkg", origin_point=origin_point, destination_point=destination_point, weight="length")
+
 #shortest_path("./data/osm/lyon_drive.gpkg", "./data/osm/shortest_path/lyon_drive_shortest_path_2.gpkg", origin_point=origin_point, destination_point=destination_point, weight="length")

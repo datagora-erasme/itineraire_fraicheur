@@ -1,11 +1,12 @@
 
-import React from 'react';
-import { MapContainer, TileLayer, useMap, Marker, Popup, GeoJSON } from 'react-leaflet'
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
+import axios from "axios"
 
 // All of the following const should be send by the backend 
 
 const sp = require("../data/sp_IF_3946.json");
-const if_joined = require("../data/joined_if_3946.json");
+// const if_joined = require("../data/joined_if_3946.json");
 const colors = {
     "1":" #d6e4d7 ",
     "0.8": "#b6e4ba",
@@ -18,6 +19,8 @@ const colors = {
 
 function Map(){
 
+    const [geojsonFile, setGeojsonFile] = useState(null)
+
     function getColor(data){
         const value = data.properties.IF
         return {
@@ -27,6 +30,22 @@ function Map(){
             fillOpacity: 1
         }
     }
+
+    useEffect(() => {
+        async function fetchGeoJSON(){
+            try {
+                const response = await axios.get("http://localhost:3002/data")
+                setGeojsonFile(response.data)
+            } catch (error){
+                console.error(error)
+            }
+        }
+        fetchGeoJSON()
+    }, [])
+
+    if (!geojsonFile) {
+        return <p>Loading GeoJSON...</p>;
+      }
 
     return (
         <div>
@@ -41,7 +60,7 @@ function Map(){
                     </Popup>
                 </Marker>
                 <GeoJSON data={sp} style={{color: "red"}}/>
-                <GeoJSON data={if_joined} style={getColor}/>
+                <GeoJSON data={geojsonFile} style={getColor}/>
             </MapContainer>
 
         </div>

@@ -77,3 +77,8 @@
 .linksNavBar:hover{
   color: #4A926D;
 }
+
+.mapContainer {
+  width: 1000px;
+  height: 500px;
+}

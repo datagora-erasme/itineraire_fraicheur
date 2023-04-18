@@ -1,3 +1,8 @@
+:root{
+  --primary-color: #53AF80;
+  --secondary-color: #AEA06E; 
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +40,40 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.navBar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px var(--secondary-color);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.agroNetTitle{
+  text-align: center;
+  color: var(--primary-color);
+}
+
+.linksContainer{
+  display: flex;
+  flex-direction: row;
+  gap: 20px; 
+}
+
+.links{
+  color: var(--primary-color);
+}
+
+.linksNavBar{
+  font-weight: bold;
+  font-size: large;
+  text-decoration: none;
+}
+
+.linksNavBar:hover{
+  color: #4A926D;
 }

@@ -1,6 +1,9 @@
 
 import React from 'react';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, Marker, Popup, GeoJSON } from 'react-leaflet'
+
+const sp = require("../data/sp_IF_3946.json")
+
 
 function Map(){
     return (
@@ -15,6 +18,7 @@ function Map(){
                     A pretty CSS3 popup. <br /> Easily customizable.
                     </Popup>
                 </Marker>
+                <GeoJSON data={sp} style={{color:"red"}}/>
             </MapContainer>
 
         </div>

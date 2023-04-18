@@ -403,3 +403,13 @@ def extract_attributes(gdf, index):
 def filter_dictionnary(dictionnary, filter):
     """the filter is a string contains or not into the dictionnary keys"""
     return {k:v for k,v in dictionnary.items() if filter in k}
+
+def convert_gpkg_into_geojson(input_path, output_path):
+    gdf = gpd.read_file(input_path)
+
+    gdf = gdf.to_crs(epsg=4326)
+
+    gdf.to_file(output_path, driver='GeoJSON')
+
+create_folder("./data/geojson")
+convert_gpkg_into_geojson("./data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", "./data/geojson/sp_IF_3946.geojson")

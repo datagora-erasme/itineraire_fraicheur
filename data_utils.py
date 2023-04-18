@@ -407,9 +407,13 @@ def filter_dictionnary(dictionnary, filter):
 def convert_gpkg_into_geojson(input_path, output_path):
     gdf = gpd.read_file(input_path)
 
+    # 4326 is crs of OSM => used to project data on leaflet
     gdf = gdf.to_crs(epsg=4326)
 
+    print("Converting GPKG into GeoJSON")
     gdf.to_file(output_path, driver='GeoJSON')
+    print("Done")
 
 create_folder("./data/geojson")
-convert_gpkg_into_geojson("./data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", "./data/geojson/sp_IF_3946.geojson")
+#convert_gpkg_into_geojson("./data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", "./data/geojson/sp_IF_3946.json")
+convert_gpkg_into_geojson("./data/raw_data/joined_if_3946.gpkg", "./pocwa-init/src/data/joined_if_3946.json")

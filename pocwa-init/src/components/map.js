@@ -17,38 +17,63 @@ const colors = {
 }
 
 
-function Map(){
+function Map({selectedLayers}){
 
-    const [geojsonFile, setGeojsonFile] = useState(null)
+    const [geojsonFiles, setGeojsonFiles] = useState([])
+    const [loadingLayer, setLoadingLayer] = useState(false)
 
     function getColor(data){
-        const value = data.properties.IF
-        return {
-            color: colors[value.toString()],
-            fillColor: colors[value.toString()],
-            opacity:1,
-            fillOpacity: 1
+        if(data.properties.IF){
+            const value = data.properties.IF
+            return {
+                color: colors[value.toString()],
+                fillColor: colors[value.toString()],
+                opacity:1,
+                fillOpacity: 1
+            }
         }
+        return {
+            color: "red"
+        }
+
     }
 
     useEffect(() => {
-        async function fetchGeoJSON(){
+        async function fetchGeoJSON(id){
+            setLoadingLayer(true)
             try {
-                const response = await axios.get("http://localhost:3002/data")
-                setGeojsonFile(response.data)
+                const response = await axios.get("http://localhost:3002/data/", {
+                    params:{
+                        id: id
+                    }
+                })
+                const updatedGeojsonFiles = [...geojsonFiles, {id: id, geojson: response.data}]
+                setGeojsonFiles(updatedGeojsonFiles)
             } catch (error){
                 console.error(error)
             }
+            setLoadingLayer(false)
         }
-        fetchGeoJSON()
-    }, [])
+        let existingGeojsonFilesId = []
+        for(let file of geojsonFiles){
+            existingGeojsonFilesId.push(file.id)
+        }
+        for(let id of selectedLayers){
+            if(!existingGeojsonFilesId.includes(id)){
+                fetchGeoJSON(id)
+            }
+        }
+        console.log(geojsonFiles)
+    }, [selectedLayers])
 
-    if (!geojsonFile) {
-        return <p>Loading GeoJSON...</p>;
-      }
+    // if (!geojsonFile) {
+    //     return <p>Loading GeoJSON...</p>;
+    //   }
+    console.log(geojsonFiles)
 
     return (
         <div>
+            {loadingLayer && "Loading ...."}
             <MapContainer center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={false} className="mapContainer">
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -60,7 +85,16 @@ function Map(){
                     </Popup>
                 </Marker>
                 <GeoJSON data={sp} style={{color: "red"}}/>
-                <GeoJSON data={geojsonFile} style={getColor}/>
+                {geojsonFiles.length !== 0 && 
+                    geojsonFiles.map((data) => {
+                        if(selectedLayers.includes(data.id)) {
+                            return(
+                                <GeoJSON data={data.geojson} style={getColor} key={Math.random()} />
+                            )
+                        }
+                    })
+                }
+                {/* <GeoJSON data={geojsonFile} style={getColor}/> */}
             </MapContainer>
 
         </div>

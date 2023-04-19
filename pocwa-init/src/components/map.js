@@ -64,13 +64,11 @@ function Map({selectedLayers}){
                 fetchGeoJSON(id)
             }
         }
-        console.log(geojsonFiles)
     }, [selectedLayers])
 
     // if (!geojsonFile) {
     //     return <p>Loading GeoJSON...</p>;
     //   }
-    console.log(geojsonFiles)
 
     return (
         <div>

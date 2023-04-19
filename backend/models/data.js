@@ -5,7 +5,7 @@ const data_informations = JSON.parse(fs.readFileSync("../data_informations.json"
 function get_layer_list(){
     const layers_list = [];
     const raw_data = data_informations["raw_data"]
-    const wfs_data = data_informations["wfs_data"]
+    const wfs_data = data_informations["data_wfs"]
 
     for(let data_id in raw_data){
         layers_list.push({

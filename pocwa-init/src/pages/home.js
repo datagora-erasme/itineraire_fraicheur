@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import Map from '../components/map'
 import ListLayers from '../components/listLayers';
+import SelectAdress from '../components/selectAdress';
 
 import axios from 'axios'
 
@@ -23,6 +24,7 @@ function Home(){
 
     return (
         <div>
+            <SelectAdress/>
             <Map selectedLayers={selectedLayers}/>
             {listLayers.length !== 0 ? <ListLayers listLayers={listLayers} selectedLayers={selectedLayers} setSelectedLayers={setSelectedLayers} /> : "loading ..."}        
         </div>

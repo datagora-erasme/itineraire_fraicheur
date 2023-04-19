@@ -23,6 +23,7 @@ function Map({selectedLayers}){
     const [loadingLayer, setLoadingLayer] = useState(false)
 
     function getColor(data){
+        // TODO : for each layer : specific style properties
         if(data.properties.IF){
             const value = data.properties.IF
             return {

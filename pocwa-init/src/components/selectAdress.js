@@ -8,13 +8,14 @@ const SelectAddress = () => {
   const [endAddressSuggestions, setEndAddressSuggestions] = useState([])
   const [selectedStartAddress, setSelectedStartAddress] = useState(null)
   const [selectedEndAddress, setSelectedEndAddress] = useState(null)
-  let timeout;
+  let startTimeout;
+  let endTimeout;
 
   const handleStartAddressChange = (event) => {
     const value = event.target.value;
     setStartAddress(value);
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
+    clearTimeout(startTimeout)
+    startTimeout = setTimeout(() => {
         axios
         .get(
           `https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
@@ -25,23 +26,27 @@ const SelectAddress = () => {
         .catch((error) => {
           console.log(error);
         });
-    }, 500)
+    }, 2000)
 
   };
 
   const handleEndAddressChange = (event) => {
     const value = event.target.value;
     setEndAddress(value);
-    axios
-      .get(
-        `https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
-      )
-      .then((response) => {
-        setEndAddressSuggestions(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    clearTimeout(endTimeout)
+    endTimeout = setTimeout(() => {
+        axios
+        .get(
+          `https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
+        )
+        .then((response) => {
+          setEndAddressSuggestions(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 2000)
+
   };
 
   const handleSelectStartAddress = (event) => {
@@ -64,7 +69,25 @@ const SelectAddress = () => {
     }
   }
 
-  console.log(startAddressSuggestions)
+  const calculateItinerary = () => {
+    console.log(selectedEndAddress.lat)
+    axios.get("http://localhost:3002/itinerary", {
+        params: {
+            start: {
+                lat: selectedStartAddress.lat, 
+                lon: selectedStartAddress.lon
+            },
+            end: {
+                lat : selectedEndAddress.lat,
+                lon : selectedEndAddress.lon
+            }
+        }
+    }).then((response) => {
+        console.log(response)
+    }).catch((error) => {
+        console.error(error)
+    })
+  }
 
   return (
     <div>
@@ -109,6 +132,8 @@ const SelectAddress = () => {
             </option>
         ))}
       </datalist>
+
+      <button onClick={calculateItinerary}>Calculer</button>
     </div>
   );
 };

@@ -416,4 +416,6 @@ def convert_gpkg_into_geojson(input_path, output_path):
 
 create_folder("./data/geojson")
 #convert_gpkg_into_geojson("./data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", "./data/geojson/sp_IF_3946.json")
-convert_gpkg_into_geojson("./data/raw_data/joined_if_3946.gpkg", "./pocwa-init/src/data/joined_if_3946.json")
+#convert_gpkg_into_geojson("./data/raw_data/joined_if_3946.gpkg", "./pocwa-init/src/data/joined_if_3946.json")
+
+convert_gpkg_into_geojson("./data/raw_data/temp_surface_road_fixed_geometry.gpkg", "./data/geojson/temp_surface.json")

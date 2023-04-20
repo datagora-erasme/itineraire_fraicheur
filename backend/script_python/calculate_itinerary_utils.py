@@ -90,7 +90,7 @@ def manhattan_distance(node1, node2):
 
 def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destination_point, weight):
     # Load the graph data from the GeoPackage file
-    print(f"Loading Network from {graph_file_path}")
+    #print(f"Loading Network from {graph_file_path}")
     gdf_edges = gpd.read_file(graph_file_path, layer='edges')
     gdf_nodes = gpd.read_file(graph_file_path, layer="nodes")
 
@@ -108,21 +108,21 @@ def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destin
     destination_node = ox.nearest_nodes(G2, X=destination_point[1], Y=destination_point[0])
 
     try:
-        print("Calculating shortest path ... ")
+        #print("Calculating shortest path ... ")
         # Calculate the shortest path using Dijkstra's algorithm
         shortest_path = nx.shortest_path(G2, source=origin_node, target=destination_node, weight=weight)
 
         G3 = nx.MultiDiGraph(G2)
 
-        print(shortest_path)
+        #print(shortest_path)
 
         route_edges = ox.utils_graph.get_route_edge_attributes(G3, shortest_path)
 
         gdf_route_edges = gpd.GeoDataFrame(route_edges, crs=G.graph['crs'], geometry='geometry')
 
-        gdf_route_edges.to_file(shortest_path_file_path, driver='GPKG')
+        gdf_route_edges.to_file(shortest_path_file_path, driver='GeoJSON')
 
-        print("Shortest path found")
+        #print("Shortest path found")
 
     except nx.NetworkXNoPath:
         traceback.print_exc()

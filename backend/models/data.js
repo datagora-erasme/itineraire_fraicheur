@@ -1,6 +1,6 @@
 const fs = require("fs")
 
-const data_informations = JSON.parse(fs.readFileSync("../data_informations.json"));
+const data_informations = JSON.parse(fs.readFileSync("./script_python/data_informations.json"));
 
 function get_layer_list(){
     const layers_list = [];

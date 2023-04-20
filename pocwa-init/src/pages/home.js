@@ -9,6 +9,7 @@ import axios from 'axios'
 function Home(){
     const [listLayers, setListLayers] = useState([])
     const [selectedLayers, setSelectedLayers] = useState([])
+    const [currentItinerary, setCurrentItinerary] = useState(null)
 
     useEffect(() => {
         async function fetchListLayers(){
@@ -24,8 +25,8 @@ function Home(){
 
     return (
         <div>
-            <SelectAdress/>
-            <Map selectedLayers={selectedLayers}/>
+            <SelectAdress setCurrentItinerary={setCurrentItinerary}/>
+            <Map selectedLayers={selectedLayers} currentItinerary={currentItinerary}/>
             {listLayers.length !== 0 ? <ListLayers listLayers={listLayers} selectedLayers={selectedLayers} setSelectedLayers={setSelectedLayers} /> : "loading ..."}        
         </div>
     );

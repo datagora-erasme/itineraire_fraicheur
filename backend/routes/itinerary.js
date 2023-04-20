@@ -1,5 +1,6 @@
 const express = require('express');
 const Itinerary = require('../models/itinerary');
+const fs = require("fs")
 
 const itineraryRouter = express.Router();
 
@@ -9,10 +10,12 @@ itineraryRouter.get('/', async (req, res) => {
     if(req.query.start && req.query.end){
       try {
         console.log("calculating itinerary ...");
-        const results = await Itinerary.calculateItinerary(req.query.start, req.query.end);
+        let results = await Itinerary.calculateItinerary(req.query.start, req.query.end);
+        results = results.split("\n")[0]
+        const geojson = JSON.parse(fs.readFileSync(results))
         console.log("done")
         console.log("geojson send");
-        res.send(results);
+        res.send(geojson);
         
       } catch (err) {
         console.error(err);

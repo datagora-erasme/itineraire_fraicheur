@@ -17,7 +17,7 @@ const colors = {
 }
 
 
-function Map({selectedLayers}){
+function Map({selectedLayers, currentItinerary}){
 
     const [geojsonFiles, setGeojsonFiles] = useState([])
     const [loadingLayer, setLoadingLayer] = useState(false)
@@ -94,6 +94,7 @@ function Map({selectedLayers}){
                     })
                 }
                 {/* <GeoJSON data={geojsonFile} style={getColor}/> */}
+                {currentItinerary && <GeoJSON data={currentItinerary} style={{color: "green"}}/>}
             </MapContainer>
 
         </div>

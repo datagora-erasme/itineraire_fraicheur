@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const SelectAddress = () => {
+//`https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
+
+const SelectAddress = ({setCurrentItinerary}) => {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
@@ -13,15 +15,18 @@ const SelectAddress = () => {
 
   const handleStartAddressChange = (event) => {
     const value = event.target.value;
+    //replace double white space and then replace by +
+    let query = value.replace(/\s{2,}/g, ' ')
+    query = query.replace(/ /g, "+")
     setStartAddress(value);
     clearTimeout(startTimeout)
     startTimeout = setTimeout(() => {
         axios
         .get(
-          `https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
+          `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
         )
         .then((response) => {
-          setStartAddressSuggestions(response.data);
+          setStartAddressSuggestions(response.data.features);
         })
         .catch((error) => {
           console.log(error);
@@ -32,15 +37,18 @@ const SelectAddress = () => {
 
   const handleEndAddressChange = (event) => {
     const value = event.target.value;
+    //replace double white space and then replace by +
+    let query = value.replace(/\s{2,}/g, ' ')
+    query = query.replace(/ /g, "+")
     setEndAddress(value);
     clearTimeout(endTimeout)
     endTimeout = setTimeout(() => {
         axios
         .get(
-          `https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
+          `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
         )
         .then((response) => {
-          setEndAddressSuggestions(response.data);
+          setEndAddressSuggestions(response.data.features);
         })
         .catch((error) => {
           console.log(error);
@@ -51,8 +59,8 @@ const SelectAddress = () => {
 
   const handleSelectStartAddress = (event) => {
     for(let address of startAddressSuggestions){
-        if(address.osm_id == event.target.value){
-            setStartAddress(`${address.display_name.slice(0,30)}...`)
+        if(address.properties.id == event.target.value){
+            setStartAddress(`${address.properties.label.slice(0,30)}...`)
             setSelectedStartAddress(address)
             setStartAddressSuggestions([])
         }
@@ -61,8 +69,8 @@ const SelectAddress = () => {
 
   const handleSelectEndAddress = (event) => {
     for(let address of endAddressSuggestions){
-        if(address.osm_id == event.target.value){
-            setEndAddress(`${address.display_name.slice(0,30)}...`)
+        if(address.properties.id == event.target.value){
+            setEndAddress(`${address.properties.label.slice(0,30)}...`)
             setSelectedEndAddress(address)
             setEndAddressSuggestions([])
         }
@@ -74,16 +82,17 @@ const SelectAddress = () => {
     axios.get("http://localhost:3002/itinerary", {
         params: {
             start: {
-                lat: selectedStartAddress.lat, 
-                lon: selectedStartAddress.lon
+                lat: selectedStartAddress.geometry.coordinates[1], 
+                lon: selectedStartAddress.geometry.coordinates[0]
             },
             end: {
-                lat : selectedEndAddress.lat,
-                lon : selectedEndAddress.lon
+                lat : selectedEndAddress.geometry.coordinates[1],
+                lon : selectedEndAddress.geometry.coordinates[0]
             }
         }
     }).then((response) => {
         console.log(response)
+        setCurrentItinerary(response.data)
     }).catch((error) => {
         console.error(error)
     })
@@ -103,11 +112,11 @@ const SelectAddress = () => {
       <datalist id="startAddressSuggestions" style={{display: "block"}}>
         {startAddressSuggestions.map((suggestion) => (
           <option 
-            key={suggestion.place_id} 
-            value={suggestion.osm_id}
+            key={suggestion.properties.id} 
+            value={suggestion.properties.id}
             onClick={handleSelectStartAddress}
             >
-                {suggestion.display_name.length > 30 ? `${suggestion.display_name.slice(0,30)}...`: suggestion.display_name}
+                {suggestion.properties.label.length > 30 ? `${suggestion.properties.label.slice(0,30)}...`: suggestion.properties.label}
           </option>
         ))}
       </datalist>
@@ -124,11 +133,11 @@ const SelectAddress = () => {
       <datalist id="endAddressSuggestions" style={{display: "block"}}>
         {endAddressSuggestions.map((suggestion) => (
             <option 
-            key={suggestion.place_id} 
-            value={suggestion.osm_id}
+            key={suggestion.properties.id} 
+            value={suggestion.properties.id}
             onClick={handleSelectEndAddress}
             >
-                {suggestion.display_name.length > 30 ? `${suggestion.display_name.slice(0,30)}...`: suggestion.display_name}
+                {suggestion.properties.label.length  > 30 ? `${suggestion.properties.label.slice(0,30)}...`: suggestion.properties.label}
             </option>
         ))}
       </datalist>

@@ -5,7 +5,7 @@ import axios from "axios"
 
 // All of the following const should be send by the backend 
 
-const sp = require("../data/sp_IF_3946.json");
+// const sp = require("../data/sp_IF_3946.json");
 // const if_joined = require("../data/joined_if_3946.json");
 const colors = {
     "1":" #d6e4d7 ",
@@ -83,7 +83,7 @@ function Map({selectedLayers, currentItinerary}){
                     A pretty CSS3 popup. <br /> Easily customizable.
                     </Popup>
                 </Marker>
-                <GeoJSON data={sp} style={{color: "red"}}/>
+                {/* <GeoJSON data={sp} style={{color: "red"}}/> */}
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => {
                         if(selectedLayers.includes(data.id)) {
@@ -94,7 +94,7 @@ function Map({selectedLayers, currentItinerary}){
                     })
                 }
                 {/* <GeoJSON data={geojsonFile} style={getColor}/> */}
-                {currentItinerary && <GeoJSON data={currentItinerary} style={{color: "green"}}/>}
+                {currentItinerary && <GeoJSON data={currentItinerary} style={{color: "green"}} key={Math.random()}/>}
             </MapContainer>
 
         </div>

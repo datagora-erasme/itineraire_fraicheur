@@ -5,6 +5,7 @@ import ListLayers from '../components/listLayers';
 import SelectAdress from '../components/selectAdress';
 
 import axios from 'axios'
+import Content from '../components/content';
 
 function Home(){
     const [listLayers, setListLayers] = useState([])
@@ -24,10 +25,10 @@ function Home(){
     }, [])
 
     return (
-        <div>
-            <SelectAdress setCurrentItinerary={setCurrentItinerary}/>
+        <div style={{position: 'relative'}}>
+            <Content selectedLayers={selectedLayers} listLayers={listLayers} setCurrentItinerary={setCurrentItinerary} setSelectedLayers={setSelectedLayers}/>
             <Map selectedLayers={selectedLayers} currentItinerary={currentItinerary}/>
-            {listLayers.length !== 0 ? <ListLayers listLayers={listLayers} selectedLayers={selectedLayers} setSelectedLayers={setSelectedLayers} /> : "loading ..."}        
+        
         </div>
     );
 }

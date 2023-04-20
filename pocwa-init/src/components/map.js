@@ -78,11 +78,11 @@ function Map({selectedLayers, currentItinerary}){
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[45.76309302427536, 4.836502750843036]}>
+                {/* <Marker position={[45.76309302427536, 4.836502750843036]}>
                     <Popup>
                     A pretty CSS3 popup. <br /> Easily customizable.
                     </Popup>
-                </Marker>
+                </Marker> */}
                 {/* <GeoJSON data={sp} style={{color: "red"}}/> */}
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => {
@@ -94,7 +94,7 @@ function Map({selectedLayers, currentItinerary}){
                     })
                 }
                 {/* <GeoJSON data={geojsonFile} style={getColor}/> */}
-                {currentItinerary && <GeoJSON data={currentItinerary} style={{color: "green"}} key={Math.random()}/>}
+                {currentItinerary && <GeoJSON data={currentItinerary} style={{color: "blue"}} key={Math.random()}/>}
             </MapContainer>
 
         </div>

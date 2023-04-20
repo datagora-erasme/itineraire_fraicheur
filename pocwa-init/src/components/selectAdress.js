@@ -14,6 +14,8 @@ const SelectAddress = ({setCurrentItinerary}) => {
   const [showStartSuggestions, setShowStartSuggestions] = useState(false);
   const [showEndSuggestions, setShowEndSuggestions] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false)
+
   let startTimeout;
   let endTimeout;
 
@@ -82,7 +84,7 @@ const SelectAddress = ({setCurrentItinerary}) => {
   }
 
   const calculateItinerary = () => {
-    console.log(selectedEndAddress.lat)
+    setIsLoading(true)
     axios.get("http://localhost:3002/itinerary", {
         params: {
             start: {
@@ -95,8 +97,8 @@ const SelectAddress = ({setCurrentItinerary}) => {
             }
         }
     }).then((response) => {
-        console.log(response)
         setCurrentItinerary(response.data)
+        setIsLoading(false)
     }).catch((error) => {
         console.error(error)
     })
@@ -166,10 +168,19 @@ const SelectAddress = ({setCurrentItinerary}) => {
             ))}
           </ul>}
         </div>
-        
-        <button onClick={calculateItinerary} className="block mt-8 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">
-          Calculate
-        </button>
+        <div class="flex justify-center items-center">
+          <button onClick={calculateItinerary} className="block mt-8 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">
+            {isLoading ? (
+              <div class="flex items-center">
+                <div class="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>
+                <span>Loading...</span>
+              </div>
+            ) : (
+              <span>Calculate</span>
+            )}
+          </button>
+      </div>
+
       </div>
 
   );

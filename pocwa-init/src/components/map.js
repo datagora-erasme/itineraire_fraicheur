@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
@@ -21,8 +21,32 @@ const colors = {
     "0.01": "#28572c"
 }
 
+function MapFreshness({zoomToUserPosition, position}){
+    const map = useMap()
 
-function Map({selectedLayers, currentItinerary}){
+    if(position && zoomToUserPosition){
+        map.eachLayer((layer) => {
+            if (layer.options && layer.options.color === 'red') {
+              map.removeLayer(layer);
+            }
+          });
+
+        const circle = L.circle(position, {
+            radius: 500,
+            color: 'red',
+        }).addTo(map);
+
+        // const userPosition = L.Marker(position)
+        // userPosition.addTo(map)
+      
+        // zoom to circle
+        map.fitBounds(circle.getBounds());
+    }
+    return null
+}
+
+
+function Map({selectedLayers, currentItinerary, zoomToUserPosition, position}){
 
     const [geojsonFiles, setGeojsonFiles] = useState([])
     const [loadingLayer, setLoadingLayer] = useState(false)
@@ -77,7 +101,7 @@ function Map({selectedLayers, currentItinerary}){
 
     // console.log(geojsonFiles)
     const createClusterCustomIcon = function (cluster, markerOption) {
-        console.log(markerOption.clusterCountStyle)
+        // console.log(markerOption.clusterCountStyle)
         return L.divIcon({
             html: `<span style="position: relative; width:25px; height:25px;">
                         <img src=${markerOption.iconUrl} style="display: block, width: 40px; height:40px;" />
@@ -87,15 +111,22 @@ function Map({selectedLayers, currentItinerary}){
             iconSize: L.point(33, 33, true),
         })
     }
+
+    const handleClickMarker = (e) => {
+        console.log("ok")
+    }
+
+
     return (
         <div>
             {loadingLayer && "Loading ...."}
-            <MapContainer center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={false} className="mapContainer" zoomControl={false}>
+            <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={false} className="mapContainer" zoomControl={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <ZoomControl position='topright' />
+                <MapFreshness zoomToUserPosition={zoomToUserPosition} position={position}/>
                 {/* <Marker position={[45.76309302427536, 4.836502750843036]}>
                     <Popup>
                     A pretty CSS3 popup. <br /> Easily customizable.
@@ -120,7 +151,11 @@ function Map({selectedLayers, currentItinerary}){
                                             {data.geojson.features.map((point, index) => {
                                                 const coordinates = point.geometry.coordinates
                                                 return(
-                                                    <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)}></Marker>
+                                                    <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)}>
+                                                        <Popup>
+                                                            <button onClick={handleClickMarker}>Itinéraire</button>
+                                                        </Popup>
+                                                    </Marker>
                                                 )
                                             })}
                                         </MarkerClusterGroup>

@@ -14,6 +14,9 @@ function Home(){
 
     const [isLayerLoading, setIsLayerLoading] = useState(false)
 
+    const [userPosition, setUserPosition] = useState(null)
+    const [zoomToUserPosition, setZoomToUserPosition] = useState(false)
+
     useEffect(() => {
         async function fetchListLayers(){
             try{
@@ -28,10 +31,32 @@ function Home(){
         setIsLayerLoading(false)
     }, [])
 
+    useEffect(() => {
+        // Get user's current position using geolocation API
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { latitude, longitude } = pos.coords;
+            setUserPosition([latitude, longitude]);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      }, []);
+
     return (
         <div style={{position: 'relative'}}>
-            <Content selectedLayers={selectedLayers} listLayers={listLayers} setCurrentItinerary={setCurrentItinerary} setSelectedLayers={setSelectedLayers} isLayerLoading={isLayerLoading}/>
-            <Map selectedLayers={selectedLayers} currentItinerary={currentItinerary}/>
+            <Content 
+                selectedLayers={selectedLayers} 
+                listLayers={listLayers} 
+                setCurrentItinerary={setCurrentItinerary} 
+                setSelectedLayers={setSelectedLayers} 
+                isLayerLoading={isLayerLoading} 
+                position={userPosition} 
+                zoomToUserPosition={zoomToUserPosition}
+                setZoomToUserPosition={setZoomToUserPosition}
+            />
+            <Map selectedLayers={selectedLayers} currentItinerary={currentItinerary} zoomToUserPosition={zoomToUserPosition} position={userPosition}/>
         
         </div>
     );

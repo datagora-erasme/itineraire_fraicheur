@@ -12,21 +12,25 @@ function Home(){
     const [selectedLayers, setSelectedLayers] = useState([])
     const [currentItinerary, setCurrentItinerary] = useState(null)
 
+    const [isLayerLoading, setIsLayerLoading] = useState(false)
+
     useEffect(() => {
         async function fetchListLayers(){
             try{
                 const response = await axios.get("http://localhost:3002/data")
-                setListLayers(response.data)
+                setListLayers(response.data) 
             } catch (error){
                 console.error(error)
             } 
         }
+        setIsLayerLoading(true)
         fetchListLayers()
+        setIsLayerLoading(false)
     }, [])
 
     return (
         <div style={{position: 'relative'}}>
-            <Content selectedLayers={selectedLayers} listLayers={listLayers} setCurrentItinerary={setCurrentItinerary} setSelectedLayers={setSelectedLayers}/>
+            <Content selectedLayers={selectedLayers} listLayers={listLayers} setCurrentItinerary={setCurrentItinerary} setSelectedLayers={setSelectedLayers} isLayerLoading={isLayerLoading}/>
             <Map selectedLayers={selectedLayers} currentItinerary={currentItinerary}/>
         
         </div>

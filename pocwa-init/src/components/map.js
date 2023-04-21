@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
-import { FaWater } from "react-icons/fa";
+import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 
 const drop = "droplet-solid.svg"
 
@@ -26,13 +26,6 @@ function Map({selectedLayers, currentItinerary}){
 
     const [geojsonFiles, setGeojsonFiles] = useState([])
     const [loadingLayer, setLoadingLayer] = useState(false)
-
-    const dropWaterIcon = new L.Icon({
-        iconUrl: drop,
-        iconRetinaUrl: drop,
-        popupAnchor:  [-0, -0],
-        iconSize: [32,45], 
-    })
 
     function getColor(data){
         // TODO : for each layer : specific style properties
@@ -61,7 +54,6 @@ function Map({selectedLayers, currentItinerary}){
                     }
                 })
                 const updatedGeojsonFiles = [...geojsonFiles, {...response.data}]
-                console.log("response : ", response.data)
                 setGeojsonFiles(updatedGeojsonFiles)
             } catch (error){
                 console.error(error)
@@ -84,7 +76,17 @@ function Map({selectedLayers, currentItinerary}){
     //   }
 
     // console.log(geojsonFiles)
-
+    const createClusterCustomIcon = function (cluster, markerOption) {
+        console.log(markerOption.clusterCountStyle)
+        return L.divIcon({
+            html: `<span style="position: relative; width:25px; height:25px;">
+                        <img src=${markerOption.iconUrl} style="display: block, width: 40px; height:40px;" />
+                        <span style=${markerOption.clusterCountStyle}>${cluster.getChildCount()}</span>
+                    </span>`,
+            className: 'custom-marker-cluster',
+            iconSize: L.point(33, 33, true),
+        })
+    }
     return (
         <div>
             {loadingLayer && "Loading ...."}
@@ -103,17 +105,25 @@ function Map({selectedLayers, currentItinerary}){
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => { 
                         if(selectedLayers.includes(data.id)) {
-                            console.log(data)
                             const dataType = data.geojson.features[0].geometry.type
                             const markerOption = data.markerOption
                             if(dataType == "Point"){
                                 return(
-                                        data.geojson.features.map((point, index) => {
-                                            const coordinates = point.geometry.coordinates
-                                            return(
-                                                <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)}></Marker>
-                                            )
-                                    })
+                                        <MarkerClusterGroup 
+                                            key={data.id} 
+                                            maxClusterRadius={100}
+                                            polygonOptions={{
+                                                opacity: 0
+                                            }}
+                                            iconCreateFunction={(cluster) => createClusterCustomIcon(cluster, markerOption)}
+                                            >
+                                            {data.geojson.features.map((point, index) => {
+                                                const coordinates = point.geometry.coordinates
+                                                return(
+                                                    <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)}></Marker>
+                                                )
+                                            })}
+                                        </MarkerClusterGroup>
                                 )
                             } else if (dataType == "MultiPolygon"){
                                 return(

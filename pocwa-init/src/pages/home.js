@@ -1,8 +1,6 @@
 
 import React, {useState, useEffect} from 'react';
 import Map from '../components/map'
-import ListLayers from '../components/listLayers';
-import SelectAdress from '../components/selectAdress';
 
 import axios from 'axios'
 import Content from '../components/content';

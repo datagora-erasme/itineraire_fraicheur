@@ -38,8 +38,13 @@ module.exports.findOne = (id) => {
         if(data["id"] === id){
             const path = data["geojson_path"]
             const geojson = JSON.parse(fs.readFileSync(path))
+            const markerOption = data["marker_option"]
         
-            return geojson
+            return {
+                geojson,
+                markerOption,
+                id
+            }
         }
     }
 

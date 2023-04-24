@@ -13,7 +13,7 @@ end = (endLat, endLon)
 # print(start, end)
 temp_path = "./temp/temp_sp.json"
 
-shortest_path("./script_python/data/osm/lyon_drive.gpkg", temp_path, origin_point=start, destination_point=end, weight="IF")
+shortest_path("./script_python/data/osm/weighted_network_3946.gpkg", temp_path, origin_point=start, destination_point=end, weight="length")
 
 print(temp_path)
 

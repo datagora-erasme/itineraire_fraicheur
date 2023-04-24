@@ -7,6 +7,9 @@ import shapely.geometry as geom
 import geopandas as gpd
 import traceback
 from data_utils import create_folder
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def load_osm_network(network_paramaters):
@@ -120,6 +123,8 @@ def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destin
 
         gdf_route_edges = gpd.GeoDataFrame(route_edges, crs=G.graph['crs'], geometry='geometry')
 
+        gdf_route_edges = gdf_route_edges.to_crs(epsg=4326)
+
         gdf_route_edges.to_file(shortest_path_file_path, driver='GeoJSON')
 
         #print("Shortest path found")
@@ -130,12 +135,12 @@ def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destin
 
 #create_folder("./data/osm/shortest_path/")
 
-origin_point = (45.73424, 4.8593181)
-destination_point = (45.7751805,4.8437929)
+#origin_point = (45.73424, 4.8593181)
+# # destination_point = (45.7751805,4.8437929)
 
 #destination_point = (45.7531827,4.8478752)
 
-# shortest_path("./data/osm/weighted_network_3946.gpkg", "./data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", origin_point=origin_point, destination_point=destination_point, weight="IF")
+#shortest_path("./backend/script_python/data/osm/weighted_network_3946.gpkg", "./backend/script_python/data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", origin_point=origin_point, destination_point=destination_point, weight="IF")
 # shortest_path("./data/osm/weighted_network_3946.gpkg", "./data/osm/shortest_path/big_shortest_path_C_3946.gpkg", origin_point=origin_point, destination_point=destination_point, weight="C")
 # shortest_path("./data/osm/weighted_network_3946.gpkg", "./data/osm/shortest_path/big_shortest_path_length_3946.gpkg", origin_point=origin_point, destination_point=destination_point, weight="length")
 

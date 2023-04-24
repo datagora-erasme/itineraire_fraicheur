@@ -18,6 +18,7 @@ itineraryRouter.get('/', async (req, res) => {
         res.send(geojson);
         
       } catch (err) {
+        console.log('eo')
         console.error(err);
         res.sendStatus(500);
       }

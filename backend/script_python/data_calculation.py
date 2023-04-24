@@ -157,11 +157,11 @@ def extract_difference(input_path, output_path):
 # extract_intersection("./data/merged.gpkg", "./data/merged_inter.gpkg")
 # extract_difference("./data/merged.gpkg", "./data/merged_diff.gpkg")
 
-start_time = time.time()
-merge_data(10000)
-end_time = time.time()
+# start_time = time.time()
+# merge_data(10000)
+# end_time = time.time()
 
-duration = (end_time - start_time) / 60
+# duration = (end_time - start_time) / 60
 
-print(f'duration : {duration}')
+# print(f'duration : {duration}')
 

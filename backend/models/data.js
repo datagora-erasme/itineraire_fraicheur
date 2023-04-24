@@ -1,10 +1,10 @@
 const fs = require("fs")
 
-const data_informations = JSON.parse(fs.readFileSync("./script_python/data_informations.json"));
+const data_informations = JSON.parse(fs.readFileSync("./data/data_informations.json"));
 
 function get_layer_list(){
     const layers_list = [];
-    const raw_data = data_informations["raw_data"]
+    const raw_data = data_informations["data_raw"]
     const wfs_data = data_informations["data_wfs"]
 
     for(let data_id in raw_data){
@@ -36,7 +36,8 @@ module.exports.findOne = (id) => {
 
     for(let data of layer_list){
         if(data["id"] === id){
-            const path = data["geojson_path"]
+            const path = data["geojson_path"].split("./backend/")[1]
+            console.log(path)
             const geojson = JSON.parse(fs.readFileSync(path))
             const markerOption = data["marker_option"]
         

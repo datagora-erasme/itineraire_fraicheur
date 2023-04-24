@@ -6,7 +6,6 @@ const itineraryRouter = express.Router();
 
 
 itineraryRouter.get('/', async (req, res) => {
-    //TODO : send all data awailable (layers)
     if(req.query.start && req.query.end){
       try {
         console.log("calculating itinerary ...");
@@ -14,7 +13,8 @@ itineraryRouter.get('/', async (req, res) => {
         results = results.split("\n")[0]
         const geojson = JSON.parse(fs.readFileSync(results))
         console.log("done")
-        console.log("geojson send");
+        console.log("itinerary send");
+        //TODO : remove the temp file after sending it
         res.send(geojson);
         
       } catch (err) {

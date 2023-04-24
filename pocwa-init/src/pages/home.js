@@ -56,7 +56,14 @@ function Home(){
                 zoomToUserPosition={zoomToUserPosition}
                 setZoomToUserPosition={setZoomToUserPosition}
             />
-            <Map selectedLayers={selectedLayers} currentItinerary={currentItinerary} zoomToUserPosition={zoomToUserPosition} position={userPosition}/>
+            <Map 
+                selectedLayers={selectedLayers} 
+                currentItinerary={currentItinerary} 
+                zoomToUserPosition={zoomToUserPosition} 
+                position={userPosition} 
+                setZoomToUserPosition={setZoomToUserPosition}
+                setCurrentItinerary={setCurrentItinerary}
+            />
         
         </div>
     );

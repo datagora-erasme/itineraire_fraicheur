@@ -18,6 +18,7 @@ function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoadi
             setSelectedLayers(updatedSelectedLayers)
         }
     }
+    console.log(listLayers)
 
     return (
         <div className="bg-white bg-opacity-80 p-4 rounded-md shadow-lg mt-2">

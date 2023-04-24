@@ -6,6 +6,8 @@ import geopandas as gpd
 import json
 import fiona
 
+data_informations_path = "./backend/data/data_informations.json"
+
 def create_data_informations_file():
     """ Fonction to instantiate data_informations.json file """
 
@@ -16,24 +18,57 @@ def create_data_informations_file():
         },
         "data_wfs" : {
             "fontaines_potables": {
+                "name": "Fontaines potables",
                 "wfs_key": "ms:epo_eau_potable.epobornefont",
                 "service": "data.grandlyon_wfs",
+                "marker_option": {
+                "iconUrl": "droplet.svg",
+                "iconRetinaUrl": "droplet.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [40,40],
+                "clusterCountStyle" : "position:absolute;top:20px;left:-9px;color:white;font-weight:bold;"
+                }
             },
             "toilettes_publiques": {
+                "name": "Toilettes publiques",
                 "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
                 "service": "data.grandlyon_wfs",
+                "marker_option": {
+                "iconUrl": "toilet.svg",
+                "iconRetinaUrl": "toilet.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [40,40],
+                "clusterCountStyle" : "position:absolute;top:48px;left:-6px;color:black;font-weight:bold;"
+                }
             },
             "fontaines_ornementales": {
+                "name": "Fontaines ornementales",
                 "wfs_key": "ms:adr_voie_lieu.adrfontaineornem_latest",
                 "service": "data.grandlyon_wfs",
+                "marker_option": {
+                "iconUrl": "fountain.svg",
+                "iconRetinaUrl": "fountain.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [40,40],
+                "clusterCountStyle" : "position:absolute;top:48px;left:0px;color:black;font-weight:bold;"
+            }
             },
             "parcs_jardins_metropole": {
+                "name": "Parcs et jardins",
                 "wfs_key": "ms:com_donnees_communales.comparcjardin_1_0_0",
                 "service": "data.grandlyon_wfs",
             },
             "bancs": {
+                "name": "Bancs",
                 "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
                 "service": "data.grandlyon_wfs",
+                "marker_option": {
+                "iconUrl": "bench.svg",
+                "iconRetinaUrl": "bench.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [25,25],
+                "clusterCountStyle": "position:absolute;top:0px;left:-10px;color:black;font-weight:bold;"
+            }
             },
             # "arbres_alignement": {
             #     "wfs_key": "ms:abr_arbres_alignement.abrarbre",
@@ -57,18 +92,26 @@ def create_data_informations_file():
                 "srs": "EPSG:4171"
             }
         },
-        "raw_data" : {
-            "vegetation_stratifie_raw" : {
-                "path": "./data/raw_data/vegetation_stratifie.gpkg"
-            },
+        # Temporaire : en attendant de pouvoir télécharger des fichiers lourds
+        "data_raw" : {
+            # "vegetation_stratifie_raw" : {
+            #     "name": "Végétation stratifiée",
+            #     "gpkg_path": "./backend/script_python/data/raw_data/vegetation_stratifie.gpkg"
+            # },
             "temp_surface_road_raw": {
-                "path": "./data/raw_data/temp_surface_road.gpkg"
-            }
+                "name": "Température de surface",
+                "gpkg_path": "./backend/script_python/data/raw_data/temp_surface_road.gpkg"
+            },
+            "joined_if": {
+                "name" : "Calque fraîcheur",
+                "gpkg_path": "./backend/script_python/data/raw_data/joined_if_3946.gpkg",
+        }
         }
     }
 
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
+
 
 def create_folder(folder_path):
     exist = os.path.exists(folder_path)
@@ -112,7 +155,7 @@ def download_data_wfs(service_name, version, path):
         }
     """
 
-    with open("data_informations.json", "r") as f:
+    with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
 
     data_wfs = data_informations["data_wfs"]
@@ -144,10 +187,10 @@ def download_data_wfs(service_name, version, path):
             file.close()
 
             #store download path into data_informations.json
-            data_informations["data_wfs"][d_name]["download_path"] = f"{path}/{d_name}.gml"
+            data_informations["data_wfs"][d_name]["gml_path"] = f"{path}/{d_name}.gml"
 
     # re-write data_informations.json => store all download path
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
 
 
@@ -162,7 +205,7 @@ def download_data_wms(service_name, version, path):
         }
     """
 
-    with open("data_informations.json", "r") as f:
+    with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
 
     data_wms = data_informations["data_wms"]
@@ -195,28 +238,33 @@ def download_data_wms(service_name, version, path):
             file.close()
 
             #store download path into data_informations.json
-            data_informations["data_wms"][d_name]["download_path"] = f"{path}/{d_name}.{d_info['format']}"
+            data_informations["data_wms"][d_name][f"{d_info['format']}_path"] = f"{path}/{d_name}.{d_info['format']}"
 
     # re-write data_informations.json => store all download path
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
 
 
-def convert_gml(input_path, output_path, driver, extension='.gpkg', folder=False):
-    """Convert GML file into shapefile.
-    If folder = TRUE, all of the GML files of the given folder are converted to shapefile. 
+def convert_file(input_path, output_path, driver, input_extension = "gml", output_extension='gpkg', folder=False):
+    """Convert file type
+    If folder = TRUE, all of the files of the given folder are converted to the desired format. 
     Careful about the path : either a folder or a file one. 
     """
     print("converting ... ")
     if(folder):
         for filename in os.listdir(input_path):
             print(f"filename : {filename}")
-            if filename.endswith('.gml'):
+            if filename.endswith(input_extension):
                 # Read input GML file into a GeoDataFrame
                 gdf = gpd.read_file(os.path.join(input_path, filename))
+
+                if(driver == "GeoJSON"):
+                    # 4326 is crs of OSM => used to project data on leaflet
+                    gdf = gdf.to_crs(epsg=4326)
+                    print("CRS of GEOJSON: ", gdf.crs)
                 
                 # Set output file path and name
-                output_name = filename.replace('.gml', extension)
+                output_name = filename.replace(input_extension, output_extension)
                 new_output_path = os.path.join(output_path, output_name)
                 
                 # Write GeoDataFrame to output Shapefile
@@ -226,25 +274,31 @@ def convert_gml(input_path, output_path, driver, extension='.gpkg', folder=False
     else:
 
         gdf = gpd.read_file(input_path)
+        if(driver == "GeoJSON"):
+            # 4326 is crs of OSM => used to project data on leaflet
+            gdf = gdf.to_crs(epsg=4326)
         gdf.to_file(output_path, driver=driver)
-        print(f"Done, {input_path} converted into GPKG")
+        print(f"Done, {input_path} converted into {output_extension}")
 
-def convert_all_gml(output_path_folder):
+def convert_all(output_path_folder, input_extension, output_extension, driver, connection_type="wfs"):
 
-    """Convert all data stored in data_informations from GML to Shapefile"""
+    """Convert all data stored in data_informations from input format to ouput format"""
 
-    with open("data_informations.json", "r") as f:
+    with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
     
-    data_wfs = data_informations['data_wfs']
-    for d_name, d_info in data_wfs.items():
-        download_path = d_info["download_path"]
-        if(download_path.endswith(".gml")):
-            gpkg_path = f"{output_path_folder}{d_name}.gpkg"
-            convert_gml(download_path, gpkg_path, driver="GPKG")
-            data_informations["data_wfs"][d_name]["gpkg_path"] = gpkg_path
+    data = data_informations[f'data_{connection_type}']
+    for d_name, d_info in data.items():
+        download_path = d_info[f"{input_extension}_path"]
+        if(download_path.endswith(input_extension)):
+            new_path = f"{output_path_folder}{d_name}.{output_extension}"
+            convert_file(download_path, new_path, input_extension=input_extension, output_extension=output_extension, driver=driver)
+            if(driver == "GeoJSON"):
+                data_informations[f"data_{connection_type}"][d_name][f"geo{output_extension}_path"] = new_path
+            else:
+                data_informations[f"data_{connection_type}"][d_name][f"{output_extension}_path"] = new_path
 
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
 
 def points_to_polygon(point_path, polygon_path):
@@ -273,7 +327,7 @@ def points_to_polygon(point_path, polygon_path):
 def convert_all_points_into_polygons(output_path_folder):
     """ Convert all shapefile with Points Type into Polygons """
 
-    with open("data_informations.json", "r") as f:
+    with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
 
     for d_name, d_info in data_informations["data_wfs"].items():
@@ -287,7 +341,7 @@ def convert_all_points_into_polygons(output_path_folder):
         data_informations["data_wfs"][d_name]["buffered_path"] = buffered_path
 
     
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
             
 
@@ -301,7 +355,7 @@ def write_all_atributes():
 
     print("Writing all attributes into data_informations.json file ...")
 
-    with open("data_informations.json", "r") as f:
+    with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
 
     data_wfs = data_informations['data_wfs']
@@ -312,7 +366,7 @@ def write_all_atributes():
         #print(f"{d_name} = {attribute_list}")
         data_informations["data_wfs"][d_name]["all_attributes"] = attribute_list
 
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
 
     print("DONE")
@@ -329,13 +383,13 @@ def write_attributes_to_add_and_remove(data_name, attributes_to_add, attributes_
         attributes_to_remove = ["attribute1", "attribute2"]
     """
 
-    with open("data_informations.json", "r") as f: 
+    with open(data_informations_path, "r") as f: 
         data_informations = json.load(f)
 
     data_informations['data_wfs'][data_name]['attributes_to_remove'] = attributes_to_remove
     data_informations['data_wfs'][data_name]['attributes_to_add'] = attributes_to_add
 
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
     
 
@@ -365,7 +419,7 @@ def add_attributes(input_path, output_path, attributes_to_add):
 def remove_and_add_attributes(output_path_folder):
     """ """
 
-    with open("data_informations.json", "r") as f:
+    with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
 
     data_wfs = data_informations["data_wfs"]
@@ -378,7 +432,7 @@ def remove_and_add_attributes(output_path_folder):
 
         data_informations["data_wfs"][d_name]["cleaned_data_path"] = output_path
     
-    with open("data_informations.json", "w") as f:
+    with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
 
 
@@ -414,7 +468,7 @@ def convert_gpkg_into_geojson(input_path, output_path):
     gdf.to_file(output_path, driver='GeoJSON')
     print("Done")
 
-create_folder("./data/geojson")
+# create_folder("./data/geojson")
 #convert_gpkg_into_geojson("./data/osm/shortest_path/big_shortest_path_IF_3946.gpkg", "./data/geojson/sp_IF_3946.json")
 #convert_gpkg_into_geojson("./data/raw_data/joined_if_3946.gpkg", "./pocwa-init/src/data/joined_if_3946.json")
 

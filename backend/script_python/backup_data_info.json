@@ -5,6 +5,7 @@
     },
     "data_wfs": {
         "fontaines_potables": {
+            "name": "Fontaines potables",
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/fontaines_potables.gml",
@@ -28,9 +29,18 @@
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/fontaines_potables_cleaned.gpkg",
-            "buffered_path": "./data/gpkg_buffered/fontaines_potables_buffered.gpkg"
+            "buffered_path": "./data/gpkg_buffered/fontaines_potables_buffered.gpkg",
+            "geojson_path": "./script_python/data/geojson/fontaines_potables.json",
+            "marker_option": {
+                "iconUrl": "droplet.svg",
+                "iconRetinaUrl": "droplet.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [40,40],
+                "clusterCountStyle" : "position:absolute;top:20px;left:-9px;color:white;font-weight:bold;"
+            }
         },
         "toilettes_publiques": {
+            "name": "Toilettes publiques",
             "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/toilettes_publiques.gml",
@@ -60,19 +70,29 @@
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/toilettes_publiques_cleaned.gpkg",
-            "buffered_path": "./data/gpkg_buffered/toilettes_publiques_buffered.gpkg"
+            "buffered_path": "./data/gpkg_buffered/toilettes_publiques_buffered.gpkg",
+            "geojson_path": "./script_python/data/geojson/toilettes_publiques.json",
+            "marker_option": {
+                "iconUrl": "toilet.svg",
+                "iconRetinaUrl": "toilet.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [40,40],
+                "clusterCountStyle" : "position:absolute;top:48px;left:-6px;color:black;font-weight:bold;"
+            }
         },
         "fontaines_ornementales": {
+            "name": "Fontaines ornementales",
             "wfs_key": "ms:adr_voie_lieu.adrfontaineornem_latest",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/fontaines_ornementales.gml",
-            "gpkg_path": "./data/gpkg/fontaines_ornementales.gpkg",
+            "gpkg_path": "./script_python/data/gpkg/fontaines_ornementales.gpkg",
             "all_attributes": [
                 "gml_id",
                 "nom",
-                "address",
+                "adresse",
                 "commune",
                 "insee",
+                "address",
                 "source",
                 "gid",
                 "geometry"
@@ -90,13 +110,22 @@
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/fontaines_ornementales_cleaned.gpkg",
-            "buffered_path": "./data/gpkg_buffered/fontaines_ornementales_buffered.gpkg"
+            "buffered_path": "./data/gpkg_buffered/fontaines_ornementales_buffered.gpkg",
+            "geojson_path": "./script_python/data/geojson/fontaines_ornementales.json",
+            "marker_option": {
+                "iconUrl": "fountain.svg",
+                "iconRetinaUrl": "fountain.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [40,40],
+                "clusterCountStyle" : "position:absolute;top:48px;left:0px;color:black;font-weight:bold;"
+            }
         },
         "parcs_jardins_metropole": {
+            "name": "Parcs et jardins",
             "wfs_key": "ms:com_donnees_communales.comparcjardin_1_0_0",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/parcs_jardins_metropole.gml",
-            "gpkg_path": "./data/gpkg/parcs_jardins_metropole.gpkg",
+            "gpkg_path": "./script_python/data/gpkg/parcs_jardins_metropole.gpkg",
             "all_attributes": [
                 "gml_id",
                 "uid",
@@ -165,9 +194,11 @@
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/parcs_jardins_metropole_cleaned.gpkg",
-            "buffered_path": "./data/gpkg_buffered/parcs_jardins_metropole_buffered.gpkg"
+            "buffered_path": "./data/gpkg_buffered/parcs_jardins_metropole_buffered.gpkg",
+            "geojson_path": "./script_python/data/geojson/parcs_jardins_metropole.json"
         },
         "bancs": {
+            "name": "Bancs",
             "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
             "service": "data.grandlyon_wfs",
             "download_path": "./data/gml/bancs.gml",
@@ -192,7 +223,15 @@
                 "buffer_size": 10
             },
             "cleaned_data_path": "./data/cleaned_data/bancs_cleaned.gpkg",
-            "buffered_path": "./data/gpkg_buffered/bancs_buffered.gpkg"
+            "buffered_path": "./data/gpkg_buffered/bancs_buffered.gpkg",
+            "geojson_path": "./script_python/data/geojson/bancs.json",
+            "marker_option": {
+                "iconUrl": "bench.svg",
+                "iconRetinaUrl": "bench.svg",
+                "popupAnchor":  [-0, -0],
+                "iconSize": [25,25],
+                "clusterCountStyle": "position:absolute;top:0px;left:-10px;color:black;font-weight:bold;"
+            }
         }
     },
     "data_wms": {
@@ -207,12 +246,20 @@
             "download_path": "./data/raster/vegetation_stratifie.png"
         }
     },
-    "raw_data" : {
-        "vegetation_stratifie_raw" : {
+    "raw_data": {
+        "vegetation_stratifie_raw": {
+            "name": "Végétation stratifiée",
             "path": "./data/raw_data/vegetation_stratifie.gpkg"
         },
         "temp_surface_road_raw": {
-            "path": "./data/raw_data/temp_surface_road.gpkg"
+            "name": "Température de surface",
+            "path": "./data/raw_data/temp_surface_road.gpkg",
+            "geojson_path" : "./script_python/data/geojson/temp_surface.json"
+        },
+        "joined_if": {
+            "name" : "Calque fraîcheur",
+            "path": "./data/raw_data/joined_if_3946.gpkg",
+            "geojson_path": "./script_python/data/geojson/joined_if_3946.json"
         }
     }
 }

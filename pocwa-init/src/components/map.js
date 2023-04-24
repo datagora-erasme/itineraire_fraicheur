@@ -82,6 +82,7 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                 })
                 const updatedGeojsonFiles = [...geojsonFiles, {...response.data}]
                 setGeojsonFiles(updatedGeojsonFiles)
+                console.log(response.data)
             } catch (error){
                 console.error(error)
             }

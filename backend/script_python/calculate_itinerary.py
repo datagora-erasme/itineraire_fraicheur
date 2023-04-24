@@ -17,16 +17,4 @@ shortest_path("./script_python/data/osm/lyon_drive.gpkg", temp_path, origin_poin
 
 print(temp_path)
 
-# print(start, end)
-
-# result = {
-#     'startLat': startLat,
-#     'endLat': endLat
-# }
-
-# sys.stdout.write(json.dumps(result))
-# sys.stdout.flush()
-
-# print("Hello from python")
-
 sys.stdout.flush()

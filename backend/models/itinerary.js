@@ -1,8 +1,7 @@
 const { spawn } = require("child_process");
 
 const pythonCalculateItinerary = function (start, end) {
-  console.log(start, end);
-  console.log("python");
+  //TODO : create a unique id path for the temp file itinerary + send it to python
 
   return new Promise((resolve, reject) => {
     const pythonItineraryCalculation = spawn("python", [

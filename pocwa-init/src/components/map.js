@@ -1,11 +1,10 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useSyncExternalStore } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
-
-const drop = "droplet-solid.svg"
+import { FaRoute } from 'react-icons/fa';
 
 
 // All of the following const should be send by the backend 
@@ -21,35 +20,39 @@ const colors = {
     "0.01": "#28572c"
 }
 
-function MapFreshness({zoomToUserPosition, position}){
+function MapFreshness({setZoomToUserPosition, zoomToUserPosition, position}){
     const map = useMap()
 
     if(position && zoomToUserPosition){
         map.eachLayer((layer) => {
-            if (layer.options && layer.options.color === 'red') {
+            if (layer.options && layer.options.color === 'green') {
               map.removeLayer(layer);
             }
           });
 
         const circle = L.circle(position, {
             radius: 500,
-            color: 'red',
+            color: 'green',
         }).addTo(map);
+
+        const marker = L.marker(position).addTo(map)
 
         // const userPosition = L.Marker(position)
         // userPosition.addTo(map)
       
         // zoom to circle
         map.fitBounds(circle.getBounds());
+        setZoomToUserPosition(false)
     }
     return null
 }
 
 
-function Map({selectedLayers, currentItinerary, zoomToUserPosition, position}){
+function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserPosition, setZoomToUserPosition, position}){
 
     const [geojsonFiles, setGeojsonFiles] = useState([])
     const [loadingLayer, setLoadingLayer] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     function getColor(data){
         // TODO : for each layer : specific style properties
@@ -112,10 +115,26 @@ function Map({selectedLayers, currentItinerary, zoomToUserPosition, position}){
         })
     }
 
-    const handleClickMarker = (e) => {
-        console.log("ok")
+    const handleClickMarker = (coordinates) => {
+        setIsLoading(true)
+        axios.get("http://localhost:3002/itinerary", {
+            params: {
+                start: {
+                    lat: position[0], 
+                    lon: position[1]
+                },
+                end: {
+                    lat : coordinates[1],
+                    lon : coordinates[0]
+                }
+            }
+        }).then((response) => {
+            setCurrentItinerary(response.data)
+            setIsLoading(false)
+        }).catch((error) => {
+            console.error(error)
+        })
     }
-
 
     return (
         <div>
@@ -123,10 +142,11 @@ function Map({selectedLayers, currentItinerary, zoomToUserPosition, position}){
             <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={false} className="mapContainer" zoomControl={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    // url="http://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png"
+                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
                 <ZoomControl position='topright' />
-                <MapFreshness zoomToUserPosition={zoomToUserPosition} position={position}/>
+                <MapFreshness zoomToUserPosition={zoomToUserPosition} position={position} setZoomToUserPosition={setZoomToUserPosition}/>
                 {/* <Marker position={[45.76309302427536, 4.836502750843036]}>
                     <Popup>
                     A pretty CSS3 popup. <br /> Easily customizable.
@@ -151,9 +171,25 @@ function Map({selectedLayers, currentItinerary, zoomToUserPosition, position}){
                                             {data.geojson.features.map((point, index) => {
                                                 const coordinates = point.geometry.coordinates
                                                 return(
-                                                    <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)}>
+                                                    <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)} onEachFeature={handleClickMarker}>
                                                         <Popup>
-                                                            <button onClick={handleClickMarker}>Itinéraire</button>
+                                                            <div className="flex justify-center items-center">
+                                                                <button onClick={() => handleClickMarker(coordinates)} 
+                                                                className={"block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-300"}
+                                                                >
+                                                                {isLoading ? (
+                                                                    <div className="flex items-center">
+                                                                    <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>
+                                                                    <span>Loading...</span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex items-center">
+                                                                    <span className="mr-2">Itinéraire | </span>
+                                                                    <FaRoute/>
+                                                                    </div>
+                                                                )}
+                                                                </button>
+                                                            </div>
                                                         </Popup>
                                                     </Marker>
                                                 )

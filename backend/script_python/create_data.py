@@ -108,18 +108,25 @@ data_folder_path = "./backend/data/"
 print("#### Network OSM extraction ####")
 create_folder(data_folder_path +"osm")
 
+# lyon_network_parameters = {
+#     "place_name" : "Lyon, France",
+#     "network_type" : "walk",
+#     "bbox": None,
+#     "output_file": data_folder_path+ "osm/lyon_walk_simplified.gpkg"
+# }
+
 lyon_network_parameters = {
     "place_name" : "Lyon, France",
     "network_type" : "walk",
-    "bbox": None,
-    "output_file": data_folder_path+ "osm/lyon_walk_simplified.gpkg"
+    "bbox": (45.954014,45.546274, 5.217133,4.566879),
+    "output_file": data_folder_path+ "osm/metrop_walk_simplified.gpkg"
 }
 
 load_osm_network(lyon_network_parameters)
 
 print("#### Merge Network and IF layer")
 
-merge_network_data(data_folder_path + "osm/lyon_walk_simplified.gpkg", "./backend/script_python/data/raw_data/joined_if_3946.gpkg", data_folder_path + "osm/weighted_network_walk_simplified.gpkg")
+merge_network_data(data_folder_path + "osm/metrop_walk_simplified.gpkg", "./backend/script_python/data/raw_data/joined_if_3946.gpkg", data_folder_path + "osm/weighted_network_walk_metrop_simplified.gpkg")
 
 end_time = time.time()
 

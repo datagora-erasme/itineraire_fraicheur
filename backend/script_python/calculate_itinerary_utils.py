@@ -24,9 +24,7 @@ def load_osm_network(network_paramaters):
 
     G = ox.project_graph(G, to_crs="EPSG:4171")
 
-    G = ox.simplify_graph(G)
-
-    ox.simplify_graph()
+    #G = ox.simplify_graph(G)
     #G = ox.project_graph(G)
 
     print("OSM network loaded, saving into file..")
@@ -34,20 +32,20 @@ def load_osm_network(network_paramaters):
     create_folder("./data/osm")
     ox.save_graph_geopackage(G, filepath=network_paramaters["output_file"])
 
-lyon_network_parameters = {
-    "place_name" : "Lyon, France",
-    "network_type" : "drive",
-    "bbox": None,
-    "output_file": "./data/osm/lyon_drive_default_crs.gpkg"
-}
+# lyon_network_parameters = {
+#     "place_name" : "Lyon, France",
+#     "network_type" : "drive",
+#     "bbox": None,
+#     "output_file": "./data/osm/lyon_drive_default_crs.gpkg"
+# }
 
 
-bbox_network_parameters = {
-    "place_name": "Lyon, France",
-    "network_type": "walk",
-    "bbox": (45.76091,45.74938, 4.89007,4.86426),
-    "output_file" : "./data/osm/bbox_default_crs.gpkg"
-}
+# bbox_network_parameters = {
+#     "place_name": "Lyon, France",
+#     "network_type": "walk",
+#     "bbox": (45.76091,45.74938, 4.89007,4.86426),
+#     "output_file" : "./data/osm/bbox_default_crs.gpkg"
+# }
 
 #load_osm_network(lyon_network_parameters)
 # load_osm_network(bbox_network_parameters)

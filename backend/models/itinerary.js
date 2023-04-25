@@ -1,7 +1,12 @@
+let uniqid = require("uniqid")
+
 const { spawn } = require("child_process");
 
 const pythonCalculateItinerary = function (start, end) {
   //TODO : create a unique id path for the temp file itinerary + send it to python
+
+  path_length = "./temp/sp_length_" + uniqid()
+  path_if = "./temp/sp_if_" +uniqid()
 
   return new Promise((resolve, reject) => {
     const pythonItineraryCalculation = spawn("python", [
@@ -10,12 +15,13 @@ const pythonCalculateItinerary = function (start, end) {
       start.lon,
       end.lat,
       end.lon,
+      path_length,
+      path_if
     ]);
-    let test;
+    let result;
 
     pythonItineraryCalculation.stdout.on("data", (data) => {
-      console.log("test");
-      test = data.toString();
+      result = data.toString().split("\n");
     });
 
     pythonItineraryCalculation.stderr.on("data", (data) => {
@@ -25,8 +31,8 @@ const pythonCalculateItinerary = function (start, end) {
 
     pythonItineraryCalculation.on("close", (code) => {
       console.log(`child process close all stdio with code ${code}`);
-      console.log(test);
-      resolve(test);
+      console.log(result);
+      resolve(result);
     });
   });
 };
@@ -34,9 +40,8 @@ const pythonCalculateItinerary = function (start, end) {
 module.exports.calculateItinerary = (start, end) => {
   return new Promise(function (resolve, reject) {
     pythonCalculateItinerary(start, end)
-      .then((itinerary) => {
-        console.log("itinerary : ", itinerary);
-        resolve(itinerary);
+      .then((itineraries) => {
+        resolve(itineraries);
       })
       .catch((err) => {
         console.error("error calculating itinerary", err);

@@ -24,6 +24,9 @@ def load_osm_network(network_paramaters):
 
     G = ox.project_graph(G, to_crs="EPSG:4171")
 
+    G = ox.simplify_graph(G)
+
+    ox.simplify_graph()
     #G = ox.project_graph(G)
 
     print("OSM network loaded, saving into file..")
@@ -48,6 +51,7 @@ bbox_network_parameters = {
 
 #load_osm_network(lyon_network_parameters)
 # load_osm_network(bbox_network_parameters)
+
 
 def merge_network_data(network_file, data_file, output_file):
     """Use an osm network and merge data gpkd polygon file"""

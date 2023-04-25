@@ -137,6 +137,8 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
         })
     }
 
+    console.log(currentItinerary)
+
     return (
         <div>
             {loadingLayer && "Loading ...."}
@@ -207,7 +209,14 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                     })
                 }
                 {/* <GeoJSON data={geojsonFile} style={getColor}/> */}
-                {currentItinerary && <GeoJSON data={currentItinerary} style={{color: "blue"}} key={Math.random()}/>}
+                {currentItinerary && 
+                    currentItinerary.map((it) => {
+                        return(
+                            <GeoJSON data={it.geojson} style={{color: it.color}} key={Math.random()}/>
+                        )
+                    })
+                }
+
             </MapContainer>
 
         </div>

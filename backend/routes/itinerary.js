@@ -10,15 +10,31 @@ itineraryRouter.get('/', async (req, res) => {
       try {
         console.log("calculating itinerary ...");
         let results = await Itinerary.calculateItinerary(req.query.start, req.query.end);
-        results = results.split("\n")[0]
-        const geojson = JSON.parse(fs.readFileSync(results))
-        console.log("done")
-        console.log("itinerary send");
-        //TODO : remove the temp file after sending it
-        res.send(geojson);
+        console.log("Itineraries routes : ", results)
+        pathLength = results[0]
+        pathIf = results[1]
+
+        const geoJsonLength = JSON.parse(fs.readFileSync(pathLength))
+        const geoJsonIf = JSON.parse(fs.readFileSync(pathIf))
+
+        res.send([
+          {
+            geojson: geoJsonLength,
+            color: "red"
+          },
+          {
+            geojson: geoJsonIf,
+            color: "blue"
+          }
+        ])
+
+        console.log("Itineraries send")
+        //TODO remove files
+        // fs.unlink(pathLength)
+        // fs.unlink(pathIf)
+        // console.log("Files deleted")
         
       } catch (err) {
-        console.log('eo')
         console.error(err);
         res.sendStatus(500);
       }

@@ -42,7 +42,7 @@ default_ntf = "./data/osm/lyon_walk_simplified.gpkg"
 
 temp = "./script_python/data/raw_data/temp_surface.gpkg"
 
-temp_w = "./script_python/data/raw_data/network_C_cal_len.gpkg"
+temp_w = "./script_python/data/raw_data/network_temp_test.gpkg"
 
 c_IF = "./script_python/data/raw_data/temp_IF.gpkg"
 
@@ -75,7 +75,9 @@ def split_network_edges(network_path, output_path):
     subedges.to_file(output_path, driver="GPKG")
 
 def calculate_IF(input_path, output_path, fn, name):
-    """Function to recalculate IF according to other attributes"""
+    """Function to recalculate IF according to other attributes
+    fn is the function to apply
+    """
     data = gpd.read_file(input_path)
 
     data[f"IF_{name}"] = data.apply(fn, axis=1)
@@ -85,15 +87,15 @@ def calculate_IF(input_path, output_path, fn, name):
 def temp_IF(row):
     """Return value of IF for temperature data"""
     if(row["C"] < 25):
-        return 1
+        return 0
     elif(25 <= row["C"] < 30):
-        return 0.75
+        return 0.25
     elif(30 <= row["C"] < 35):
         return 0.5
     elif(35 <= row["C"] < 40):
-        return 0.25
+        return 0.75
     else:
-        return 0
+        return 1
     
 # def null_IF(row, column_name, value):
 #     """Replace null by value IF """
@@ -102,7 +104,7 @@ def temp_IF(row):
 #     else: 
 #         return row[column_name]
     
-# calculate_IF(temp, c_IF, temp_IF, "temp_surface_road_raw")
+#calculate_IF(temp, c_IF, temp_IF, "temp_surface_road_raw")
 
 # with open(data_informations_path, "r") as f:
 #     data_informations = json.load(f)
@@ -121,7 +123,6 @@ def network_weighted_average(default_network, weighted_edges, layer_name, output
     the weighted average of the vegetation for this segment 
     """
 
-
     default_edges = gpd.read_file(default_network, layer="edges")
 
     default_nodes = gpd.read_file(default_network, layer="nodes")
@@ -133,9 +134,8 @@ def network_weighted_average(default_network, weighted_edges, layer_name, output
 
     # Due to intersection, there more features into the weighted_edges dataframe than the default_network one
     #The following line allows to recalculate the weighted average for one edge taking account all the "subedges"
-
-    grouped_edges = weighted_edges.groupby(["u", "v", "key"]).apply(lambda x: pd.Series({
-        f"IF_{layer_name}": np.average(x["IF"], weights=x["cal_length"])
+    grouped_edges = weighted_edges.groupby(["u", "v", "key"], group_keys=True).apply(lambda x: pd.Series({
+        f"IF_{layer_name}": np.average(x[f"IF_{layer_name}"], weights=x["cal_length"])
     })).reset_index()
 
     grouped_edges = grouped_edges.set_index(["u", "v", "key"])
@@ -172,9 +172,11 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
     joined_edges["cal_length"] = joined_edges_serie.length
 
+    joined_edges.to_file("./data/osm/joined_edges_temp.gpkg", driver="GPKG")
+
     network_weighted_average(default_ntf, joined_edges, layer_name, output_path)
 
-# join_network_layer(default_ntf, temp, "C", temp_w)
+#join_network_layer(default_ntf, c_IF, "temp_surface_road_raw", temp_w)
 
 def create_all_weighted_network(default_ntf):
     """Create a weighted network for each kind of data"""
@@ -191,7 +193,7 @@ def create_all_weighted_network(default_ntf):
 
     ## RAW
     temp = data_informations["data_raw"]["temp_surface_road_raw"]
-    path = temp["gpkg_path"]
+    path = temp["recalculated_if_path"]
     temp_output_path = "./data/osm/network_temp_surface_road_raw_weighted.gpkg"
     join_network_layer(default_ntf, path, "temp_surface_road_raw", temp_output_path)
     data_informations["data_raw"]["temp_surface_road_raw"]["weighted_network_path"] = temp_output_path
@@ -199,7 +201,7 @@ def create_all_weighted_network(default_ntf):
     with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)
 
-create_all_weighted_network(default_ntf)
+#create_all_weighted_network(default_ntf)
 
 def merge_networks(default_network, output_path):
     """Merge all network together"""
@@ -218,29 +220,31 @@ def merge_networks(default_network, output_path):
         count+=1
         network_path = d_info["weighted_network_path"]
         network = gpd.read_file(network_path, layer="edges")
-        print(network.head())
         network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(0)
         final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]
+        final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
 
     # RAW
     data_raw = data_informations["data_raw"]
     for d_name, d_info in data_raw.items():
-        count+=1
-        network_path = d_info["weighted_network_path"]
-        network = gpd.read_file(network_path, layer="edges")
-        print(network.head())
-        network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(0)
-        final_network["IF"] = final_network["IF"] + network["IF"]
+        if(d_name == "temp_surface_road_raw"):
+            count+=1
+            network_path = d_info["weighted_network_path"]
+            network = gpd.read_file(network_path, layer="edges")
+            network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(0)
+            final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]
+            final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
     
     final_network["IF"] = final_network["IF"] / count
 
-    G = ox.graph_from_gdfs(final_network_nodes, final_network)
+    final_network = final_network.set_index(["u", "v", "key"])
+    final_network_nodes = final_network_nodes.set_index(["osmid"])
 
-    # final_network.to_file(output_file, driver="GPKG")
+    G = ox.graph_from_gdfs(final_network_nodes, final_network)
 
     ox.save_graph_geopackage(G, filepath=output_path)
 
-merge_networks(default_ntf, "./data/osm/final_network.gpkg")
+# merge_networks(default_ntf, "./data/osm/final_network.gpkg")
 
 
 end_time = time.time()

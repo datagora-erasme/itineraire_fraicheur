@@ -8,9 +8,40 @@ import geopandas as gpd
 import traceback
 from data_utils import create_folder
 import warnings
+import numpy as np
+import json
+import pandas as pd
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
+### Global Variables
+
+data_informations_path = "./data/data_informations.json"
+
+### FUNCTION TO CALCULATE IF FOR EACH DATA
+
+def calculate_IF(input_path, output_path, fn, name):
+    """Function to recalculate IF according to other attributes
+    fn is the function to apply
+    """
+    data = gpd.read_file(input_path)
+
+    data[f"IF_{name}"] = data.apply(fn, axis=1)
+
+    data.to_file(output_path, driver="GPKG")
+
+def temp_IF(row):
+    """Return value of IF for temperature data"""
+    if(row["C"] < 25):
+        return 0
+    elif(25 <= row["C"] < 30):
+        return 0.25
+    elif(30 <= row["C"] < 35):
+        return 0.5
+    elif(35 <= row["C"] < 40):
+        return 0.75
+    else:
+        return 1
 
 def load_osm_network(network_paramaters):
     print("Loading OSM network")
@@ -32,66 +63,138 @@ def load_osm_network(network_paramaters):
     create_folder("./data/osm")
     ox.save_graph_geopackage(G, filepath=network_paramaters["output_file"])
 
-# lyon_network_parameters = {
-#     "place_name" : "Lyon, France",
-#     "network_type" : "drive",
-#     "bbox": None,
-#     "output_file": "./data/osm/lyon_drive_default_crs.gpkg"
-# }
+def network_weighted_average(default_network, weighted_edges, layer_name, output_path):
+    """This function calculate the weighted average for one attribute of one edge
+    for the OSM network.
 
+    For example, if for one segment we have 3 kind of vegetation, we want to calculate 
+    the weighted average of the vegetation for this segment 
+    """
 
-# bbox_network_parameters = {
-#     "place_name": "Lyon, France",
-#     "network_type": "walk",
-#     "bbox": (45.76091,45.74938, 4.89007,4.86426),
-#     "output_file" : "./data/osm/bbox_default_crs.gpkg"
-# }
+    default_edges = gpd.read_file(default_network, layer="edges")
 
-#load_osm_network(lyon_network_parameters)
-# load_osm_network(bbox_network_parameters)
+    default_nodes = gpd.read_file(default_network, layer="nodes")
 
+    # For some reason pandas convert u, v and key into float for weighted_edges
+    weighted_edges[["u", "v", "key"]] = weighted_edges[["u", "v", "key"]].astype(int)
+    weighted_edges = weighted_edges.drop_duplicates(subset=["u", "v", "key"])
+    weighted_edges = weighted_edges.set_index(["u", "v", "key"])
 
-def merge_network_data(network_file, data_file, output_file):
-    """Use an osm network and merge data gpkd polygon file"""
-    print("loading network and data file")
-    edges = gpd.read_file(network_file, layer="edges")
-    nodes = gpd.read_file(network_file, layer ="nodes")
-    data = gpd.read_file(data_file)
+    print(f"Calculating weighted average for {layer_name} ...")
 
-    # print("edges.crs : ", edges.crs)
-    # print("nodes.crs : ", nodes.crs)
-    # print("data.crs : ", data.crs)
+    # Due to intersection, there more features into the weighted_edges dataframe than the default_network one
+    #The following line allows to recalculate the weighted average for one edge taking account all the "subedges"
+    grouped_edges = weighted_edges.groupby(["u", "v", "key"], group_keys=True).apply(lambda x: pd.Series({
+        f"IF_{layer_name}": np.average(x[f"IF_{layer_name}"], weights=x["cal_length"])
+    })).reset_index()
 
-    data_reprojected = data.to_crs(edges.crs)
+    grouped_edges = grouped_edges.set_index(["u", "v", "key"])
+    default_edges = default_edges.set_index(["u", "v", "key"])
 
-    # print("new data.crs : ", data_reprojected.crs)
+    default_edges[f"IF_{layer_name}"] = grouped_edges[f"IF_{layer_name}"]
 
-    print("merging data into network")
-    joined = gpd.sjoin(edges, data_reprojected, how="left", predicate="intersects")
+    default_nodes = default_nodes.set_index(['osmid'])
 
-    joined.drop_duplicates(subset=["u", "v"], inplace=True)
+    G = ox.graph_from_gdfs(default_nodes, default_edges)
 
-    # joined.to_file(output_file, driver="GPKG")
+    print(f"Done. \nSaving file into {output_path}")
 
-    joined = joined.set_index(['u', 'v', 'key'])
-    nodes = nodes.set_index(['osmid'])
+    ox.save_graph_geopackage(G, filepath=output_path)
 
-    # print("joined columns : ", joined.columns)
-    # print("joined if counts : ", joined['C'].value_counts())
+def join_network_layer(network_path, layer_path, layer_name, output_path):
+    """This function join a network with a specific layer"""
+    network_edges = gpd.read_file(network_path, layer="edges")
 
-    G = ox.graph_from_gdfs(nodes, joined)
+    layer = gpd.read_file(layer_path)
 
-    ox.save_graph_geopackage(G, filepath=output_file)
-    print("done")
+    # if(layer_name == "temp_surface_road_raw"):
+    #     layer = layer.to_crs(3946)
+    # else:
+    layer = layer.to_crs(network_edges.crs)
 
-#merge_network_data("./data/osm/lyon_drive_default_crs.gpkg", "./data/raw_data/joined_if_3946.gpkg", "./data/osm/weighted_network_3946.gpkg")
+    print(f"Joining {layer_name} with osm network")
 
+    joined_edges = gpd.overlay(network_edges, layer, how="intersection", keep_geom_type=True)
 
-def manhattan_distance(node1, node2):
-    print(node1, node2)
-    x1, y1 = node1
-    x2, y2 = node2
-    return abs(x1-x2) + abs(y1-y2)
+    # Convert into geoserie in order to calculate the length of the intersection
+
+    joined_edges_serie = gpd.GeoSeries(joined_edges["geometry"])
+
+    joined_edges_serie = joined_edges_serie.to_crs(32631)
+
+    joined_edges["cal_length"] = joined_edges_serie.length
+
+    network_weighted_average(network_path, joined_edges, layer_name, output_path)
+
+def create_all_weighted_network(default_ntf):
+    """Create a weighted network for each kind of data"""
+    with open(data_informations_path, "r") as f:
+        data_informations = json.load(f)
+    
+    # ## WFS
+    data_wfs = data_informations["data_wfs"]
+
+    for d_name, d_info in data_wfs.items():
+        output_path = f"./data/osm/network_{d_name}_weighted.gpkg"
+        join_network_layer(default_ntf, d_info["buffered_path"], d_name, output_path)
+        data_informations["data_wfs"][d_name]["weighted_network_path"] = output_path
+
+    ## RAW
+    temp = data_informations["data_raw"]["temp_surface_road_raw"]
+    path = temp["recalculated_if_path"]
+    temp_output_path = "./data/osm/network_temp_surface_road_raw_weighted.gpkg"
+    join_network_layer(default_ntf, path, "temp_surface_road_raw", temp_output_path)
+    data_informations["data_raw"]["temp_surface_road_raw"]["weighted_network_path"] = temp_output_path
+
+    with open(data_informations_path, "w") as f:
+        json.dump(data_informations, f, indent=4)
+
+def merge_networks(default_network, output_path):
+    """Merge all network together"""
+    final_network = gpd.read_file(default_network, layer="edges")
+    final_network_nodes = gpd.read_file(default_network, layer="nodes")
+    final_network["IF"] = 0
+
+    with open(data_informations_path, "r") as f:
+        data_informations = json.load(f)
+
+    count = 0
+    
+    # WFS
+    data_wfs = data_informations["data_wfs"]
+    for d_name, d_info in data_wfs.items():
+        count+=1
+        network_path = d_info["weighted_network_path"]
+        network = gpd.read_file(network_path, layer="edges")
+        network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(0)
+        final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]
+        final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
+
+    # RAW
+    data_raw = data_informations["data_raw"]
+    for d_name, d_info in data_raw.items():
+        # if(d_name == "temp_surface_road_raw"):
+        count+=1
+        network_path = d_info["weighted_network_path"]
+        network = gpd.read_file(network_path, layer="edges")
+        network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(0)
+        final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]
+        final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
+    
+    final_network["IF"] = final_network["IF"] / count
+
+    final_network = final_network.set_index(["u", "v", "key"])
+    final_network_nodes = final_network_nodes.set_index(["osmid"])
+
+    G = ox.graph_from_gdfs(final_network_nodes, final_network)
+
+    ox.save_graph_geopackage(G, filepath=output_path)
+
+# def manhattan_distance(node1, node2):
+#     print(node1, node2)
+#     x1, y1 = node1
+#     x2, y2 = node2
+#     return abs(x1-x2) + abs(y1-y2)
 
 def shortest_path(graph_file_path, shortest_path_file_path, origin_point, destination_point, weight):
     # Load the graph data from the GeoPackage file

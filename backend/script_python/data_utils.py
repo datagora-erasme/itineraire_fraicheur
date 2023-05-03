@@ -6,7 +6,23 @@ import geopandas as gpd
 import json
 import fiona
 
-data_informations_path = "./backend/data/data_informations.json"
+import os
+
+# # Get the absolute path of the current file
+# absolute_path = os.path.abspath(__file__)
+
+# # Get the directory name of the current file
+# directory_name = os.path.dirname(absolute_path)
+
+# # Get the relative path of the current file
+# relative_path = os.path.relpath(absolute_path)
+
+# print("Absolute path:", absolute_path)
+# print("Directory name:", directory_name)
+# print("Relative path:", relative_path)
+
+
+data_informations_path = "./data/data_informations.json"
 
 def create_data_informations_file():
     """ Fonction to instantiate data_informations.json file """
@@ -15,6 +31,10 @@ def create_data_informations_file():
         "services" : {
             "data.grandlyon_wfs": "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0",
             "data.grandlyon_wms" : "https://download.data.grandlyon.com/wms/grandlyon?VERSION=1.3.0&SERVICE=WMS"
+        },
+        "osm": {
+            "network_parameters": {  
+            }
         },
         "data_wfs" : {
             "fontaines_potables": {
@@ -31,7 +51,7 @@ def create_data_informations_file():
             },
             "toilettes_publiques": {
                 "name": "Toilettes publiques",
-                "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
+                "wfs_key": "ms:adr_voie_lieu.adrtoilettepublique_latest",
                 "service": "data.grandlyon_wfs",
                 "marker_option": {
                 "iconUrl": "toilet.svg",
@@ -92,7 +112,6 @@ def create_data_informations_file():
                 "srs": "EPSG:4171"
             }
         },
-        # Temporaire : en attendant de pouvoir télécharger des fichiers lourds
         "data_raw" : {
             # "vegetation_stratifie_raw" : {
             #     "name": "Végétation stratifiée",
@@ -100,12 +119,12 @@ def create_data_informations_file():
             # },
             "temp_surface_road_raw": {
                 "name": "Température de surface",
-                "gpkg_path": "./backend/script_python/data/raw_data/temp_surface_road.gpkg"
+                "gpkg_path": "./script_python/data/raw_data/temp_surface_road.gpkg"
             },
-            "joined_if": {
-                "name" : "Calque fraîcheur",
-                "gpkg_path": "./backend/script_python/data/raw_data/joined_if_3946.gpkg",
-        }
+        #     "joined_if": {
+        #         "name" : "Calque fraîcheur",
+        #         "gpkg_path": "./backend/script_python/data/raw_data/joined_if_3946.gpkg",
+        # }
         }
     }
 

@@ -3,6 +3,19 @@
         "data.grandlyon_wfs": "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0",
         "data.grandlyon_wms": "https://download.data.grandlyon.com/wms/grandlyon?VERSION=1.3.0&SERVICE=WMS"
     },
+    "osm": {
+        "network_parameters": {
+            "place_name": "Lyon, France",
+            "network_type": "walk",
+            "bbox": [
+                45.9472,
+                45.5497,
+                5.0803,
+                4.6717
+            ],
+            "output_file": "./data/osm/metrop_walk_simplified.gpkg"
+        }
+    },
     "data_wfs": {
         "fontaines_potables": {
             "name": "Fontaines potables",
@@ -281,11 +294,6 @@
             "geojson_path": "./data/geojson/temp_surface_road_raw.json",
             "recalculated_if_path": "./script_python/data/raw_data/temp_IF.gpkg",
             "weighted_network_path": "./data/osm/network_temp_surface_road_raw_weighted.gpkg"
-        },
-        "joined_if": {
-            "name": "Calque fra\u00eecheur",
-            "gpkg_path": "./script_python/data/raw_data/joined_if_3946.gpkg",
-            "geojson_path": "./data/geojson/joined_if.json"
         }
     }
 }

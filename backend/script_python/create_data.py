@@ -139,16 +139,24 @@ lyon_network_parameters = {
     "output_file": data_folder_path+ "osm/lyon_walk_simplified.gpkg"
 }
 
-data_informations["osm"]["network_parameters"] = lyon_network_parameters
 
-load_osm_network(lyon_network_parameters)
+metrop_network_parameters = {
+    "place_name": "Lyon, France",
+    "network_type": "walk",
+    "bbox": (45.9472,45.5497, 5.0803,4.6717),
+    "output_file" : data_folder_path+ "osm/metrop_walk_simplified.gpkg"
+}
+
+data_informations["osm"]["network_parameters"] = metrop_network_parameters
+
+load_osm_network(metrop_network_parameters)
 
 with open(data_informations_path, "w") as f:
     json.dump(data_informations, f, indent=4)
 
 print("#### Create all weighted networks ####")
 
-create_all_weighted_network(lyon_network_parameters["output_file"])
+create_all_weighted_network(metrop_network_parameters["output_file"])
 
 print("#### Create final weigthed network #### ")
 
@@ -157,7 +165,7 @@ with open(data_informations_path, "r") as f:
 
 final_network_path = data_folder_path + "osm/final_network.gpkg"
 
-merge_networks(lyon_network_parameters["output_file"], final_network_path)
+merge_networks(metrop_network_parameters["output_file"], final_network_path)
 
 data_informations["osm"]["final_network_path"] = final_network_path
 

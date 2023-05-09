@@ -36,7 +36,7 @@ module.exports.findOne = (id) => {
 
     for(let data of layer_list){
         if(data["id"] === id){
-            const path = data["geojson_path"].split("./backend/")[1]
+            const path = data["geojson_path"]
             console.log(path)
             const geojson = JSON.parse(fs.readFileSync(path))
             const markerOption = data["marker_option"]

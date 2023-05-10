@@ -10,7 +10,7 @@ const pythonCalculateItinerary = function (start, end) {
 
   return new Promise((resolve, reject) => {
     const pythonItineraryCalculation = spawn("python", [
-      "script_python/calculate_itinerary.py",
+      "calculate_itinerary.py",
       start.lat,
       start.lon,
       end.lat,
@@ -21,7 +21,7 @@ const pythonCalculateItinerary = function (start, end) {
     let result;
 
     pythonItineraryCalculation.stdout.on("data", (data) => {
-      result = data.toString().split("\n");
+      result = data
     });
 
     pythonItineraryCalculation.stderr.on("data", (data) => {
@@ -31,8 +31,7 @@ const pythonCalculateItinerary = function (start, end) {
 
     pythonItineraryCalculation.on("close", (code) => {
       console.log(`child process close all stdio with code ${code}`);
-      console.log(result);
-      resolve(result);
+      resolve(JSON.parse(result));
     });
   });
 };
@@ -41,6 +40,7 @@ module.exports.calculateItinerary = (start, end) => {
   return new Promise(function (resolve, reject) {
     pythonCalculateItinerary(start, end)
       .then((itineraries) => {
+        console.log("model :", itineraries)
         resolve(itineraries);
       })
       .catch((err) => {

@@ -11,22 +11,29 @@ itineraryRouter.get('/', async (req, res) => {
         console.log("calculating itinerary ...");
         let results = await Itinerary.calculateItinerary(req.query.start, req.query.end);
         console.log("Itineraries routes : ", results)
-        pathLength = results[0]
-        pathIf = results[1]
+        // pathLength = results[0]
+        // pathIf = results[1]
 
-        const geoJsonLength = JSON.parse(fs.readFileSync(pathLength))
-        const geoJsonIf = JSON.parse(fs.readFileSync(pathIf))
+        // const geoJsonLength = JSON.parse(fs.readFileSync(pathLength))
+        // const geoJsonIf = JSON.parse(fs.readFileSync(pathIf))
 
         res.send([
           {
-            geojson: geoJsonLength,
-            color: "red"
-          },
-          {
-            geojson: geoJsonIf,
+            geojson: results, 
             color: "blue"
           }
         ])
+
+        // res.send([
+        //   {
+        //     geojson: geoJsonLength,
+        //     color: "red"
+        //   },
+        //   {
+        //     geojson: geoJsonIf,
+        //     color: "blue"
+        //   }
+        // ])
 
         console.log("Itineraries send")
         //TODO remove files

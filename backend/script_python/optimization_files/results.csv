@@ -1,1 +1,4 @@
 Start_X,Start_Y,End_X,End_Y,Dijkstra_sp,Dijkstra_duration,Astar_sp,Astar_duration
+5.0303408,45.7623897,4.8477709,45.700054,./script_python/optimization_files/sp_dijkstra/dijkstra_0.gpkg,24.75816798210144,./script_python/optimization_files/sp_alpha_star/astar_0.gpkg,25.479355096817017
+4.8188614,45.8413344,5.0395643,45.6786956,./script_python/optimization_files/sp_dijkstra/dijkstra_1.gpkg,25.394654035568237,./script_python/optimization_files/sp_alpha_star/astar_1.gpkg,23.66970205307007
+4.7086955,45.7867821,4.826636,45.6113227,./script_python/optimization_files/sp_dijkstra/dijkstra_2.gpkg,26.412670135498047,./script_python/optimization_files/sp_alpha_star/astar_2.gpkg,23.725204467773438

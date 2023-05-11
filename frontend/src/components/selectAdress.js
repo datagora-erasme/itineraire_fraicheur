@@ -95,7 +95,7 @@ const SelectAddress = ({setCurrentItinerary}) => {
   const calculateItinerary = () => {
     setIsLoading(true)
     const start = performance.now()
-    axios.get("http://localhost:3002/itinerary", {
+    axios.get(`${process.env.REACT_APP_URL_SERVER}/itinerary`, {
         params: {
             start: {
                 lat: selectedStartAddress.geometry.coordinates[1], 

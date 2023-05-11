@@ -63,7 +63,7 @@ def get_itinerary():
             "geojson": geojson_path, 
             "color": "blue"
         }]
-        print(results)
+        # print(results)
         return jsonify(results)
     except Exception as e:
         print(e)
@@ -75,4 +75,4 @@ if __name__ == "__main__":
     app.config["extra_files"] = [
         "./data/pickle_network.pickle"
     ]
-    app.run(debug=True, host="localhost", port=3002)
+    app.run(debug=True, host="0.0.0.0", port=3002)

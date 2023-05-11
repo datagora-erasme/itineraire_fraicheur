@@ -75,7 +75,7 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
         async function fetchGeoJSON(id){
             setLoadingLayer(true)
             try {
-                const response = await axios.get("http://localhost:3002/data/", {
+                const response = await axios.get(`${process.env.REACT_APP_URL_SERVER}/data/`, {
                     params:{
                         id: id
                     }
@@ -118,7 +118,7 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
 
     const handleClickMarker = (coordinates) => {
         setIsLoading(true)
-        axios.get("http://localhost:3002/itinerary", {
+        axios.get(`${process.env.REACT_APP_URL_SERVER}/itinerary`, {
             params: {
                 start: {
                     lat: position[0], 

@@ -2,7 +2,7 @@ let uniqid = require("uniqid")
 
 const { spawn } = require("child_process");
 
-const pythonCalculateItinerary = function (start, end) {
+module.exports.pythonCalculateItinerary = function (start, end) {
   //TODO : create a unique id path for the temp file itinerary + send it to python
 
   path_length = "./temp/sp_length_" + uniqid()
@@ -36,16 +36,16 @@ const pythonCalculateItinerary = function (start, end) {
   });
 };
 
-module.exports.calculateItinerary = (start, end) => {
-  return new Promise(function (resolve, reject) {
-    pythonCalculateItinerary(start, end)
-      .then((itineraries) => {
-        console.log("model :", itineraries)
-        resolve(itineraries);
-      })
-      .catch((err) => {
-        console.error("error calculating itinerary", err);
-        reject(err);
-      });
-  });
-};
+// module.exports.calculateItinerary = (start, end) => {
+//   return new Promise(function (resolve, reject) {
+//     pythonCalculateItinerary(start, end)
+//       .then((itineraries) => {
+//         console.log("model :", itineraries)
+//         resolve(itineraries);
+//       })
+//       .catch((err) => {
+//         console.error("error calculating itinerary", err);
+//         reject(err);
+//       });
+//   });
+// };

@@ -94,6 +94,7 @@ const SelectAddress = ({setCurrentItinerary}) => {
 
   const calculateItinerary = () => {
     setIsLoading(true)
+    const start = performance.now()
     axios.get("http://localhost:3002/itinerary", {
         params: {
             start: {
@@ -106,6 +107,8 @@ const SelectAddress = ({setCurrentItinerary}) => {
             }
         }
     }).then((response) => {
+        const end = performance.now()
+        console.log("duration : ", (end-start)/1000)
         setCurrentItinerary(response.data)
         setIsLoading(false)
     }).catch((error) => {

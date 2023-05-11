@@ -9,7 +9,7 @@ itineraryRouter.get('/', async (req, res) => {
     if(req.query.start && req.query.end){
       try {
         console.log("calculating itinerary ...");
-        let results = await Itinerary.calculateItinerary(req.query.start, req.query.end);
+        let results = await Itinerary.pythonCalculateItinerary(req.query.start, req.query.end);
         console.log("Itineraries routes : ", results)
         // pathLength = results[0]
         // pathIf = results[1]

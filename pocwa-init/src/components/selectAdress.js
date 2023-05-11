@@ -109,6 +109,7 @@ const SelectAddress = ({setCurrentItinerary}) => {
     }).then((response) => {
         const end = performance.now()
         console.log("duration : ", (end-start)/1000)
+        console.log("reponse : ", response.data)
         setCurrentItinerary(response.data)
         setIsLoading(false)
     }).catch((error) => {

@@ -26,6 +26,10 @@ def calculate_IF(input_path, output_path, fn, name):
     """
     data = gpd.read_file(input_path)
 
+    if(name == "veget_raw"):
+        print(data.columns)
+        data = data.set_index(["id"])
+
     data[f"IF_{name}"] = data.apply(fn, axis=1)
 
     data.to_file(output_path, driver="GPKG")
@@ -155,11 +159,18 @@ def create_all_weighted_network(default_ntf):
         data_informations["data_wfs"][d_name]["weighted_network_path"] = output_path
 
     ## RAW
-    temp = data_informations["data_raw"]["temp_surface_road_raw"]
-    path = temp["recalculated_if_path"]
-    temp_output_path = "./data/osm/network_temp_surface_road_raw_weighted.gpkg"
-    join_network_layer(default_ntf, path, "temp_surface_road_raw", temp_output_path)
-    data_informations["data_raw"]["temp_surface_road_raw"]["weighted_network_path"] = temp_output_path
+    data_raw = data_informations["data_raw"]
+    for d_name, d_info in data_raw.items():
+        output_path = f"./data/osm/network_{d_name}_weighted.gpkg"
+        join_network_layer(default_ntf, d_info["recalculated_if_path"], d_name, output_path)
+        data_informations["data_raw"][d_name]["weighted_network_path"] = output_path
+
+
+    # temp = data_informations["data_raw"]["temp_surface_road_raw"]
+    # path = temp["recalculated_if_path"]
+    # temp_output_path = "./data/osm/network_temp_surface_road_raw_weighted.gpkg"
+    # join_network_layer(default_ntf, path, "temp_surface_road_raw", temp_output_path)
+    # data_informations["data_raw"]["temp_surface_road_raw"]["weighted_network_path"] = temp_output_path
 
     with open(data_informations_path, "w") as f:
         json.dump(data_informations, f, indent=4)

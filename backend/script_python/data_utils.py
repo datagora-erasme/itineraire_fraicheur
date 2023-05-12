@@ -119,7 +119,7 @@ def create_data_informations_file():
             # },
             "temp_surface_road_raw": {
                 "name": "Température de surface",
-                "gpkg_path": "./script_python/data/raw_data/temp_surface.gpkg"
+                "gpkg_path": "./raw_data/temp_surface.gpkg"
             },
         #     "joined_if": {
         #         "name" : "Calque fraîcheur",

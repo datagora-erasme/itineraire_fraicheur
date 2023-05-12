@@ -5,34 +5,35 @@ from data_calculation import *
 from calculate_itinerary_utils import *
 import geopandas as gpd
 import time
-
-# # # Get the absolute path of the current file
-# # absolute_path = os.path.abspath(__file__)
-
-# # # Get the directory name of the current file
-# # directory_name = os.path.dirname(absolute_path)
-
-# # # Get the relative path of the current file
-# # relative_path = os.path.relpath(absolute_path)
-
-# # print("Absolute path:", absolute_path)
-# # print("Directory name:", directory_name)
-# # print("Relative path:", relative_path)
+from datetime import datetime
 
 start_time = time.time()
+now = datetime.now()
+now = now.strftime("%d%m%Y%H%M")
 
 data_folder_path = "./data/"
+data_informations_path = "./data/data_informations.json"
 
-print("### CREATION of data_informations.json file ### ")
 create_folder("./data")
-create_data_informations_file()
+create_folder("./data/backup")
+if os.path.isfile(data_informations_path):
+    backup_path = f"./data/backup/data_informations_{now}.json"
+    with open(data_informations_path, "r") as f:
+        data_informations = json.load(f)
+    with open(backup_path, "w") as f:
+        json.dump(data_informations, f, indent=4)
+    print("### BACKUP of data_informations.json file ###")
+
+else:
+    print("### CREATE data_informations.json file ###")
+    create_data_informations_file()
 
 print("#### LOADING ALL DATA #### \n \n")
 create_folder(data_folder_path + "gml")
 download_data_wfs("data.grandlyon_wfs", "2.0.0", data_folder_path + "gml")
 
 create_folder(data_folder_path + "raster")
-download_data_wms("data.grandlyon_wms", "1.1.1", data_folder_path + "raster")
+# download_data_wms("data.grandlyon_wms", "1.1.1", data_folder_path + "raster")
 
 print("#### Converting Files #### \n \n")
 

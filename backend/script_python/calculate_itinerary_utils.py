@@ -42,6 +42,21 @@ def temp_IF(row):
         return 0.75
     else:
         return 1
+    
+def veget_IF(row):
+    """Return value of IF for temperature data"""
+    if(row["vegetation_class"] == 1):
+        return 0.75
+    elif(row["vegetation_class"] == 2):
+        return 0.75
+    elif(row["vegetation_class"] == 3):
+        return 0.5
+    elif(row["vegetation_class"] == 4):
+        return 0.01
+    elif(row["vegetation_class"] == 5):
+        return 0.01
+    else:
+        return 1
 
 def load_osm_network(network_paramaters):
     print("Loading OSM network")

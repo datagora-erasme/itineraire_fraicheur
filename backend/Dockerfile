@@ -11,6 +11,7 @@ RUN pip install -r requirements.txt
 COPY ./models/ /app/models
 COPY ./script_python/ /app/script_python
 COPY ./data/ /app/data
+COPY ./raw_data/ /app/raw_data
 
 COPY ./calculate_itinerary.py /app/
 COPY ./load_network.py /app/

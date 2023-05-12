@@ -74,7 +74,7 @@ const SelectAddress = ({setCurrentItinerary}) => {
 
   const handleSelectStartAddress = (id) => {
     for(let address of startAddressSuggestions){
-        if(address.properties.id == id){
+        if(address.properties.id === id){
             setStartAddress(`${address.properties.label.slice(0,30)}...`)
             setSelectedStartAddress(address)
             setStartAddressSuggestions([])
@@ -84,7 +84,7 @@ const SelectAddress = ({setCurrentItinerary}) => {
 
   const handleSelectEndAddress = (id) => {
     for(let address of endAddressSuggestions){
-        if(address.properties.id == id){
+        if(address.properties.id === id){
             setEndAddress(`${address.properties.label.slice(0,30)}...`)
             setSelectedEndAddress(address)
             setEndAddressSuggestions([])
@@ -109,7 +109,6 @@ const SelectAddress = ({setCurrentItinerary}) => {
     }).then((response) => {
         const end = performance.now()
         console.log("duration : ", (end-start)/1000)
-        console.log("reponse : ", response.data)
         setCurrentItinerary(response.data)
         setIsLoading(false)
     }).catch((error) => {

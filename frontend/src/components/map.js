@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
@@ -35,7 +35,7 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, position}){
             color: 'green',
         }).addTo(map);
 
-        const marker = L.marker(position).addTo(map)
+        L.marker(position).addTo(map)
 
         // const userPosition = L.Marker(position)
         // userPosition.addTo(map)
@@ -82,7 +82,6 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                 })
                 const updatedGeojsonFiles = [...geojsonFiles, {...response.data}]
                 setGeojsonFiles(updatedGeojsonFiles)
-                console.log(response.data)
             } catch (error){
                 console.error(error)
             }
@@ -97,15 +96,10 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                 fetchGeoJSON(id)
             }
         }
-    }, [selectedLayers])
+    }, [selectedLayers, geojsonFiles])
 
-    // if (!geojsonFile) {
-    //     return <p>Loading GeoJSON...</p>;
-    //   }
-
-    // console.log(geojsonFiles)
     const createClusterCustomIcon = function (cluster, markerOption) {
-        // console.log(markerOption.clusterCountStyle)
+
         return L.divIcon({
             html: `<span style="position: relative; width:25px; height:25px;">
                         <img src=${markerOption.iconUrl} style="display: block, width: 40px; height:40px;" />
@@ -140,8 +134,6 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
         })
     }
 
-    console.log(currentItinerary)
-
     return (
         <div>
             {loadingLayer && "Loading ...."}
@@ -153,18 +145,13 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                 />
                 <ZoomControl position='topright' />
                 <MapFreshness zoomToUserPosition={zoomToUserPosition} position={position} setZoomToUserPosition={setZoomToUserPosition}/>
-                {/* <Marker position={[45.76309302427536, 4.836502750843036]}>
-                    <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker> */}
-                {/* <GeoJSON data={sp} style={{color: "red"}}/> */}
+
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => { 
                         if(selectedLayers.includes(data.id)) {
                             const dataType = data.geojson.features[0].geometry.type
                             const markerOption = data.markerOption
-                            if(dataType == "Point"){
+                            if(dataType === "Point"){
                                 return(
                                         <MarkerClusterGroup 
                                             key={data.id} 
@@ -202,16 +189,16 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                                             })}
                                         </MarkerClusterGroup>
                                 )
-                            } else if (dataType == "MultiPolygon"){
+                            } else if (dataType === "MultiPolygon"){
                                 return(
                                     <GeoJSON data={data.geojson} style={getColor} key={Math.random()} />
                                 )
                             }
-
                         }
+                        return null
                     })
                 }
-                {/* <GeoJSON data={geojsonFile} style={getColor}/> */}
+
                 {currentItinerary && 
                     currentItinerary.map((it) => {
                         return(

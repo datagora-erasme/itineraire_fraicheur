@@ -18,7 +18,11 @@ function Home(){
     useEffect(() => {
         async function fetchListLayers(){
             try{
-                const response = await axios.get(`${process.env.REACT_APP_URL_SERVER}/data`)
+                const response = await axios({
+                    method:'get',
+                    baseURL: `${process.env.REACT_APP_URL_SERVER}`,
+                    url: "/data/",
+                })
                 setListLayers(response.data) 
             } catch (error){
                 console.error(error)

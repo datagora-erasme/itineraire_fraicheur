@@ -118,7 +118,10 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
 
     const handleClickMarker = (coordinates) => {
         setIsLoading(true)
-        axios.get(`${process.env.REACT_APP_URL_SERVER}/itinerary`, {
+        axios({
+            method:'get',
+            baseURL: `${process.env.REACT_APP_URL_SERVER}`,
+            url: "/data/",
             params: {
                 start: {
                     lat: position[0], 

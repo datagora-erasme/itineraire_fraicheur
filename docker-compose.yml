@@ -1,13 +1,15 @@
 version: '3'
 services:
   backend:
+    image: yannisbarba/itineraires_fraicheur_backend
     build: backend/
-    ports:
-      - "3002:3002"
     env_file:
       - .env
+    ports:
+      - "3002:3002"
     #command: "tail -f /dev/null"
   frontend:
+    image: yannisbarba/itineraires_fraicheur_frontend
     build:
       context: frontend
       dockerfile: dev.Dockerfile

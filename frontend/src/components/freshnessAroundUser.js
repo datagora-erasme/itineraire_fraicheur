@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
-import L from 'leaflet'
 
 const FreshnessAroundUser = ({position, zoomToUserPosition, setZoomToUserPosition}) => {
     const [showFindFreshness, setShowFindFreshness] = useState(false)

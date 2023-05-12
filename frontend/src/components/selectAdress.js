@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import axios from "axios";
+import _debounce from 'lodash/debounce'
 import { FaRoute, FaChevronUp, FaChevronDown } from "react-icons/fa";
 
 //`https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
@@ -19,12 +20,39 @@ const SelectAddress = ({setCurrentItinerary}) => {
 
   const [showItineraryCalculation, setShowItineraryCalculation] = useState(true)
 
-  let startTimeout;
-  let endTimeout;
-
   const handleToggleItineraryCalculation = () => {
     setShowItineraryCalculation(!showItineraryCalculation)
   }
+
+  const handleStartAddressAPI = (query) => {
+    axios
+    .get(
+      `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
+    )
+    .then((response) => {
+      setStartAddressSuggestions(response.data.features);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  const handleEndAddressAPI = (query) => {
+    axios
+    .get(
+      `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
+    )
+    .then((response) => {
+      setEndAddressSuggestions(response.data.features);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  /*eslint-disable*/
+  const debounceStartAddress = useCallback(_debounce(handleStartAddressAPI, 300), [])
+  const debounceEndAddress = useCallback(_debounce(handleEndAddressAPI, 300), [])
 
   const handleStartAddressChange = (event) => {
     const value = event.target.value;
@@ -33,20 +61,12 @@ const SelectAddress = ({setCurrentItinerary}) => {
     query = query.replace(/ /g, "+")
     setStartAddress(value);
     setSelectedStartAddress(null)
-    clearTimeout(startTimeout)
-    startTimeout = setTimeout(() => {
-        axios
-        .get(
-          `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
-        )
-        .then((response) => {
-          setStartAddressSuggestions(response.data.features);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, 2000)
-
+    // clearTimeout(startTimeout)
+    if(query.length > 3){
+      debounceStartAddress(query)
+    } else {
+      setStartAddressSuggestions([])
+    }
   };
 
   const handleEndAddressChange = (event) => {
@@ -56,20 +76,11 @@ const SelectAddress = ({setCurrentItinerary}) => {
     query = query.replace(/ /g, "+")
     setEndAddress(value);
     setSelectedEndAddress(null)
-    clearTimeout(endTimeout)
-    endTimeout = setTimeout(() => {
-        axios
-        .get(
-          `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
-        )
-        .then((response) => {
-          setEndAddressSuggestions(response.data.features);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, 2000)
-
+    if(query.length > 3){
+      debounceEndAddress(query)
+    } else {
+      setStartAddressSuggestions([])
+    }
   };
 
   const handleSelectStartAddress = (id) => {

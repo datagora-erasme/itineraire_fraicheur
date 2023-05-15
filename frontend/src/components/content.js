@@ -9,6 +9,7 @@ function Content({setCurrentItinerary, listLayers, selectedLayers, setSelectedLa
             <SelectAddress setCurrentItinerary={setCurrentItinerary}/>
             <FreshnessAroundUser position={position} zoomToUserPosition={zoomToUserPosition} setZoomToUserPosition={setZoomToUserPosition}/>
             {listLayers.length !== 0 ? <ListLayers listLayers={listLayers} selectedLayers={selectedLayers} setSelectedLayers={setSelectedLayers} isLayerLoading={isLayerLoading}/> : "loading ..."}
+            <div className='mt-2 cursor-pointer'><a target="_blank" rel="noopener noreferrer" href='https://datagora.erasme.org/projets/sortons-au-frais/'>En savoir plus</a></div>
         </div>
     )
 }

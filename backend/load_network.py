@@ -8,7 +8,7 @@ import time
 import sys
 
 
-def load_network(network_path, pickle_path):
+def load_network(network_path, pickle_path, network_multidigraph_pickle_path):
     gdf_edges = gpd.read_file(network_path, layer='edges')
     gdf_nodes = gpd.read_file(network_path, layer="nodes")
 
@@ -25,9 +25,15 @@ def load_network(network_path, pickle_path):
     G = ox.graph_from_gdfs(gdf_nodes, new_edges)
 
     G2 = nx.Graph(G)
+    # G2 = nx.MultiDiGraph(G)
+
+    G_digraph = nx.MultiDiGraph(G2)
 
     with open(pickle_path, "wb") as f:
         pickle.dump(G2, f)
+
+    with open(network_multidigraph_pickle_path, "wb") as f:
+        pickle.dump(G_digraph, f)
     return True
 
 # network_path = sys.argv[1]

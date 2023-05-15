@@ -9,14 +9,21 @@ CORS(app)
 
 network_path = "./data/osm/final_network.gpkg"
 network_pickle_path = "./data/pickle_network.pickle"
+network_multidigraph_pickle_path ="./data/pickle_network_multidigraph.pickle"
 
 G = None
+G_multidigraph = None
 
 print("loading network ...")
-load_net = load_network(network_path, network_pickle_path)
+if(os.path.isfile(network_pickle_path) & os.path.isfile(network_multidigraph_pickle_path)):
+    load_net = True
+else:
+    load_net = load_network(network_path, network_pickle_path, network_multidigraph_pickle_path)
+
 if(load_net):
     print("Network loaded")
     G = load_graph_from_pickle(network_pickle_path)
+    G_multidigraph = load_graph_from_pickle(network_multidigraph_pickle_path)
 
 @app.route('/')
 def hello_worl():
@@ -57,7 +64,7 @@ def get_itinerary():
     print(start_lat, start_lon, end_lat, end_lon)
     try:
         print(start, end)
-        geojson_path = shortest_path(G, start, end)
+        geojson_path = shortest_path(G, start, end, G_multidigraph)
         # print(geojson_path)
         results = [{
             "geojson": geojson_path, 

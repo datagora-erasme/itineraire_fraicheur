@@ -14,37 +14,29 @@ def load_graph_from_pickle(pickle_path):
 
     return G
 
-def shortest_path(G, start, end):
-
-    # s_nodes = time.time()
-    # TODO : paralliser ça
+def shortest_path(G, start, end, G_multidigraph):
     origin_node = ox.nearest_nodes(G, X=start[0], Y=start[1])
     destination_node = ox.nearest_nodes(G, X=end[0], Y=end[1])
-    # e_nodes = time.time()
 
     print("Finding shortest path ...")
-    # s_sp = time.time()
+
     shortest_path = nx.shortest_path(G, source=origin_node, target=destination_node, weight="IF")
-    # e_sp = time.time()
 
-    # s_convert_sp = time.time()
-    G2 = nx.MultiDiGraph(G)
-
-    route_edges = ox.utils_graph.get_route_edge_attributes(G2, shortest_path)
+    route_edges = ox.utils_graph.get_route_edge_attributes(G_multidigraph, shortest_path)
 
     gdf_route_edges = gpd.GeoDataFrame(route_edges, crs=G.graph['crs'], geometry='geometry')
 
     gdf_route_edges = gdf_route_edges.to_crs(epsg=4326)
-    # e_convert_sp = time.time()
 
     geojson = json.loads(gdf_route_edges.to_json())
 
     return geojson
 
-# e = time.time()
-
-# print(f"total duration : {e-s}") # 6.55 s
-# print(f"load graph duration : {e_g -s_g}") # 1.62 s
-# print(f"find nodes duration : {e_nodes - s_nodes}") # 1.84 s
-# print(f"shortest path duration : {e_sp - s_sp}") # 0.1 s
-# print(f"convert shortest path duration : {e_convert_sp - s_convert_sp}") #3s
+# global :  5.0173704624176025
+# node:  1.904900312423706
+# sp :  0.004061222076416016
+# convert :  3.104257345199585
+# multidigraph :  3.097426652908325
+# route_edges :  8.368492126464844e-05
+# gpd :  0.0014109611511230469
+# geojson :  0.004133939743041992

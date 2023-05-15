@@ -28,9 +28,12 @@ def calculate_IF(input_path, output_path, fn, name):
 
     if(name == "veget_raw"):
         print(data.columns)
-        data = data.set_index(["id"])
+        data = data.set_index(["id_gpd"])
 
     data[f"IF_{name}"] = data.apply(fn, axis=1)
+
+    # if(name == "veget_raw"):
+    #     data = data.set_index(["id_gpd"])
 
     data.to_file(output_path, driver="GPKG")
 
@@ -126,6 +129,9 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
     layer = gpd.read_file(layer_path)
 
+    print(layer.head)
+    print(layer.columns)
+
     # if(layer_name == "temp_surface_road_raw"):
     #     layer = layer.to_crs(3946)
     # else:
@@ -133,24 +139,35 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
     print(f"Joining {layer_name} with osm network")
 
-    joined_edges = gpd.overlay(network_edges, layer, how="intersection", keep_geom_type=True)
+    if(layer_name != "veget_raw"):
 
-    # Convert into geoserie in order to calculate the length of the intersection
+        joined_edges = gpd.overlay(network_edges, layer, how="intersection", keep_geom_type=True)
 
-    joined_edges_serie = gpd.GeoSeries(joined_edges["geometry"])
+        # Convert into geoserie in order to calculate the length of the intersection
 
-    joined_edges_serie = joined_edges_serie.to_crs(32631)
+        joined_edges_serie = gpd.GeoSeries(joined_edges["geometry"])
 
-    joined_edges["cal_length"] = joined_edges_serie.length
+        joined_edges_serie = joined_edges_serie.to_crs(32631)
 
-    network_weighted_average(network_path, joined_edges, layer_name, output_path)
+        joined_edges["cal_length"] = joined_edges_serie.length
+
+        network_weighted_average(network_path, joined_edges, layer_name, output_path)
+    
+    else:
+        layer_serie = gpd.GeoSeries(layer["geometry"])
+        layer_serie = layer_serie.to_crs(32631)
+        layer["cal_length"] = layer_serie.length
+
+        network_weighted_average(network_path, layer, layer_name, output_path)
+
+
 
 def create_all_weighted_network(default_ntf):
     """Create a weighted network for each kind of data"""
     with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
     
-    # ## WFS
+    ## WFS
     data_wfs = data_informations["data_wfs"]
 
     for d_name, d_info in data_wfs.items():
@@ -161,6 +178,7 @@ def create_all_weighted_network(default_ntf):
     ## RAW
     data_raw = data_informations["data_raw"]
     for d_name, d_info in data_raw.items():
+        # if(d_name == "veget_raw"):
         output_path = f"./data/osm/network_{d_name}_weighted.gpkg"
         join_network_layer(default_ntf, d_info["recalculated_if_path"], d_name, output_path)
         data_informations["data_raw"][d_name]["weighted_network_path"] = output_path

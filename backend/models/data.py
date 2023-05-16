@@ -9,11 +9,11 @@ def get_layer_list():
     raw_data = data_informations['data_raw']
     wfs_data = data_informations['data_wfs']
 
-    for data_id, data in raw_data.items():
-        layers_list.append({
-            'id': data_id,
-            **data
-        })
+    # for data_id, data in raw_data.items():
+    #     layers_list.append({
+    #         'id': data_id,
+    #         **data
+    #     })
 
     for data_id, data in wfs_data.items():
         layers_list.append({
@@ -26,6 +26,7 @@ def get_layer_list():
 def findMany():
     return get_layer_list()
 
+
 def findOne(id):
     layer_list = get_layer_list()
     print(f'fetching geojson: {id}')
@@ -37,11 +38,17 @@ def findOne(id):
             with open(path) as f:
                 geojson = json.load(f)
 
-            markerOption = data['marker_option']
-            return {
-                'geojson': geojson,
-                'markerOption': markerOption,
-                'id': id
-            }
+            if("marker_option" in data):
+                markerOption = data['marker_option']
+                return {
+                    'geojson': geojson,
+                    'markerOption': markerOption,
+                    'id': id
+                }
+            else:
+                return {
+                    'geojson': geojson,
+                    'id': id
+                }
 
     return None

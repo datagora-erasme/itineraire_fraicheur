@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap, Polygon } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
@@ -35,7 +35,7 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, position}){
             color: 'green',
         }).addTo(map);
 
-        L.marker(position).addTo(map)
+        let marker = L.marker(position).addTo(map)
 
         // const userPosition = L.Marker(position)
         // userPosition.addTo(map)
@@ -66,7 +66,10 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
             }
         }
         return {
-            color: "red"
+            color: "green",
+            fillColor: "green", 
+            fillOpacity: 0.5, 
+            opacity: 0.5
         }
 
     }
@@ -115,7 +118,7 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
         axios({
             method:'get',
             baseURL: `${process.env.REACT_APP_URL_SERVER}`,
-            url: "/data/",
+            url: "/itinerary/",
             params: {
                 start: {
                     lat: position[0], 
@@ -151,6 +154,7 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                         if(selectedLayers.includes(data.id)) {
                             const dataType = data.geojson.features[0].geometry.type
                             const markerOption = data.markerOption
+                            console.log(dataType)
                             if(dataType === "Point"){
                                 return(
                                         <MarkerClusterGroup 
@@ -189,11 +193,24 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                                             })}
                                         </MarkerClusterGroup>
                                 )
-                            } else if (dataType === "MultiPolygon"){
+                            } else if (dataType === "MultiPolygon" || dataType === "Polygon"){
                                 return(
                                     <GeoJSON data={data.geojson} style={getColor} key={Math.random()} />
                                 )
-                            }
+                            } 
+                            // else if (dataType === "Polygon"){
+                            //     return(
+                            //         <>
+                            //             {data.geojson.features.map((polygon, index) => {
+                            //                 return(
+                            //                     <Polygon key={index} positions={polygon.geometry.coordinates} color='green'>
+
+                            //                     </Polygon>
+                            //                 )
+                            //             })}
+                            //         </>
+                            //     )
+                            // }
                         }
                         return null
                     })

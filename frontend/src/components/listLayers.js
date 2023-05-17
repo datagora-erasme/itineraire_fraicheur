@@ -1,7 +1,7 @@
 import React from 'react'
-// import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
 
-function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoading}){
+function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoading, showLayers, setShowLayers}){
 
     // const handleToggleLayers = () => {
     //   setShowLayers(!showLayers);
@@ -18,20 +18,15 @@ function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoadi
     }
 
     return (
-        <div className="bg-white bg-opacity-80 p-4 rounded-md shadow-lg mt-2">
-        {/* <button
-          className="flex items-center cursor-pointer"
-          onClick={handleToggleLayers}
+        <div className="card md:card-desktop">
+        <button
+          className="md:hidden card-title"
+          onClick={() => setShowLayers(!showLayers)}
         >
         {isLayerLoading && <div class="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>}
+          <FaChevronDown className="text-gray-500 mt-1" />
           <span className="text-lg font-bold mr-2">Liste des layers</span>
-          {showLayers ? (
-            <FaChevronUp className="text-gray-500 mt-1" />
-          ) : (
-            <FaChevronDown className="text-gray-500 mt-1" />
-          )}
-        </button> */}
-        {/* {showLayers && ( */}
+        </button>
           {listLayers.length !== 0 ? <ul className="mt-2">
             {listLayers.map((layer) => {
               return (
@@ -51,7 +46,6 @@ function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoadi
               );
             })}
           </ul> : "Loading .. "}
-        {/* )} */}
       </div>
       );
     

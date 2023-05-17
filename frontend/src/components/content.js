@@ -23,7 +23,7 @@ function Content({setCurrentItinerary, listLayers, selectedLayers, setSelectedLa
                 <span>Calculer un itinéraire</span>
                 {/* <span className="hidden md:block">Je calcule mon itinéraire fraîcheur</span> */}
             </button>
-            {showItineraryCalculation && <CalculateItinerary setCurrentItinerary={setCurrentItinerary}/>}
+            {showItineraryCalculation && <CalculateItinerary setCurrentItinerary={setCurrentItinerary} showItineraryCalculation={showItineraryCalculation} setShowItineraryCalculation={setShowItineraryCalculation}/>}
 
             <button onClick={() => setShowFindFreshness(!showFindFreshness)} className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:border-b-2 md:border-b-gray-100">
                 {showFindFreshness ? (
@@ -33,7 +33,7 @@ function Content({setCurrentItinerary, listLayers, selectedLayers, setSelectedLa
                 )}
                 <span>Trouver un lieu frais</span>
             </button>
-            {showFindFreshness && <FreshnessAroundUser position={position} zoomToUserPosition={zoomToUserPosition} setZoomToUserPosition={setZoomToUserPosition}/>}
+            {showFindFreshness && <FreshnessAroundUser position={position} zoomToUserPosition={zoomToUserPosition} setZoomToUserPosition={setZoomToUserPosition} showFindFreshness={showFindFreshness} setShowFindFreshness={setShowFindFreshness}/>}
 
             <button onClick={() => setShowLayers(!showLayers)} className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:border-b-2 md:border-b-gray-100">
                 {showLayers ? (
@@ -43,7 +43,7 @@ function Content({setCurrentItinerary, listLayers, selectedLayers, setSelectedLa
                 )}
                 <span>Consulter la carte fraîcheur</span>
             </button>
-            {showLayers && <ListLayers listLayers={listLayers} selectedLayers={selectedLayers} setSelectedLayers={setSelectedLayers} isLayerLoading={isLayerLoading}/>}
+            {showLayers && <ListLayers listLayers={listLayers} selectedLayers={selectedLayers} setSelectedLayers={setSelectedLayers} isLayerLoading={isLayerLoading} showLayers={showLayers} setShowLayers={setShowLayers}/>}
 
             <div className='cursor-pointer secondary-btn secondary-btn-mobile md:main-btn-desktop md:rounded-t-none md:rounded-b-3xl'><a target="_blank" rel="noopener noreferrer" href='https://datagora.erasme.org/projets/sortons-au-frais/'>En savoir plus</a></div>
         </div>

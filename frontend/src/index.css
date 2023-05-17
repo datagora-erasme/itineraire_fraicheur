@@ -31,6 +31,22 @@ code {
     @apply p-4
   }
   .secondary-btn-mobile {
-    @apply bg-gray-400 text-bgWhite rounded-full
+    @apply bg-gray-400 text-bgWhite rounded-full;
+  }
+
+  .card {
+    @apply bg-bgWhite absolute w-full -left-0 p-4;
+  }
+
+  .card-desktop {
+    @apply bg-white static bg-opacity-80;
+  }
+
+  .card-title {
+    @apply flex flex-row gap-2 font-bold text-mainText
+  }
+
+  .main-input {
+    @apply block w-full p-2 border-gray-900 rounded-md shadow-sm focus:ring focus:ring-primary focus:border-primary sm:text-sm italic
   }
 }

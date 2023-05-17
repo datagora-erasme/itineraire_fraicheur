@@ -2,10 +2,10 @@ import React, { useCallback, useState } from "react";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
 import { FaRoute } from "react-icons/fa";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 
-//`https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
 
-const CalculateItinerary = ({setCurrentItinerary}) => {
+const CalculateItinerary = ({setCurrentItinerary, showItineraryCalculation,  setShowItineraryCalculation}) => {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
@@ -130,21 +130,13 @@ const CalculateItinerary = ({setCurrentItinerary}) => {
   };
 
   return (
-      <div className="bg-white bg-opacity-80 p-4 rounded-md shadow-lg">
-          {/* <button
-          className="flex items-center cursor-pointer"
-          onClick={handleToggleItineraryCalculation}
-          >
-            <span className="text-lg font-bold mr-2">Calcul d'itinéraires frais</span>
-            {showItineraryCalculation ? (
-              <FaChevronUp className="text-gray-500 mt-1" />
-            ) : (
+      <div className="card md:card-desktop">
+          <button onClick={() => setShowItineraryCalculation(!showItineraryCalculation)} className="md:hidden card-title">
               <FaChevronDown className="text-gray-500 mt-1" />
-            )}
-        // </button> */}
-        {/* {showItineraryCalculation && <div> */}
-          <label htmlFor="startAddress" className="block font-medium mb-1">
-            Adresse de départ :
+              <span>Calculer un itinéraire</span>
+          </button>
+          <label htmlFor="startAddress" className="block mb-1 mt-4 flex">
+            Départ
           </label>
           <div className="relative">
             <input
@@ -155,7 +147,7 @@ const CalculateItinerary = ({setCurrentItinerary}) => {
               onChange={handleStartAddressChange}
               onFocus={() => setShowStartSuggestions(true)}
               onBlur={() => setTimeout(() => setShowStartSuggestions(false), 200)}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="main-input"
               placeholder="Adresse de départ"
             />
             { showStartSuggestions && <ul
@@ -173,8 +165,8 @@ const CalculateItinerary = ({setCurrentItinerary}) => {
             </ul>}
           </div>
           
-          <label htmlFor="endAddress" className="block font-medium my-2">
-            Adresse d'arrivée :
+          <label htmlFor="endAddress" className="block my-2 flex ">
+            Arrivée
           </label>
           <div className="relative">
             <input
@@ -185,7 +177,7 @@ const CalculateItinerary = ({setCurrentItinerary}) => {
               onChange={handleEndAddressChange}
               onFocus={() => handleEndFocus(true)}
               onBlur={() => setTimeout(() => handleEndFocus(false), 200)}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="main-input mb-4"
               placeholder="Adresse d'arrivée"
             />
             {showEndSuggestions && <ul
@@ -203,17 +195,17 @@ const CalculateItinerary = ({setCurrentItinerary}) => {
           </div>
           <div className="flex justify-center items-center">
             <button onClick={calculateItinerary} 
-            className={`block mt-8 px-4 py-2 ${!selectedStartAddress || !selectedEndAddress ? "bg-gray-300 hover:bg-gray-400" : "bg-blue-500 hover:bg-blue-600"} text-white rounded-md transition duration-300`}
+            className={` main-btn ${!selectedStartAddress || !selectedEndAddress ? "bg-gray-300 hover:bg-gray-400" : "bg-primary"} text-white rounded-full transition duration-300`}
             disabled={!selectedStartAddress || !selectedEndAddress}
             >
               {isLoading ? (
                 <div className="flex items-center">
-                  <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>
+                  <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-primary animate-spin mr-3"></div>
                   <span>Loading...</span>
                 </div>
               ) : (
-                <div className="flex items-center">
-                  <span className="mr-2">Itinéraire | </span>
+                <div className="flex items-center gap-2">
+                  <span className="">Valider ma recherche </span>
                   <FaRoute/>
                 </div>
               )}

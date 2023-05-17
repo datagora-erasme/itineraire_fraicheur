@@ -15,3 +15,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@layer utilities {
+  .main-btn {
+    @apply p-4
+  }
+  .main-btn-mobile {
+    @apply bg-primary text-bgWhite rounded-full;
+  }
+  .main-btn-desktop {
+    @apply bg-bgWhite text-mainText font-bold flex flex-row gap-2;
+  }
+
+  .secondary-btn {
+    @apply p-4
+  }
+  .secondary-btn-mobile {
+    @apply bg-gray-400 text-bgWhite rounded-full
+  }
+}

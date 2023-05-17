@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
-import { FaRoute, FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { FaRoute } from "react-icons/fa";
 
 //`https://nominatim.openstreetmap.org/search?q=${value}&format=json&addressdetails=1&limit=5`
 
-const SelectAddress = ({setCurrentItinerary}) => {
+const CalculateItinerary = ({setCurrentItinerary}) => {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
@@ -18,11 +18,9 @@ const SelectAddress = ({setCurrentItinerary}) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const [showItineraryCalculation, setShowItineraryCalculation] = useState(true)
-
-  const handleToggleItineraryCalculation = () => {
-    setShowItineraryCalculation(!showItineraryCalculation)
-  }
+  // const handleToggleItineraryCalculation = () => {
+  //   setShowItineraryCalculation(!showItineraryCalculation)
+  // }
 
   const handleStartAddressAPI = (query) => {
     axios
@@ -133,7 +131,7 @@ const SelectAddress = ({setCurrentItinerary}) => {
 
   return (
       <div className="bg-white bg-opacity-80 p-4 rounded-md shadow-lg">
-          <button
+          {/* <button
           className="flex items-center cursor-pointer"
           onClick={handleToggleItineraryCalculation}
           >
@@ -143,8 +141,8 @@ const SelectAddress = ({setCurrentItinerary}) => {
             ) : (
               <FaChevronDown className="text-gray-500 mt-1" />
             )}
-        </button>
-        {showItineraryCalculation && <div>
+        // </button> */}
+        {/* {showItineraryCalculation && <div> */}
           <label htmlFor="startAddress" className="block font-medium mb-1">
             Adresse de départ :
           </label>
@@ -221,11 +219,11 @@ const SelectAddress = ({setCurrentItinerary}) => {
               )}
             </button>
           </div>
-        </div>}
+        {/* </div>} */}
 
       </div>
 
   );
 };
 
-export default SelectAddress;
+export default CalculateItinerary;

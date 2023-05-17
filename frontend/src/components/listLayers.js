@@ -1,13 +1,11 @@
-import React, {useState} from 'react'
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import React from 'react'
+// import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoading}){
 
-    const [showLayers, setShowLayers] = useState(false);
-
-    const handleToggleLayers = () => {
-      setShowLayers(!showLayers);
-    };
+    // const handleToggleLayers = () => {
+    //   setShowLayers(!showLayers);
+    // };
 
     function handleCheckBoxList(event){
         const {value, checked} = event.target;
@@ -21,7 +19,7 @@ function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoadi
 
     return (
         <div className="bg-white bg-opacity-80 p-4 rounded-md shadow-lg mt-2">
-        <button
+        {/* <button
           className="flex items-center cursor-pointer"
           onClick={handleToggleLayers}
         >
@@ -32,9 +30,9 @@ function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoadi
           ) : (
             <FaChevronDown className="text-gray-500 mt-1" />
           )}
-        </button>
-        {showLayers && (
-          <ul className="mt-2">
+        </button> */}
+        {/* {showLayers && ( */}
+          {listLayers.length !== 0 ? <ul className="mt-2">
             {listLayers.map((layer) => {
               return (
                 <li key={layer.id} className="flex items-center justify-start space-x-2">
@@ -52,8 +50,8 @@ function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoadi
                 </li>
               );
             })}
-          </ul>
-        )}
+          </ul> : "Loading .. "}
+        {/* )} */}
       </div>
       );
     

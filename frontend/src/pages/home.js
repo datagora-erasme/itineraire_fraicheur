@@ -1,9 +1,10 @@
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Map from '../components/map'
 
 import axios from 'axios'
 import Content from '../components/content';
+import MainContext from '../contexts/mainContext';
 
 function Home(){
     const [listLayers, setListLayers] = useState([])
@@ -15,6 +16,9 @@ function Home(){
     const [userPosition, setUserPosition] = useState(null)
     const [zoomToUserPosition, setZoomToUserPosition] = useState(false)
 
+    const { test } = useContext(MainContext)
+
+    console.log(test)
     useEffect(() => {
         async function fetchListLayers(){
             try{
@@ -47,7 +51,7 @@ function Home(){
       }, []);
 
     return (
-        <div style={{position: 'relative'}}>
+        <div style={{position: 'relative'}} className="min-h-screen">
             <Content 
                 selectedLayers={selectedLayers} 
                 listLayers={listLayers} 

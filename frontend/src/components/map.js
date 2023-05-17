@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap, Polygon } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
@@ -35,6 +35,7 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, position}){
             color: 'green',
         }).addTo(map);
 
+        /*eslint-disable*/
         let marker = L.marker(position).addTo(map)
 
         // const userPosition = L.Marker(position)

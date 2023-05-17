@@ -1,12 +1,12 @@
-import React, {useState} from "react";
-import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import React from "react";
+// import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 
 const FreshnessAroundUser = ({position, zoomToUserPosition, setZoomToUserPosition}) => {
-    const [showFindFreshness, setShowFindFreshness] = useState(false)
+    
 
-    const handleToggleShowFindFreshness = () => {
-        setShowFindFreshness(!showFindFreshness)
-    }
+    // const handleToggleShowFindFreshness = () => {
+    //     setShowFindFreshness(!showFindFreshness)
+    // }
 
     const findFreshnessAroundMe = () => {
         if (position) {
@@ -19,7 +19,7 @@ const FreshnessAroundUser = ({position, zoomToUserPosition, setZoomToUserPositio
 
     return (
         <div className="bg-white bg-opacity-80 p-4 rounded-md shadow-lg mt-2">
-            <button
+            {/* <button
                 className="flex items-center justify-center cursor-pointer"
                 onClick={handleToggleShowFindFreshness}
             >
@@ -29,8 +29,8 @@ const FreshnessAroundUser = ({position, zoomToUserPosition, setZoomToUserPositio
                 ) : (
                     <FaChevronDown className="text-gray-500 mt-1" />
                 )}
-            </button>
-            {showFindFreshness && (
+            </button> */}
+            {/* {showFindFreshness && ( */}
                 <div className="flex justify-center mt-8">
                     <button
                         onClick={findFreshnessAroundMe}
@@ -39,7 +39,7 @@ const FreshnessAroundUser = ({position, zoomToUserPosition, setZoomToUserPositio
                         Trouver les lieux frais
                     </button>
                 </div>
-            )}
+            {/* )} */}
         </div>
     );
 } 

@@ -15,6 +15,8 @@ export const MainContextProvider = ({ children }) => {
 
     const [userAddress, setUserAddress] = useState(null)
 
+    const [history, setHistory] = useState([])
+
     useEffect(() => {
         async function fetchListLayers(){
             try{
@@ -77,7 +79,9 @@ export const MainContextProvider = ({ children }) => {
                 setCurrentItinerary,
                 isLayerLoading,
                 setIsLayerLoading,
-                userAddress
+                userAddress, 
+                history, 
+                setHistory
             }}
         >
             {children}

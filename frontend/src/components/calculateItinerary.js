@@ -18,7 +18,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const { setCurrentItinerary, userAddress } = useContext(MainContext)
+  const { setCurrentItinerary, userAddress, history, setHistory } = useContext(MainContext)
 
   // const handleToggleItineraryCalculation = () => {
   //   setShowItineraryCalculation(!showItineraryCalculation)
@@ -140,7 +140,13 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   return (
       <div className="card md:card-desktop">
-          <button onClick={() => setShowItineraryCalculation(!showItineraryCalculation)} className="md:hidden card-title">
+          <button 
+            onClick={() => {
+              setShowItineraryCalculation(!showItineraryCalculation)
+              setHistory(history.slice(0,-1))
+            }} 
+            className="md:hidden card-title"
+            >
               <FaChevronDown className="text-gray-500 mt-1" />
               <span>Calculer un itinéraire</span>
           </button>

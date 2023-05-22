@@ -4,7 +4,7 @@ import MainContext from "../contexts/mainContext";
 
 const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     
-    const { userPosition, setZoomToUserPosition  } = useContext(MainContext)
+    const { userPosition, setZoomToUserPosition, history, setHistory } = useContext(MainContext)
     // const handleToggleShowFindFreshness = () => {
     //     setShowFindFreshness(!showFindFreshness)
     // }
@@ -20,10 +20,13 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
 
 
     return (
-        <div className="card md:card-desktop" onBlur={() => setShowFindFreshness(!showFindFreshness)}>
+        <div className="card md:card-desktop">
             <button
                 className="md:hidden card-title"
-                onClick={() => setShowFindFreshness(!showFindFreshness)}
+                onClick={() => {
+                    setShowFindFreshness(!showFindFreshness)
+                    setHistory(history.slice(0,-1))
+                }}
             >
                 <FaChevronDown className="text-gray-500 mt-1" />
                 <span className="text-lg font-bold mr-2">Lieu le plus frais autour de moi</span>

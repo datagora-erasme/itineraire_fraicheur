@@ -1,10 +1,11 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import { FaRoute } from 'react-icons/fa';
+import MainContext from '../contexts/mainContext';
 
 
 // All of the following const should be send by the backend 
@@ -20,23 +21,23 @@ const colors = {
     "0.01": "#28572c"
 }
 
-function MapFreshness({setZoomToUserPosition, zoomToUserPosition, position}){
+function MapFreshness({setZoomToUserPosition, zoomToUserPosition, userPosition}){
     const map = useMap()
 
-    if(position && zoomToUserPosition){
+    if(userPosition && zoomToUserPosition){
         map.eachLayer((layer) => {
             if (layer.options && layer.options.color === 'green') {
               map.removeLayer(layer);
             }
           });
 
-        const circle = L.circle(position, {
+        const circle = L.circle(userPosition, {
             radius: 500,
             color: 'green',
         }).addTo(map);
 
         /*eslint-disable*/
-        let marker = L.marker(position).addTo(map)
+        let marker = L.marker(userPosition).addTo(map)
 
         // const userPosition = L.Marker(position)
         // userPosition.addTo(map)
@@ -49,11 +50,13 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, position}){
 }
 
 
-function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserPosition, setZoomToUserPosition, position}){
+function Map(){
 
     const [geojsonFiles, setGeojsonFiles] = useState([])
     const [loadingLayer, setLoadingLayer] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+
+    const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, currentItinerary, setCurrentItinerary } = useContext(MainContext)
 
     function getColor(data){
         // TODO : for each layer : specific style properties
@@ -122,8 +125,8 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
             url: "/itinerary/",
             params: {
                 start: {
-                    lat: position[0], 
-                    lon: position[1]
+                    lat: userPosition[0], 
+                    lon: userPosition[1]
                 },
                 end: {
                     lat : coordinates[1],
@@ -148,7 +151,7 @@ function Map({selectedLayers, currentItinerary, setCurrentItinerary, zoomToUserP
                     url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
                 <ZoomControl position='topright' />
-                <MapFreshness zoomToUserPosition={zoomToUserPosition} position={position} setZoomToUserPosition={setZoomToUserPosition}/>
+                <MapFreshness zoomToUserPosition={zoomToUserPosition} userPosition={userPosition} setZoomToUserPosition={setZoomToUserPosition}/>
 
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => { 

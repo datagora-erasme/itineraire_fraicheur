@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
 import { FaChevronDown, FaCheck } from "react-icons/fa";
+import MainContext from "../contexts/mainContext";
 
 
-const CalculateItinerary = ({setCurrentItinerary, showItineraryCalculation,  setShowItineraryCalculation}) => {
+const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalculation}) => {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
@@ -16,6 +17,8 @@ const CalculateItinerary = ({setCurrentItinerary, showItineraryCalculation,  set
   const [showEndSuggestions, setShowEndSuggestions] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const { setCurrentItinerary } = useContext(MainContext)
 
   // const handleToggleItineraryCalculation = () => {
   //   setShowItineraryCalculation(!showItineraryCalculation)

@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { FaChevronDown } from "react-icons/fa";
+import MainContext from '../contexts/mainContext';
 
-function ListLayers({listLayers, selectedLayers, setSelectedLayers, isLayerLoading, showLayers, setShowLayers}){
+function ListLayers({ showLayers, setShowLayers }){
 
-    // const handleToggleLayers = () => {
-    //   setShowLayers(!showLayers);
-    // };
+    const { listLayers, selectedLayers, setSelectedLayers, isLayerLoading } = useContext(MainContext)
 
     function handleCheckBoxList(event){
         const {value, checked} = event.target;

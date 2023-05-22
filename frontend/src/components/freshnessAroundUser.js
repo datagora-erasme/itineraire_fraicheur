@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import MainContext from "../contexts/mainContext";
 
-const FreshnessAroundUser = ({position, zoomToUserPosition, setZoomToUserPosition, showFindFreshness, setShowFindFreshness}) => {
+const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     
-
+    const { userPosition, setZoomToUserPosition  } = useContext(MainContext)
     // const handleToggleShowFindFreshness = () => {
     //     setShowFindFreshness(!showFindFreshness)
     // }
 
     const findFreshnessAroundMe = () => {
-        if (position) {
+        console.log(userPosition)
+        if (userPosition) {
             setZoomToUserPosition(true)
         } else {
             alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")

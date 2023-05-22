@@ -42,6 +42,10 @@ code {
     @apply bg-bgWhite static min-h-fit;
   }
 
+  .card-details-desktop {
+    @apply bg-bgWhite min-h-[100px] max-w-[300px] top-16 left-[400px] flex flex-col gap-0 rounded-3xl;
+  }
+
   .card-title {
     @apply flex flex-row gap-2 font-bold text-mainText
   }

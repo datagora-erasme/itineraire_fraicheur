@@ -10,6 +10,12 @@ export const MainContextProvider = ({ children }) => {
     const [listLayers, setListLayers] = useState([])
     const [selectedLayers, setSelectedLayers] = useState([])
     const [currentItinerary, setCurrentItinerary] = useState(null)
+    const [showCurrentItineraryDetails, setShowCurrentItineraryDetails] = useState(false)
+
+    const [startAddress, setStartAddress] = useState("");
+    const [endAddress, setEndAddress] = useState("");
+    const [selectedStartAddress, setSelectedStartAddress] = useState(null)
+    const [selectedEndAddress, setSelectedEndAddress] = useState(null)
 
     const [isLayerLoading, setIsLayerLoading] = useState(false)
 
@@ -63,7 +69,6 @@ export const MainContextProvider = ({ children }) => {
         }
     }, [userPosition])
 
-    console.log(userAddress)
     return(
         <MainContext.Provider
             value={{
@@ -77,11 +82,21 @@ export const MainContextProvider = ({ children }) => {
                 setSelectedLayers,
                 currentItinerary,
                 setCurrentItinerary,
+                showCurrentItineraryDetails,
+                setShowCurrentItineraryDetails,
                 isLayerLoading,
                 setIsLayerLoading,
                 userAddress, 
                 history, 
-                setHistory
+                setHistory,
+                startAddress, 
+                setStartAddress,
+                endAddress,
+                setEndAddress,
+                selectedStartAddress,
+                setSelectedStartAddress,
+                selectedEndAddress,
+                setSelectedEndAddress
             }}
         >
             {children}

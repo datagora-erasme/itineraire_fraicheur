@@ -6,19 +6,18 @@ import MainContext from "../contexts/mainContext";
 
 
 const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalculation}) => {
-  const [startAddress, setStartAddress] = useState("");
-  const [endAddress, setEndAddress] = useState("");
   const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
   const [endAddressSuggestions, setEndAddressSuggestions] = useState([])
-  const [selectedStartAddress, setSelectedStartAddress] = useState(null)
-  const [selectedEndAddress, setSelectedEndAddress] = useState(null)
 
   const [showStartSuggestions, setShowStartSuggestions] = useState(false);
   const [showEndSuggestions, setShowEndSuggestions] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const { setCurrentItinerary, userAddress, history, setHistory } = useContext(MainContext)
+  const { setCurrentItinerary, userAddress, history, setHistory, setShowCurrentItineraryDetails, 
+    selectedStartAddress, setSelectedStartAddress, selectedEndAddress, setSelectedEndAddress,
+    startAddress, setStartAddress, endAddress, setEndAddress
+   } = useContext(MainContext)
 
   // const handleToggleItineraryCalculation = () => {
   //   setShowItineraryCalculation(!showItineraryCalculation)
@@ -105,6 +104,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   const calculateItinerary = () => {
     setIsLoading(true)
+    setShowCurrentItineraryDetails(false)
     const start = performance.now()
     axios.get(`${process.env.REACT_APP_URL_SERVER}/itinerary/`, {
         params: {
@@ -122,6 +122,12 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
         console.log("duration : ", (end-start)/1000)
         setCurrentItinerary(response.data)
         setIsLoading(false)
+        setShowItineraryCalculation(false)
+        setShowCurrentItineraryDetails(true)
+        setHistory([...history, {fn: () => {
+          setShowCurrentItineraryDetails(false)
+          setShowItineraryCalculation(true)
+        }}])
     }).catch((error) => {
         console.error(error)
     })
@@ -132,7 +138,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
   };
 
   useEffect(() => {
-    if(userAddress){
+    if(userAddress && startAddress === ""){
       setStartAddress(userAddress.properties.label)
       setSelectedStartAddress(userAddress)
     }

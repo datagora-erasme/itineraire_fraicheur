@@ -4,6 +4,7 @@ import CalculateItinerary from './calculateItinerary'
 import FreshnessAroundUser from './freshnessAroundUser'
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import MainContext from '../contexts/mainContext';
+import CurrentItineraryDetails from './currentItineraryDetails';
 
 
 function Content(){
@@ -11,12 +12,13 @@ function Content(){
     const [showFindFreshness, setShowFindFreshness] = useState(false)
     const [showLayers, setShowLayers] = useState(false);
 
-    const { history, setHistory } = useContext(MainContext)
+    const { history, setHistory, showCurrentItineraryDetails } = useContext(MainContext)
 
     return(
         <div style={{zIndex:1000}} className="absolute md:top-8 bottom-4 flex flex-col gap-4 w-full p-8 md:pd-0 md:w-[400px] md:gap-0 md:rounded-full">
             <div className="hidden md:block bg-bgWhite w-[300px] ml-[20px] p-4 absolute top-0 rounded-full font-bold text-xl drop-shadow-lg">Sortons au frais !</div>
             <div className="hidden md:block h-8 bg-bgWhite rounded-t-3xl"></div>
+            {showCurrentItineraryDetails && <CurrentItineraryDetails/>}
             <button 
                 onClick={() => {
                     setShowItineraryCalculation(!showItineraryCalculation)
@@ -70,4 +72,3 @@ function Content(){
 }
 
 export default Content
-// style={{ position: 'absolute', top: 20, left: 20, zIndex:1000}}

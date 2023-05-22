@@ -18,19 +18,31 @@ def shortest_path(G, start, end, G_multidigraph):
     origin_node = ox.nearest_nodes(G, X=start[0], Y=start[1])
     destination_node = ox.nearest_nodes(G, X=end[0], Y=end[1])
 
-    print("Finding shortest path ...")
+    print("Finding shortest path IF ...")
 
-    shortest_path = nx.shortest_path(G, source=origin_node, target=destination_node, weight="IF")
+    shortest_path_if = nx.shortest_path(G, source=origin_node, target=destination_node, weight="IF")
 
-    route_edges = ox.utils_graph.get_route_edge_attributes(G_multidigraph, shortest_path)
+    route_edges_if = ox.utils_graph.get_route_edge_attributes(G_multidigraph, shortest_path_if)
 
-    gdf_route_edges = gpd.GeoDataFrame(route_edges, crs=G.graph['crs'], geometry='geometry')
+    gdf_route_edges_if = gpd.GeoDataFrame(route_edges_if, crs=G.graph['crs'], geometry='geometry')
 
-    gdf_route_edges = gdf_route_edges.to_crs(epsg=4326)
+    gdf_route_edges_if = gdf_route_edges_if.to_crs(epsg=4326)
 
-    geojson = json.loads(gdf_route_edges.to_json())
+    geojson_if = json.loads(gdf_route_edges_if.to_json())
 
-    return geojson
+    print("Finding shortest path Length ...")
+
+    shortest_path_len = nx.shortest_path(G, source=origin_node, target=destination_node, weight="length")
+
+    route_edges_len = ox.utils_graph.get_route_edge_attributes(G_multidigraph, shortest_path_len)
+
+    gdf_route_edges_len = gpd.GeoDataFrame(route_edges_len, crs=G.graph['crs'], geometry='geometry')
+
+    gdf_route_edges_len = gdf_route_edges_len.to_crs(epsg=4326)
+
+    geojson_len = json.loads(gdf_route_edges_len.to_json())
+
+    return geojson_if, geojson_len
 
 # global :  5.0173704624176025
 # node:  1.904900312423706

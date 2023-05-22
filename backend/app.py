@@ -3,6 +3,7 @@ from flask_cors import CORS
 from models.data import *
 from load_network import *
 from models.itinerary import *
+import concurrent.futures
 
 app = Flask(__name__)
 CORS(app)
@@ -64,12 +65,26 @@ def get_itinerary():
     print(start_lat, start_lon, end_lat, end_lon)
     try:
         print(start, end)
-        geojson_path = shortest_path(G, start, end, G_multidigraph)
-        # print(geojson_path)
-        results = [{
-            "geojson": geojson_path, 
-            "color": "blue"
-        }]
+        # with concurrent.futures.ThreadPoolExecutor() as executor:
+        #     if_future = executor.submit(shortest_path, G, start, end, G_multidigraph, "IF")
+        #     length_future = executor.submit(shortest_path, G, start, end, G_multidigraph, "length")
+
+        # geojson_path_IF = if_future.result()
+        # geojson_path_length = length_future.result()
+        geojson_path_IF, geojson_path_length = shortest_path(G, start, end, G_multidigraph)
+
+        results = [
+            {
+                "name": "Itinéraire le plus frais",
+                "geojson": geojson_path_IF, 
+                "color": "green"
+            },
+            {
+                "name": "Itinéraire le plus court",
+                "geojson": geojson_path_length,
+                "color": "blue"
+            }
+        ]
         # print(results)
         return jsonify(results)
     except Exception as e:

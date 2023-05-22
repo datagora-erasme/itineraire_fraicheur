@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
 import { FaChevronDown, FaCheck } from "react-icons/fa";
@@ -18,7 +18,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const { setCurrentItinerary } = useContext(MainContext)
+  const { setCurrentItinerary, userAddress } = useContext(MainContext)
 
   // const handleToggleItineraryCalculation = () => {
   //   setShowItineraryCalculation(!showItineraryCalculation)
@@ -130,6 +130,13 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
   const handleEndFocus = () => {
     setShowEndSuggestions(true);
   };
+
+  useEffect(() => {
+    if(userAddress){
+      setStartAddress(userAddress.properties.label)
+      setSelectedStartAddress(userAddress)
+    }
+  }, [userAddress])
 
   return (
       <div className="card md:card-desktop">

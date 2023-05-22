@@ -39,7 +39,7 @@ code {
   }
 
   .card-desktop {
-    @apply bg-bgWhite static min-h-fit bg-opacity-80;
+    @apply bg-bgWhite static min-h-fit;
   }
 
   .card-title {

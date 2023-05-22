@@ -13,6 +13,8 @@ export const MainContextProvider = ({ children }) => {
 
     const [isLayerLoading, setIsLayerLoading] = useState(false)
 
+    const [userAddress, setUserAddress] = useState(null)
+
     useEffect(() => {
         async function fetchListLayers(){
             try{
@@ -44,6 +46,22 @@ export const MainContextProvider = ({ children }) => {
         );
       }, []);
 
+    useEffect(() => {
+        if(userPosition){
+            axios
+            .get(
+              `https://api-adresse.data.gouv.fr/reverse/?lon=${userPosition[1]}&lat=${userPosition[0]}`
+            )
+            .then((response) => {
+              setUserAddress(response.data.features[0]);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+    }, [userPosition])
+
+    console.log(userAddress)
     return(
         <MainContext.Provider
             value={{
@@ -58,7 +76,8 @@ export const MainContextProvider = ({ children }) => {
                 currentItinerary,
                 setCurrentItinerary,
                 isLayerLoading,
-                setIsLayerLoading
+                setIsLayerLoading,
+                userAddress
             }}
         >
             {children}

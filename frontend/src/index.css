@@ -31,15 +31,15 @@ code {
     @apply p-4
   }
   .secondary-btn-mobile {
-    @apply bg-gray-400 text-bgWhite rounded-full;
+    @apply bg-gray-400 text-bgWhite rounded-full overflow-y-scroll;
   }
 
   .card {
-    @apply bg-bgWhite absolute w-full -left-0 p-4;
+    @apply bg-bgWhite fixed w-full min-h-[50vh] -left-0 p-4;
   }
 
   .card-desktop {
-    @apply bg-white static bg-opacity-80;
+    @apply bg-bgWhite static min-h-fit bg-opacity-80;
   }
 
   .card-title {

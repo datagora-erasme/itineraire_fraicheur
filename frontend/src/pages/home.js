@@ -51,7 +51,7 @@ function Home(){
       }, []);
 
     return (
-        <div style={{position: 'relative'}} className="min-h-screen">
+        <div style={{position: 'relative'}} className="min-h-screen max-h-screen">
             <Content 
                 selectedLayers={selectedLayers} 
                 listLayers={listLayers} 

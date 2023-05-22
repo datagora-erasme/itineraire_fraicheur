@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from "react";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
-import { FaRoute } from "react-icons/fa";
-import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaCheck } from "react-icons/fa";
 
 
 const CalculateItinerary = ({setCurrentItinerary, showItineraryCalculation,  setShowItineraryCalculation}) => {
@@ -199,14 +198,14 @@ const CalculateItinerary = ({setCurrentItinerary, showItineraryCalculation,  set
             disabled={!selectedStartAddress || !selectedEndAddress}
             >
               {isLoading ? (
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
+                  <span>En cours de chargement</span>
                   <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-primary animate-spin mr-3"></div>
-                  <span>Loading...</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
                   <span className="">Valider ma recherche </span>
-                  <FaRoute/>
+                  <FaCheck/>
                 </div>
               )}
             </button>

@@ -1,5 +1,6 @@
 import React, { useState, useContext, useCallback, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
+import { BiCurrentLocation } from "react-icons/bi"
 import MainContext from "../contexts/mainContext";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
@@ -11,7 +12,7 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     
     const { userPosition, setZoomToUserPosition, history, setHistory, 
         startAddress, setStartAddress, selectedStartAddress, setSelectedStartAddress, userAddress,
-        radius, setRadius
+        radius, setRadius, showCircle, setShowCircle
     } = useContext(MainContext)
     // const handleToggleShowFindFreshness = () => {
     //     setShowFindFreshness(!showFindFreshness)
@@ -69,6 +70,12 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
         setRadius(e.target.value)
     }
 
+    const handleSelectUserAddress = () => {
+        console.log("test")
+        setStartAddress(userAddress.properties.label)
+        setSelectedStartAddress(userAddress)
+    }
+
     useEffect(() => {
         if(userAddress && startAddress === ""){
           setStartAddress(userAddress.properties.label)
@@ -90,11 +97,12 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
                 <span className="text-lg font-bold mr-2">Lieu le plus frais autour de moi</span>
             </button>
 
-                <div className="flex flex-col">
-                    <label htmlFor="startAddress" className="block mb-1 mt-4 flex">
-                        Départ
+                <div className="flex flex-col p-2">
+                    <label htmlFor="startAddress" className="block mb-1 mt-4 flex justify-between">
+                        <p>Départ</p>
+                        <input type="checkbox" onChange={() => setShowCircle(!showCircle)} checked={showCircle}></input>
                     </label>
-                    <div className="relative">
+                    <div className="relative flex gap-2">
                         <input
                         type="text"
                         id="startAddress"
@@ -108,7 +116,7 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
                         />
                         { showStartSuggestions && <ul
                         id="startAddressSuggestions"
-                        className="absolute z-10 w-full bg-white border-gray-300 rounded-md shadow-lg mt-1"
+                        className="absolute z-10 w-full bg-white border-gray-300 rounded-md shadow-lg mt-12 md:mt-10"
                         value={startAddress}
                         >
                         {startAddressSuggestions.map((suggestion) => {
@@ -119,8 +127,13 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
                             )
                         })}
                         </ul>}
+                        <BiCurrentLocation size={30} className="mt-2 cursor-pointer" onClick={handleSelectUserAddress}/>
                     </div>
-                    <div className="w-64 mx-auto mb-2">
+                    <div className="w-full mx-auto mb-2 flex flex-col gap-2 mt-2">
+                        <div className="w-full flex justify-between">
+                            <p>Distance (km)</p>
+                            <p className="font-bold">{radius} km</p>
+                        </div>
                         <input
                             type="range"
                             min="0.2"
@@ -130,9 +143,8 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
                             onChange={handleChangeRadius}
                             className="w-full h-4 bg-gray-400 rounded-full appearance-none"
                         />
-                        <div className="flex justify-between mt-2">
+                        <div className="flex justify-between">
                             <span>0.2 km</span>
-                            <span>{radius} km</span>
                             <span>10 km</span>
                         </div>
                     </div>

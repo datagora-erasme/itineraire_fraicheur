@@ -25,6 +25,8 @@ export const MainContextProvider = ({ children }) => {
 
     const [radius, setRadius] = useState(1)
 
+    const [showCircle, setShowCircle] = useState(true)
+
     useEffect(() => {
         async function fetchListLayers(){
             try{
@@ -100,7 +102,9 @@ export const MainContextProvider = ({ children }) => {
                 selectedEndAddress,
                 setSelectedEndAddress,
                 radius,
-                setRadius
+                setRadius, 
+                showCircle, 
+                setShowCircle
             }}
         >
             {children}

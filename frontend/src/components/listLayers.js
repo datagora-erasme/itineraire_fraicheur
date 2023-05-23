@@ -27,7 +27,7 @@ function ListLayers({ showLayers, setShowLayers }){
         >
         {isLayerLoading && <div class="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>}
           <FaChevronDown className="text-gray-500 mt-1" />
-          <span className="text-lg font-bold mr-2">Liste des layers</span>
+          <span className="text-lg font-bold mr-2">Afficher sur la carte</span>
         </button>
           {listLayers.length !== 0 ? <ul className="mt-2">
             {listLayers.map((layer) => {

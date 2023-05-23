@@ -24,31 +24,44 @@ const colors = {
 
 const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0,1])
 
-function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress}){
+function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress, showCircle}){
     const map = useMap()
 
-    if(selectedStartAddress && zoomToUserPosition){
+    if(selectedStartAddress && showCircle){
         const coordinates = [selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]
         map.eachLayer((layer) => {
-            if (layer.options && layer.options.color === 'green') {
+            if (layer.options && (layer.options.id === "freshnessAroundUser" || layer.options.id === "userPosition")) {
               map.removeLayer(layer);
             }
           });
 
         const circle = L.circle(coordinates, {
+            id:"freshnessAroundUser",
             radius: radius*1000,
             color: 'green',
         }).addTo(map);
 
         /*eslint-disable*/
-        let marker = L.marker(coordinates).addTo(map)
+        let marker = L.marker(coordinates, {
+            id:"userPosition"
+        }).addTo(map)
 
         // const userPosition = L.Marker(position)
         // userPosition.addTo(map)
       
         // zoom to circle
-        map.fitBounds(circle.getBounds());
-        setZoomToUserPosition(false)
+        if(zoomToUserPosition){
+            map.fitBounds(circle.getBounds());
+            setZoomToUserPosition(false)
+        }
+
+
+    } else if (!showCircle){
+        map.eachLayer((layer) => {
+            if (layer.options && (layer.options.id === "freshnessAroundUser" || layer.options.id === "userPosition")) {
+              map.removeLayer(layer);
+            }
+          });
     }
     return null
 }
@@ -60,7 +73,7 @@ function Map(){
     const [loadingLayer, setLoadingLayer] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
-    const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, currentItinerary, setCurrentItinerary, selectedStartAddress, radius } = useContext(MainContext)
+    const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, currentItinerary, setCurrentItinerary, selectedStartAddress, radius, showCircle } = useContext(MainContext)
 
     function getColor(data){
         // TODO : for each layer : specific style properties
@@ -156,7 +169,7 @@ function Map(){
                     // url="https://openmaptiles.data.grandlyon.com/data/v3/{z}/{x}/{y}.pbf"
                 />
                 <ZoomControl position='topright' />
-                <MapFreshness zoomToUserPosition={zoomToUserPosition} radius={radius} setZoomToUserPosition={setZoomToUserPosition} selectedStartAddress={selectedStartAddress}/>
+                <MapFreshness zoomToUserPosition={zoomToUserPosition} radius={radius} setZoomToUserPosition={setZoomToUserPosition} selectedStartAddress={selectedStartAddress} showCircle={showCircle}/>
 
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => { 

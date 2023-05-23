@@ -24,23 +24,24 @@ const colors = {
 
 const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0,1])
 
-function MapFreshness({setZoomToUserPosition, zoomToUserPosition, userPosition}){
+function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress}){
     const map = useMap()
 
-    if(userPosition && zoomToUserPosition){
+    if(selectedStartAddress && zoomToUserPosition){
+        const coordinates = [selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]
         map.eachLayer((layer) => {
             if (layer.options && layer.options.color === 'green') {
               map.removeLayer(layer);
             }
           });
 
-        const circle = L.circle(userPosition, {
-            radius: 500,
+        const circle = L.circle(coordinates, {
+            radius: radius*1000,
             color: 'green',
         }).addTo(map);
 
         /*eslint-disable*/
-        let marker = L.marker(userPosition).addTo(map)
+        let marker = L.marker(coordinates).addTo(map)
 
         // const userPosition = L.Marker(position)
         // userPosition.addTo(map)
@@ -59,7 +60,7 @@ function Map(){
     const [loadingLayer, setLoadingLayer] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
-    const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, currentItinerary, setCurrentItinerary } = useContext(MainContext)
+    const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, currentItinerary, setCurrentItinerary, selectedStartAddress, radius } = useContext(MainContext)
 
     function getColor(data){
         // TODO : for each layer : specific style properties
@@ -155,7 +156,7 @@ function Map(){
                     // url="https://openmaptiles.data.grandlyon.com/data/v3/{z}/{x}/{y}.pbf"
                 />
                 <ZoomControl position='topright' />
-                <MapFreshness zoomToUserPosition={zoomToUserPosition} userPosition={userPosition} setZoomToUserPosition={setZoomToUserPosition}/>
+                <MapFreshness zoomToUserPosition={zoomToUserPosition} radius={radius} setZoomToUserPosition={setZoomToUserPosition} selectedStartAddress={selectedStartAddress}/>
 
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => { 

@@ -54,3 +54,45 @@ code {
     @apply block w-full p-2 border-gray-900 rounded-md shadow-sm focus:ring focus:ring-primary focus:border-primary sm:text-sm italic
   }
 }
+
+/* SLIDER */
+/* CHROME */
+/* la zone de déplacement */
+input[type=range].custom-slider::-webkit-slider-runnable-track {
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;  /* supprimé définie sur l'input */
+}
+/* le curseur */
+input[type=range].custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;       /* également nécessaire sur le curseur */
+  width: 1em;
+  height: inherit;                /* s'adapte à la hauteur de l'input */
+  border: none;
+  border-radius: 0;               /* pris en compte sur Webkit et Edge */
+  background: currentColor;       /* pris en compte sur Webkit only */
+}
+
+/* FIREFOX */
+/* la zone de déplacement */
+input[type=range].custom-slider::-moz-range-track {
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;  /* supprimé définie sur l'input */
+}
+/* le curseur */
+input[type=range].custom-slider::-moz-range-thumb {
+  width: 1em;
+  height: inherit;                /* s'adapte à la hauteur de l'input */
+  border: none;                   /* supprimer la bordure */
+  border-radius: 0;               /* supprimer le rayon */
+  background: red;
+  color: red;
+}
+/* barre progression avant */
+input[type=range].custom-slider::-moz-range-progress {
+  height: 0;
+  background: transparent;        /* supprime barre progression avant */
+}

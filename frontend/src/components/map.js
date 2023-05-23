@@ -6,6 +6,7 @@ import L from 'leaflet'
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import { FaRoute } from 'react-icons/fa';
 import MainContext from '../contexts/mainContext';
+import chroma from "chroma-js"
 
 
 // All of the following const should be send by the backend 
@@ -20,6 +21,8 @@ const colors = {
     "0.2": "#4d8652",
     "0.01": "#28572c"
 }
+
+const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0,1])
 
 function MapFreshness({setZoomToUserPosition, zoomToUserPosition, userPosition}){
     const map = useMap()
@@ -222,9 +225,17 @@ function Map(){
                 }
 
                 {currentItinerary && 
-                    currentItinerary.map((it) => {
+                    currentItinerary.map((it, index) => {
                         return(
-                            <GeoJSON data={it.geojson} style={{color: it.color}} key={Math.random()}/>
+                            <GeoJSON 
+                            data={it.geojson} 
+                            style={(feature) => ({
+                                color: index === 0 ? colorIfScale(feature.properties.IF).hex() : it.color, 
+                                weight: 5, 
+                                lineCap: "round", 
+                                lineJoin: "round"
+                                })} 
+                            key={Math.random()}/>
                         )
                     })
                 }

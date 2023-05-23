@@ -8,9 +8,9 @@ import concurrent.futures
 app = Flask(__name__)
 CORS(app)
 
-network_path = "./data/osm/final_network.gpkg"
-network_pickle_path = "./data/pickle_network.pickle"
-network_multidigraph_pickle_path ="./data/pickle_network_multidigraph.pickle"
+network_path = "./data/osm/final_network_veget.gpkg"
+network_pickle_path = "./data/pickle_network_veget.pickle"
+network_multidigraph_pickle_path ="./data/pickle_network_multidigraph_veget.pickle"
 
 G = None
 G_multidigraph = None
@@ -77,12 +77,12 @@ def get_itinerary():
             {
                 "name": "Itinéraire le plus frais",
                 "geojson": geojson_path_IF, 
-                "color": "green"
+                "color": "#1f8b2c"
             },
             {
                 "name": "Itinéraire le plus court",
                 "geojson": geojson_path_length,
-                "color": "blue"
+                "color": " #1b2599 "
             }
         ]
         # print(results)

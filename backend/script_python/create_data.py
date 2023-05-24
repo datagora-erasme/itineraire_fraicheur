@@ -144,11 +144,25 @@ print("Calculating IF vegetation")
 # }
 
 
+# metrop_network_parameters = {
+#     "place_name": "Lyon, France",
+#     "network_type": "walk",
+#     "bbox": (45.9472,45.5497, 5.0803,4.6717),
+#     "output_file" : data_folder_path+ "osm/metrop_walk_simplified.gpkg"
+# }
+
+filters = (
+        f'["highway"]["area"!~"yes"]'
+        f'["highway"!~"abandoned|bus_guideway|construction|cycleway|motorway|trunk|planned|platform|'
+        f'proposed|raceway|primary|secondary|motorway_link|trunk_link|primary_link|secondary_link|escape|busway"]'
+        f'["foot"!~"no"]["service"!~"private"]'
+    )
+
 metrop_network_parameters = {
     "place_name": "Lyon, France",
-    "network_type": "walk",
+    "network_filters": filters,
     "bbox": (45.9472,45.5497, 5.0803,4.6717),
-    "output_file" : data_folder_path+ "osm/metrop_walk_simplified.gpkg"
+    "output_file" : data_folder_path+ "osm/metrop_walk_custom.gpkg"
 }
 
 data_informations["osm"]["network_parameters"] = metrop_network_parameters

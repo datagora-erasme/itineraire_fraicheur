@@ -71,11 +71,12 @@ def load_osm_network(network_paramaters):
     # Retrieve the street network graph
     if(network_paramaters["bbox"] !=None):
         north, south, east, west = network_paramaters["bbox"]
-        G = ox.graph_from_bbox(north, south, east, west, network_type=network_paramaters["network_type"], simplify=True)
+        # G = ox.graph_from_bbox(north, south, east, west, network_type=network_paramaters["network_type"], simplify=True)
+        G = ox.graph_from_bbox(north, south, east, west, custom_filter=network_paramaters["network_filters"], simplify=True)
     else:
-        G = ox.graph_from_place(network_paramaters["place_name"], network_type=network_paramaters["network_type"], simplify=False)
+        G = ox.graph_from_place(network_paramaters["place_name"], custom_filter=network_paramaters["network_filters"], simplify=False)
 
-    G = ox.project_graph(G, to_crs="EPSG:4171")
+    G = ox.project_graph(G, to_crs="EPSG:3946")
 
     #G = ox.simplify_graph(G)
     #G = ox.project_graph(G)
@@ -147,7 +148,7 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
         joined_edges_serie = gpd.GeoSeries(joined_edges["geometry"])
 
-        joined_edges_serie = joined_edges_serie.to_crs(32631)
+        # joined_edges_serie = joined_edges_serie.to_crs(32631)
 
         joined_edges["cal_length"] = joined_edges_serie.length
 
@@ -155,7 +156,7 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
     
     else:
         layer_serie = gpd.GeoSeries(layer["geometry"])
-        layer_serie = layer_serie.to_crs(32631)
+        # layer_serie = layer_serie.to_crs(32631)
         layer["cal_length"] = layer_serie.length
 
         network_weighted_average(network_path, layer, layer_name, output_path)

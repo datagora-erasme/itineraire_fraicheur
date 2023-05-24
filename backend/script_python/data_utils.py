@@ -282,10 +282,13 @@ def convert_file(input_path, output_path, driver, input_extension = "gml", outpu
                     gdf = gdf.to_crs(epsg=4326)
                     print("CRS of GEOJSON: ", gdf.crs)
                 
+                if(driver == "GPKG"):
+                    gdf = gdf.to_crs(epsg=3946)
+                
                 # Set output file path and name
                 output_name = filename.replace(input_extension, output_extension)
                 new_output_path = os.path.join(output_path, output_name)
-                
+
                 # Write GeoDataFrame to output Shapefile
                 gdf.to_file(new_output_path, driver=driver)
 
@@ -296,6 +299,8 @@ def convert_file(input_path, output_path, driver, input_extension = "gml", outpu
         if(driver == "GeoJSON"):
             # 4326 is crs of OSM => used to project data on leaflet
             gdf = gdf.to_crs(epsg=4326)
+        if(driver == "GPKG"):
+            gdf = gdf.to_crs(epsg=3946)
         gdf.to_file(output_path, driver=driver)
         print(f"Done, {input_path} converted into {output_extension}")
 
@@ -328,20 +333,20 @@ def points_to_polygon(point_path, polygon_path):
     points = gpd.read_file(point_path)
 
     # change temporarily the CRS (projection system) because buffering need meter
-    points.to_crs(epsg=3857)
+    # points.to_crs(epsg=3857)
 
     # Create a buffer around each point
-    buffered_points = points.to_crs(epsg=3857).buffer(points["buffer_size"])
+    buffered_points = points.buffer(points["buffer_size"])
 
     # Convert the buffered points to polygons
     polygons = buffered_points.geometry.apply(lambda x: x.convex_hull)
 
     # Create a new GeoDataFrame with the polygon geometry and any additional attributes from the original points shapefile
-    polygon_gdf = gpd.GeoDataFrame(points.drop('geometry', axis=1), geometry=polygons, crs=3857)
+    polygon_gdf = gpd.GeoDataFrame(points.drop('geometry', axis=1), geometry=polygons, crs=3946)
 
-    final_polygon = polygon_gdf.to_crs(epsg=4171)
+    # final_polygon = polygon_gdf.to_crs(epsg=4171)
 
-    final_polygon.to_file(polygon_path, driver="GPKG")
+    polygon_gdf.to_file(polygon_path, driver="GPKG")
 
 def convert_all_points_into_polygons(output_path_folder):
     """ Convert all shapefile with Points Type into Polygons """

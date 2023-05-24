@@ -73,7 +73,9 @@ function Map(){
     const [loadingLayer, setLoadingLayer] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
-    const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, currentItinerary, setCurrentItinerary, selectedStartAddress, radius, showCircle } = useContext(MainContext)
+    const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, 
+        currentItinerary, setCurrentItinerary, selectedStartAddress, selectedEndAddress, radius, showCircle,
+     } = useContext(MainContext)
 
     function getColor(data){
         // TODO : for each layer : specific style properties
@@ -161,7 +163,7 @@ function Map(){
     return (
         <div>
             {loadingLayer && "Loading ...."}
-            <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={false} className="mapContainer" zoomControl={false}>
+            <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={true} className="mapContainer" zoomControl={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     // url="http://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png"
@@ -252,7 +254,13 @@ function Map(){
                         )
                     })
                 }
-
+                { selectedStartAddress &&
+                    <Marker position={[selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]}></Marker>
+                }
+                {
+                    selectedEndAddress &&
+                    <Marker position={[selectedEndAddress.geometry.coordinates[1], selectedEndAddress.geometry.coordinates[0]]}></Marker>
+                }
             </MapContainer>
 
         </div>

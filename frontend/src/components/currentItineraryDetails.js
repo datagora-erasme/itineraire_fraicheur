@@ -10,7 +10,6 @@ const CurrentItineraryDetails = () => {
         if(currentItinerary){
             setDetails([])
             for(let it of currentItinerary){
-                console.log(it)
                 let tot = 0
                 let dist = 0
                 let duration = 0
@@ -24,7 +23,7 @@ const CurrentItineraryDetails = () => {
                 }
                 duration = Math.round(Math.round(tot) * 60 / 4000)
                 if(duration > 60){
-                    let hour = Math.round(duration/60)
+                    let hour = Math.trunc(duration/60)
                     let minutes = duration % 60
                     duration = hour.toString()+ "h " + minutes.toString() +"min"
                 } else {
@@ -35,8 +34,6 @@ const CurrentItineraryDetails = () => {
 
         }
     }, [currentItinerary])
-
-    console.log(currentItinerary)
 
     return(
         <div className="card md:card-details-desktop">

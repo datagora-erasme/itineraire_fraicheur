@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
 import { FaChevronDown, FaCheck } from "react-icons/fa";
+import { BiCurrentLocation } from "react-icons/bi"
 import MainContext from "../contexts/mainContext";
 
 
@@ -102,6 +103,11 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
     }
   }
 
+  const handleSelectUserAddress = () => {
+    setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
+    setSelectedStartAddress(userAddress)
+  }
+
   const calculateItinerary = () => {
     setIsLoading(true)
     setShowCurrentItineraryDetails(false)
@@ -139,7 +145,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   useEffect(() => {
     if(userAddress && startAddress === ""){
-      setStartAddress(userAddress.properties.label)
+      setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
       setSelectedStartAddress(userAddress)
     }
   }, [userAddress])
@@ -159,7 +165,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
           <label htmlFor="startAddress" className="block mb-1 mt-4 flex">
             Départ
           </label>
-          <div className="relative">
+          <div className="relative flex gap-2">
             <input
               type="text"
               id="startAddress"
@@ -173,7 +179,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
             />
             { showStartSuggestions && <ul
               id="startAddressSuggestions"
-              className="absolute z-10 w-full bg-white border-gray-300 rounded-md shadow-lg mt-1"
+              className="absolute z-10 w-full bg-white border-gray-300 rounded-md shadow-lg mt-12 md:mt-10"
               value={startAddress}
             >
               {startAddressSuggestions.map((suggestion) => {
@@ -184,6 +190,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
                 )
               })}
             </ul>}
+            <BiCurrentLocation size={30} className="mt-1 cursor-pointer" onClick={handleSelectUserAddress}/>
           </div>
           
           <label htmlFor="endAddress" className="block my-2 flex ">

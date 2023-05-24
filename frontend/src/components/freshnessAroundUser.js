@@ -72,14 +72,13 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     }
 
     const handleSelectUserAddress = () => {
-        console.log("test")
-        setStartAddress(userAddress.properties.label)
+        setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
         setSelectedStartAddress(userAddress)
     }
 
     useEffect(() => {
         if(userAddress && startAddress === ""){
-          setStartAddress(userAddress.properties.label)
+            setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
           setSelectedStartAddress(userAddress)
         }
       }, [userAddress])

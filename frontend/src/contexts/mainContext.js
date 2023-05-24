@@ -25,7 +25,7 @@ export const MainContextProvider = ({ children }) => {
 
     const [radius, setRadius] = useState(1)
 
-    const [showCircle, setShowCircle] = useState(true)
+    const [showCircle, setShowCircle] = useState(false)
 
     useEffect(() => {
         async function fetchListLayers(){

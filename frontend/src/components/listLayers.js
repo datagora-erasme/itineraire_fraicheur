@@ -29,25 +29,52 @@ function ListLayers({ showLayers, setShowLayers }){
           <FaChevronDown className="text-gray-500 mt-1" />
           <span className="text-lg font-bold mr-2">Afficher sur la carte</span>
         </button>
-          {listLayers.length !== 0 ? <ul className="mt-2">
-            {listLayers.map((layer) => {
-              return (
-                <li key={layer.id} className="flex items-center justify-start space-x-2">
-                  <input
-                    type="checkbox"
-                    id={layer.id}
-                    value={layer.id}
-                    checked={selectedLayers.includes(layer.id)}
-                    onChange={handleCheckBoxList}
-                    disabled={isLayerLoading}
-                  />
-                  <label htmlFor={layer.id} className="ml-2">
-                    {layer.name}
-                  </label>
-                </li>
-              );
-            })}
-          </ul> : "Loading .. "}
+        {listLayers.length !== 0 ? (
+            <ul className="mt-2 grid grid-cols-3">
+              {listLayers.map((layer) => {
+                return (
+                  <li key={layer.id} className="">
+                    <label htmlFor={layer.id} className="ml-2 flex flex-col items-center text-xs gap-2">
+                      <input
+                        type="checkbox"
+                        id={layer.id}
+                        value={layer.id}
+                        checked={selectedLayers.includes(layer.id)}
+                        onChange={handleCheckBoxList}
+                        disabled={isLayerLoading}
+                        className="hidden"
+                      />
+                      <div id={`img_${layer.id}`} className='border-solid border-2 rounded-full p-4 hover:bg-gray-100 cursor-pointer'>
+                        <img
+                          className="w-8 h-8"
+                          src={layer.marker_option.iconUrl}
+                          alt="Checkbox"
+                          onClick={(e) => {
+                            const checkbox = document.getElementById(layer.id);
+                            if (checkbox) {
+                              checkbox.checked = !checkbox.checked;
+                              const img = document.getElementById(`img_${layer.id}`)
+                              if(checkbox.checked){
+                                console.log(img.class)
+                                img.className = 'bg-gray-300 border-solid border-2 rounded-full p-4 cursor-pointer'
+                              } else {
+                                img.className = 'border-solid border-2 rounded-full p-4 hover:bg-gray-100 cursor-pointer'
+                              }
+
+                              handleCheckBoxList(e);
+                            }
+                          }}
+                        />
+                      </div>
+                      {layer.name}
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            "Loading..."
+          )}
       </div>
       );
     

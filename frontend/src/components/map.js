@@ -176,7 +176,6 @@ function Map(){
                         if(selectedLayers.includes(data.id)) {
                             const dataType = data.geojson.features[0].geometry.type
                             const markerOption = data.markerOption
-                            console.log(dataType)
                             if(dataType === "Point"){
                                 return(
                                         <MarkerClusterGroup 

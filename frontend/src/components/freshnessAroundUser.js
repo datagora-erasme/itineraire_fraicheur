@@ -51,6 +51,7 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     const findFreshnessAroundMe = () => {
         if (selectedStartAddress) {
             setZoomToUserPosition(true)
+            setShowCircle(true)
         } else {
             alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
         }

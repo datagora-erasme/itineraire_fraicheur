@@ -125,16 +125,16 @@ data_informations["data_raw"]["temp_surface_road_raw"]["recalculated_if_path"] =
 
 print("Calculating IF vegetation")
 
-# print(data_informations["data_raw"])
-# veget_path = data_informations["data_raw"]["vegetation_raw"]["gpkg_path"]
-# veget_IF_path = "./raw_data/veget_IF.gpkg"
+print(data_informations["data_raw"])
+veget_path = data_informations["data_raw"]["vegetation_raw"]["gpkg_path"]
+veget_IF_path = "./raw_data/veget_IF.gpkg"
 
-# calculate_IF(veget_path, veget_IF_path, veget_IF, "veget_raw")
+calculate_IF(veget_path, veget_IF_path, veget_IF, "veget_raw")
 
-# data_informations["data_raw"]["vegetation_raw"]["recalculated_if_path"] = veget_IF_path
+data_informations["data_raw"]["vegetation_raw"]["recalculated_if_path"] = veget_IF_path
 
-# print("#### Network OSM extraction ####")
-# create_folder(data_folder_path +"osm")
+print("#### Network OSM extraction ####")
+create_folder(data_folder_path +"osm")
 
 # lyon_network_parameters = {
 #     "place_name" : "Lyon, France",
@@ -154,34 +154,34 @@ print("Calculating IF vegetation")
 filters = (
         f'["highway"]["area"!~"yes"]'
         f'["highway"!~"abandoned|bus_guideway|construction|cycleway|motorway|trunk|planned|platform|'
-        f'proposed|raceway|primary|secondary|motorway_link|trunk_link|primary_link|secondary_link|escape|busway"]'
-        f'["foot"!~"no"]["service"!~"private"]'
+        f'proposed|raceway|motorway_link|trunk_link|escape|busway"]'
+        f'["foot"!~"no"]["service"!~"private"]["sidewalk"!~"no"]'
     )
 
 metrop_network_parameters = {
     "place_name": "Lyon, France",
     "network_filters": filters,
     "bbox": (45.9472,45.5497, 5.0803,4.6717),
-    "output_file" : data_folder_path+ "osm/metrop_walk_custom.gpkg"
+    "output_file" : data_folder_path+ "osm/metrop_walk_custom_sidewalk_no.gpkg"
 }
 
 data_informations["osm"]["network_parameters"] = metrop_network_parameters
 
-load_osm_network(metrop_network_parameters)
+# load_osm_network(metrop_network_parameters)
 
 with open(data_informations_path, "w") as f:
     json.dump(data_informations, f, indent=4)
 
 print("#### Create all weighted networks ####")
 
-create_all_weighted_network(metrop_network_parameters["output_file"])
+# create_all_weighted_network(metrop_network_parameters["output_file"])
 
 print("#### Create final weigthed network #### ")
 
 with open(data_informations_path, "r") as f:
     data_informations = json.load(f)
 
-final_network_path = data_folder_path + "osm/final_network_veget.gpkg"
+final_network_path = data_folder_path + "osm/final_network_2605.gpkg"
 
 merge_networks(metrop_network_parameters["output_file"], final_network_path)
 

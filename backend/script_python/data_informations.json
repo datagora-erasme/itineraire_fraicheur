@@ -8,6 +8,7 @@
             "name": "Fontaines potables",
             "wfs_key": "ms:epo_eau_potable.epobornefont",
             "service": "data.grandlyon_wfs",
+            "weight": 0.5,
             "marker_option": {
                 "iconUrl": "droplet.svg",
                 "iconRetinaUrl": "droplet.svg",
@@ -49,6 +50,7 @@
             "name": "Toilettes publiques",
             "wfs_key": "ms:gin_nettoiement.gintoilettepublique",
             "service": "data.grandlyon_wfs",
+            "weight": 0.2,
             "marker_option": {
                 "iconUrl": "toilet.svg",
                 "iconRetinaUrl": "toilet.svg",
@@ -96,6 +98,7 @@
             "name": "Fontaines ornementales",
             "wfs_key": "ms:adr_voie_lieu.adrfontaineornem_latest",
             "service": "data.grandlyon_wfs",
+            "weight": 0.2,
             "marker_option": {
                 "iconUrl": "fountain.svg",
                 "iconRetinaUrl": "fountain.svg",
@@ -142,6 +145,7 @@
             "name": "Parcs et jardins",
             "wfs_key": "ms:com_donnees_communales.comparcjardin_1_0_0",
             "service": "data.grandlyon_wfs",
+            "weight": 0.5,
             "gml_path": "./data/gml/parcs_jardins_metropole.gml",
             "gpkg_path": "./data/gpkg/parcs_jardins_metropole.gpkg",
             "geojson_path": "./data/geojson/parcs_jardins_metropole.json",
@@ -219,6 +223,7 @@
             "name": "Bancs",
             "wfs_key": "ms:adr_voie_lieu.adrbanc_latest",
             "service": "data.grandlyon_wfs",
+            "weight": 0.1,
             "marker_option": {
                 "iconUrl": "bench.svg",
                 "iconRetinaUrl": "bench.svg",

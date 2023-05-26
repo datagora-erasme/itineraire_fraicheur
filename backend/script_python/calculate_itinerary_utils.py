@@ -100,16 +100,21 @@ def network_weighted_average(default_network, weighted_edges, layer_name, output
 
     # For some reason pandas convert u, v and key into float for weighted_edges
     weighted_edges[["u", "v", "key"]] = weighted_edges[["u", "v", "key"]].astype(int)
-    weighted_edges = weighted_edges.drop_duplicates(subset=["u", "v", "key"])
+    # weighted_edges = weighted_edges.drop_duplicates(subset=["u", "v", "key"])
     weighted_edges = weighted_edges.set_index(["u", "v", "key"])
 
     print(f"Calculating weighted average for {layer_name} ...")
 
+    # print(weighted_edges.loc[(weighted_edges.index.get_level_values("u") == 347474560) & (weighted_edges.index.get_level_values("v") == 1974857243)])
+
+
     # Due to intersection, there more features into the weighted_edges dataframe than the default_network one
     #The following line allows to recalculate the weighted average for one edge taking account all the "subedges"
     grouped_edges = weighted_edges.groupby(["u", "v", "key"], group_keys=True).apply(lambda x: pd.Series({
-        f"IF_{layer_name}": np.average(x[f"IF_{layer_name}"], weights=x["cal_length"])
+        f"IF_{layer_name}": np.average(x[f"IF_{layer_name}"], weights=x["cal_length"], returned=False)
     })).reset_index()
+
+    # print(grouped_edges[(grouped_edges["u"] == 347474560) & (grouped_edges["v"] == 1974857243)])
 
     grouped_edges = grouped_edges.set_index(["u", "v", "key"])
     default_edges = default_edges.set_index(["u", "v", "key"])
@@ -130,8 +135,8 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
     layer = gpd.read_file(layer_path)
 
-    print(layer.head)
-    print(layer.columns)
+    # print(layer.head)
+    # print(layer.columns)
 
     # if(layer_name == "temp_surface_road_raw"):
     #     layer = layer.to_crs(3946)
@@ -142,7 +147,7 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
     if(layer_name != "veget_raw"):
 
-        joined_edges = gpd.overlay(network_edges, layer, how="intersection", keep_geom_type=True)
+        joined_edges = gpd.overlay(network_edges, layer, how="identity", keep_geom_type=True)
 
         # Convert into geoserie in order to calculate the length of the intersection
 
@@ -152,6 +157,9 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
         joined_edges["cal_length"] = joined_edges_serie.length
 
+        joined_edges[f"IF_{layer_name}"] = joined_edges[f"IF_{layer_name}"].fillna(1)
+
+        # joined_edges.to_file("./temp/toil_net_joined_ident_na.gpkg", driver="GPKG")
         network_weighted_average(network_path, joined_edges, layer_name, output_path)
     
     else:
@@ -161,7 +169,7 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
         network_weighted_average(network_path, layer, layer_name, output_path)
 
-
+# join_network_layer("./data/osm/metrop_walk_custom_sidewalk_no.gpkg", "./data/gpkg_buffered/toilettes_publiques_buffered.gpkg", "toilettes_publiques", "./temp/toil_net_ident_na.gpkg")
 
 def create_all_weighted_network(default_ntf):
     """Create a weighted network for each kind of data"""
@@ -203,33 +211,39 @@ def merge_networks(default_network, output_path):
     with open(data_informations_path, "r") as f:
         data_informations = json.load(f)
 
-    count = 0
+    sum_weight = 0
+
+    final_network = final_network.set_index(["u", "v", "key"])
+    final_network_nodes = final_network_nodes.set_index(["osmid"])
     
     # WFS
     data_wfs = data_informations["data_wfs"]
     for d_name, d_info in data_wfs.items():
-        count+=1
+        weigth = d_info["weight"]
         network_path = d_info["weighted_network_path"]
         network = gpd.read_file(network_path, layer="edges")
-        network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(0)
-        final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]
+        network = network.set_index(["u", "v", "key"])
+        network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(1)
+        final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]*weigth
         final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
+        final_network[f"weight_{d_name}"] = weigth
+        sum_weight += weigth
 
     # RAW
     data_raw = data_informations["data_raw"]
     for d_name, d_info in data_raw.items():
         # if(d_name == "temp_surface_road_raw"):
-        count+=1
+        weigth = d_info["weight"]
         network_path = d_info["weighted_network_path"]
         network = gpd.read_file(network_path, layer="edges")
-        network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(0)
-        final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]
+        network = network.set_index(["u", "v", "key"])
+        network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(1)
+        final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]*weigth
         final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
+        final_network[f"weight_{d_name}"] = weigth
+        sum_weight += weigth
     
-    final_network["IF"] = final_network["IF"] / count
-
-    final_network = final_network.set_index(["u", "v", "key"])
-    final_network_nodes = final_network_nodes.set_index(["osmid"])
+    final_network["IF"] = final_network["IF"] / sum_weight
 
     G = ox.graph_from_gdfs(final_network_nodes, final_network)
 

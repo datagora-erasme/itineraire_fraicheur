@@ -30,6 +30,8 @@ def shortest_path(G, start, end, G_multidigraph):
 
     geojson_if = json.loads(gdf_route_edges_if.to_json())
 
+    # gdf_route_edges_if.to_file("./temp/if_test.json", driver="GeoJSON")
+
     print("Finding shortest path Length ...")
 
     shortest_path_len = nx.shortest_path(G, source=origin_node, target=destination_node, weight="length")
@@ -41,6 +43,8 @@ def shortest_path(G, start, end, G_multidigraph):
     gdf_route_edges_len = gdf_route_edges_len.to_crs(epsg=4326)
 
     geojson_len = json.loads(gdf_route_edges_len.to_json())
+
+    # gdf_route_edges_len.to_file("./temp/len_test.json", driver="GeoJSON")
 
     return geojson_if, geojson_len
 

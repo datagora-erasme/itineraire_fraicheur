@@ -103,6 +103,9 @@ def network_weighted_average(default_network, weighted_edges, layer_name, output
     # weighted_edges = weighted_edges.drop_duplicates(subset=["u", "v", "key"])
     weighted_edges = weighted_edges.set_index(["u", "v", "key"])
 
+    # print(f"default_edges: \n {default_edges.loc[(default_edges.index.get_level_values('u') == 10928012589)]}")
+    print(f"weighted_edges: \n {weighted_edges.loc[(weighted_edges.index.get_level_values('u') == 10928012589)]}")
+
     print(f"Calculating weighted average for {layer_name} ...")
 
     # print(weighted_edges.loc[(weighted_edges.index.get_level_values("u") == 347474560) & (weighted_edges.index.get_level_values("v") == 1974857243)])
@@ -121,13 +124,27 @@ def network_weighted_average(default_network, weighted_edges, layer_name, output
 
     default_edges[f"IF_{layer_name}"] = grouped_edges[f"IF_{layer_name}"]
 
+    print(f" default_edges after group : \n : {default_edges.loc[(default_edges.index.get_level_values('u') == 10928012589)]}")
+
     default_nodes = default_nodes.set_index(['osmid'])
 
-    G = ox.graph_from_gdfs(default_nodes, default_edges)
+    # G = ox.graph_from_gdfs(default_nodes, default_edges)
 
     print(f"Done. \nSaving file into {output_path}")
 
-    ox.save_graph_geopackage(G, filepath=output_path)
+    # nodes, edges = ox.graph_to_gdfs(G)
+
+    # print(f" edges after graph : \n : {edges.loc[(edges.index.get_level_values('u') == 10928012589)]}")
+
+    default_edges.to_file(output_path, layer="edges")
+
+    # ox.save_graph_geopackage(G, filepath=output_path)
+
+    # new_edges = gpd.read_file(output_path, layer="edges")
+
+    # new_edges = new_edges.set_index(["u", "v", "key"])
+
+    # print(f" new_edges after group : \n : {new_edges.loc[(new_edges.index.get_level_values('u') == 10928012589)]}")
 
 def join_network_layer(network_path, layer_path, layer_name, output_path):
     """This function join a network with a specific layer"""
@@ -169,7 +186,7 @@ def join_network_layer(network_path, layer_path, layer_name, output_path):
 
         network_weighted_average(network_path, layer, layer_name, output_path)
 
-# join_network_layer("./data/osm/metrop_walk_custom_sidewalk_no.gpkg", "./data/gpkg_buffered/toilettes_publiques_buffered.gpkg", "toilettes_publiques", "./temp/toil_net_ident_na.gpkg")
+#join_network_layer("./data/osm/metrop_walk_2605_2.gpkg", "./data/gpkg_buffered/toilettes_publiques_buffered.gpkg", "toilettes_publiques", "./temp/toil_net_edges_3005.gpkg")
 
 def create_all_weighted_network(default_ntf):
     """Create a weighted network for each kind of data"""
@@ -215,6 +232,9 @@ def merge_networks(default_network, output_path):
 
     final_network = final_network.set_index(["u", "v", "key"])
     final_network_nodes = final_network_nodes.set_index(["osmid"])
+
+    # print(f"Final network NA : {final_network.isna().sum()}")
+    # print(f"Is network valid : {final_network.is_valid.all()}")
     
     # WFS
     data_wfs = data_informations["data_wfs"]
@@ -223,10 +243,26 @@ def merge_networks(default_network, output_path):
         network_path = d_info["weighted_network_path"]
         network = gpd.read_file(network_path, layer="edges")
         network = network.set_index(["u", "v", "key"])
+
+        # print(f"Is layer valid : {network.is_valid.all()}")
+
+        print(f"Layer : {d_name}")
+        # print(f"NA : {network.isna().sum()}")
+        print(f"net[IF] before NA: \n {network[f'IF_{d_name}'].loc[(network[f'IF_{d_name}'].index.get_level_values('u') == 10928012589)]}")
+
         network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(1)
-        final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]*weigth
+
+        # print(f"NA fill :{network.isna().sum()}")
+        if_cal = final_network["IF"] + network[f"IF_{d_name}"]*weigth
+        print(f"fn[IF] : \n {final_network['IF'].loc[(final_network['IF'].index.get_level_values('u') == 10928012589)]}")
+        print(f"net[IF] : \n {network[f'IF_{d_name}'].loc[(network[f'IF_{d_name}'].index.get_level_values('u') == 10928012589)]}")
+        print(f" weight : {weigth}")
+        print(f" if cal : \n {if_cal.loc[(if_cal.index.get_level_values('u') == 10928012589)]}")
+        final_network["IF"] = if_cal
+        # print(f"final network NA after weight: {final_network.isna().sum()}")
         final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
         final_network[f"weight_{d_name}"] = weigth
+        # print(f"final network NA after all : {final_network.isna().sum()}")
         sum_weight += weigth
 
     # RAW
@@ -237,10 +273,19 @@ def merge_networks(default_network, output_path):
         network_path = d_info["weighted_network_path"]
         network = gpd.read_file(network_path, layer="edges")
         network = network.set_index(["u", "v", "key"])
+
+        print(f"Layer : {d_name}")
+        print(f"NA : {network.isna().sum()}")
+
         network[f"IF_{d_name}"] = network[f"IF_{d_name}"].fillna(1)
+
+        print(f"NA fill :{network.isna().sum()}")
+
         final_network["IF"] = final_network["IF"] + network[f"IF_{d_name}"]*weigth
+        print(f"final network NA after weight: {final_network.isna().sum()}")
         final_network[f"IF_{d_name}"] = network[f"IF_{d_name}"]
         final_network[f"weight_{d_name}"] = weigth
+        print(f"final network NA after all : {final_network.isna().sum()}")
         sum_weight += weigth
     
     final_network["IF"] = final_network["IF"] / sum_weight

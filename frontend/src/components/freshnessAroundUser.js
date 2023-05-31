@@ -72,8 +72,12 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     }
 
     const handleSelectUserAddress = () => {
-        setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
-        setSelectedStartAddress(userAddress)
+        if(userAddress){
+            setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
+            setSelectedStartAddress(userAddress)
+        } else {
+            alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
+        }
     }
 
     useEffect(() => {

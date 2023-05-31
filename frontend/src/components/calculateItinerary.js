@@ -17,7 +17,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   const { setCurrentItinerary, userAddress, history, setHistory, setShowCurrentItineraryDetails, 
     selectedStartAddress, setSelectedStartAddress, selectedEndAddress, setSelectedEndAddress,
-    startAddress, setStartAddress, endAddress, setEndAddress
+    startAddress, setStartAddress, endAddress, setEndAddress, setUserPosition
    } = useContext(MainContext)
 
   // const handleToggleItineraryCalculation = () => {
@@ -108,7 +108,16 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
       setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
       setSelectedStartAddress(userAddress)
     } else {
-      alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setUserPosition([latitude, longitude]);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+      // alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
     }
 
   }

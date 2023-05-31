@@ -10,7 +10,7 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     const [showStartSuggestions, setShowStartSuggestions] = useState(false);
     // const [startAddress, setStartAddress] = useState("")
     
-    const { userPosition, setZoomToUserPosition, history, setHistory, 
+    const { userPosition, setZoomToUserPosition, setUserPosition, history, setHistory, 
         startAddress, setStartAddress, selectedStartAddress, setSelectedStartAddress, userAddress,
         radius, setRadius, showCircle, setShowCircle
     } = useContext(MainContext)
@@ -76,7 +76,16 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
             setStartAddress(`${userAddress.properties.label.slice(0,30)}...`)
             setSelectedStartAddress(userAddress)
         } else {
-            alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  const { latitude, longitude } = pos.coords;
+                  setUserPosition([latitude, longitude]);
+                },
+                (err) => {
+                  console.log(err);
+                }
+              );
+            // alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
         }
     }
 

@@ -8,7 +8,9 @@ module.exports = {
       colors: {
         bgWhite: 'white',
         primary: 'black',
-        mainText: '#343F56'
+        mainText: '#343F56',
+        startGradientLegend: '#900C3F',
+        endGradientLegend: '#1f8b2c'
       },
     },
   },

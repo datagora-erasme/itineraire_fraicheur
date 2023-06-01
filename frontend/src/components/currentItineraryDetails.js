@@ -29,7 +29,7 @@ const CurrentItineraryDetails = () => {
                 } else {
                     duration = duration.toString() + "min"
                 }
-                setDetails((det) => [...det, {name: it.name, color: it.color, distance: dist, duration: duration}])
+                setDetails((det) => [...det, {id: it.id, name: it.name, color: it.color, distance: dist, duration: duration}])
             }
 
         }
@@ -41,7 +41,20 @@ const CurrentItineraryDetails = () => {
                 {details.map((det, i) => {
                     return(
                         <div key={i} className="flex flex-col items-start w-full">
-                            <h6 className="font-bold text-mainText">{det.name} <span style={{color: det.color}} className="-mt-2">   ____</span></h6>
+                            <div className="flex w-full items-center gap-6">
+                                <h6 className="font-bold text-mainText">{det.name}</h6>
+                                <div className="bg-gradient-to-r from-startGradientLegend to-endGradientLegend w-[100px] h-[5px] flex flex-row gap-4 pl-4">
+                                    {det.id === "LENGTH" && (
+                                        <>
+                                            <div className="h-full w-[10px] bg-white"> </div>
+                                            <div className="h-full w-[10px] bg-white"> </div>
+                                            <div className="h-full w-[10px] bg-white"> </div>
+                                            <div className="h-full w-[10px] bg-white"> </div>
+                                            <div className="h-full w-[10px] bg-white"> </div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
                             <div className="flex gap-4">
                                 <div className="px-2">Distance : {det.distance}</div>
                                 <div className="px-2 flex"><FaHourglassStart className="mt-1"/> {det.duration}</div>

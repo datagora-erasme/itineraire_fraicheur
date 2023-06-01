@@ -55,6 +55,13 @@ code {
   }
 }
 
+.legend-gradient {
+  height: 5px;
+  width: 100px;
+  background: linear-gradient(to right, #cdf5d7, #0c6221);
+}
+
+
 /* SLIDER */
 /* CHROME */
 /* la zone de déplacement */

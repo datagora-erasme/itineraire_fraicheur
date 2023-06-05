@@ -33,7 +33,7 @@ function ListLayers({ showLayers, setShowLayers }){
             <ul className="mt-2 grid grid-cols-3">
               {listLayers.map((layer) => {
                 return (
-                  <li key={layer.id} className="">
+                  <li key={layer.id} className="" onClick={() => window.trackButtonClick(`ShowLayer_${layer.id}`)}>
                     <label htmlFor={layer.id} className="ml-2 flex flex-col items-center text-xs gap-2">
                       <input
                         type="checkbox"

@@ -161,7 +161,7 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
                             <span>10 km</span>
                         </div>
                     </div>
-                    <div className="w-full flex justify-center">
+                    <div className="w-full flex justify-center" onClick={() => window.trackButtonClick("FindFreshness")}>
                         <button
                             onClick={findFreshnessAroundMe}
                             className={` main-btn ${!selectedStartAddress ? "bg-gray-300 hover:bg-gray-400" : "bg-primary"} text-white rounded-full transition duration-300`}

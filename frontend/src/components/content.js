@@ -23,6 +23,7 @@ function Content(){
                 onClick={() => {
                     setShowItineraryCalculation(!showItineraryCalculation)
                     setHistory([...history, {fn: () => setShowItineraryCalculation(false)}])
+                    window.trackButtonClick("OpenCalculateItinerary")
                     }} 
                 className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:rounded-b-none md:border-b-2 md:border-b-gray-100">
                 {showItineraryCalculation ? (
@@ -39,6 +40,7 @@ function Content(){
                 onClick={() => {
                     setShowFindFreshness(!showFindFreshness)
                     setHistory([...history, {fn: () => setShowFindFreshness(false)}])
+                    window.trackButtonClick("OpenFindFreshness")
                 }} 
                 className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:border-b-2 md:border-b-gray-100"
                 >
@@ -55,6 +57,7 @@ function Content(){
                 onClick={() => {
                     setShowLayers(!showLayers)
                     setHistory([...history, {fn: () => setShowLayers(false)}])
+                    window.trackButtonClick("OpenLayers")
                 }} 
                 className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:border-b-2 md:border-b-gray-100">
                 {showLayers ? (
@@ -71,7 +74,6 @@ function Content(){
                     target="_blank" 
                     rel="noopener noreferrer" 
                     href='https://datagora.erasme.org/projets/sortons-au-frais/'
-                    onClick={() => window.trackButtonClick('En savoir plus')}
                     >
                         En savoir plus
                     </a>

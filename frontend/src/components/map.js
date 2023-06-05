@@ -22,7 +22,7 @@ const colors = {
     "0.01": "#28572c"
 }
 
-const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0,1])
+const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0.9,1])
 
 function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress, showCircle}){
     const map = useMap()
@@ -245,10 +245,12 @@ function Map(){
                             <GeoJSON 
                             data={it.geojson} 
                             style={(feature) => ({
-                                color: index === 0 ? colorIfScale(feature.properties.IF).hex() : it.color, 
+                                color: colorIfScale(feature.properties.IF).hex(), 
                                 weight: 5, 
                                 lineCap: "round", 
-                                lineJoin: "round"
+                                lineJoin: "round",
+                                dashArray: it.id === "LENGTH" ? '5, 15' : '', 
+                                dashOffset: '0'
                                 })} 
                             key={Math.random()}/>
                         )

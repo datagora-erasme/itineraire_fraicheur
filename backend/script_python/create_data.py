@@ -174,14 +174,14 @@ with open(data_informations_path, "w") as f:
 
 print("#### Create all weighted networks ####")
 
-create_all_weighted_network(metrop_network_parameters["output_file"])
+# create_all_weighted_network(metrop_network_parameters["output_file"])
 
 print("#### Create final weigthed network #### ")
 
 with open(data_informations_path, "r") as f:
     data_informations = json.load(f)
 
-final_network_path = data_folder_path + "osm/final_network_30_05_debug.gpkg"
+final_network_path = data_folder_path + "osm/final_network_0206.gpkg"
 
 merge_networks(metrop_network_parameters["output_file"], final_network_path)
 

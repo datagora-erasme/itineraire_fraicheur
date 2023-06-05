@@ -8,9 +8,9 @@ import concurrent.futures
 app = Flask(__name__)
 CORS(app)
 
-network_path = "./data/osm/final_network_30_05_debug.gpkg"
-network_pickle_path = "./data/final_network_30_05_debug.pickle"
-network_multidigraph_pickle_path ="./data/final_network_30_05_debug.pickle"
+network_path = "./data/osm/final_network_iflen.gpkg"
+network_pickle_path = "./data/final_network_iflen.pickle"
+network_multidigraph_pickle_path ="./data/final_network_iflen.pickle"
 
 G = None
 G_multidigraph = None

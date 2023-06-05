@@ -6,6 +6,7 @@ const MainContext = createContext();
 export const MainContextProvider = ({ children }) => {
     const [userPosition, setUserPosition] = useState(null)
     const [zoomToUserPosition, setZoomToUserPosition] = useState(false)
+    const [zoomToItinerary, setZoomToItinerary] = useState(false)
 
     const [listLayers, setListLayers] = useState([])
     const [selectedLayers, setSelectedLayers] = useState([])
@@ -73,6 +74,10 @@ export const MainContextProvider = ({ children }) => {
         }
     }, [userPosition])
 
+    useEffect(() => {
+      setZoomToItinerary(true)
+    }, [currentItinerary])
+
     return(
         <MainContext.Provider
             value={{
@@ -104,7 +109,9 @@ export const MainContextProvider = ({ children }) => {
                 radius,
                 setRadius, 
                 showCircle, 
-                setShowCircle
+                setShowCircle,
+                zoomToItinerary,
+                setZoomToItinerary
             }}
         >
             {children}

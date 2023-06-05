@@ -66,6 +66,21 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, select
     return null
 }
 
+function ZoomItinerary({zoomToItinerary, setZoomToItinerary, currentItinerary}){
+    const map = useMap()
+    if(currentItinerary && currentItinerary.length !== 0 && zoomToItinerary){
+        const geojsonData = currentItinerary[0].geojson
+        const layer = L.geoJSON(geojsonData)
+        const bounds = layer.getBounds()
+        const centroid = bounds.getCenter()
+
+        map.setView(centroid, 14)
+        map.removeLayer(layer)
+
+        setZoomToItinerary(false)
+
+    }
+}
 
 function Map(){
 
@@ -75,6 +90,7 @@ function Map(){
 
     const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, 
         currentItinerary, setCurrentItinerary, selectedStartAddress, selectedEndAddress, radius, showCircle,
+        zoomToItinerary, setZoomToItinerary
      } = useContext(MainContext)
 
     function getColor(data){
@@ -172,6 +188,7 @@ function Map(){
                 />
                 <ZoomControl position='topright' />
                 <MapFreshness zoomToUserPosition={zoomToUserPosition} radius={radius} setZoomToUserPosition={setZoomToUserPosition} selectedStartAddress={selectedStartAddress} showCircle={showCircle}/>
+                <ZoomItinerary zoomToItinerary={zoomToItinerary} setZoomToItinerary={setZoomToItinerary} currentItinerary={currentItinerary}/>
 
                 {geojsonFiles.length !== 0 && 
                     geojsonFiles.map((data) => { 

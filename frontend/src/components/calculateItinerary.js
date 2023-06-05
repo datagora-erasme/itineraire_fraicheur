@@ -27,9 +27,10 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
   const handleStartAddressAPI = (query) => {
     axios
     .get(
-      `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
+      `https://download.data.grandlyon.com/geocoding/photon-bal/api?q=${query}`
     )
     .then((response) => {
+      console.log(response.data.features)
       setStartAddressSuggestions(response.data.features);
     })
     .catch((error) => {
@@ -40,7 +41,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
   const handleEndAddressAPI = (query) => {
     axios
     .get(
-      `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
+      `https://download.data.grandlyon.com/geocoding/photon-bal/api?q=${query}`
     )
     .then((response) => {
       setEndAddressSuggestions(response.data.features);
@@ -83,10 +84,14 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
     }
   };
 
+  const addressName = ({city, street, postcode, housenumber}) => {
+    return `${housenumber ? housenumber : ""} ${street}, ${postcode} ${city.toUpperCase()}`
+  }
+
   const handleSelectStartAddress = (id) => {
     for(let address of startAddressSuggestions){
-        if(address.properties.id === id){
-            setStartAddress(`${address.properties.label.slice(0,30)}...`)
+        if(address.properties.osm_id === id){
+            setStartAddress(`${addressName(address.properties).slice(0,30)}...`)
             setSelectedStartAddress(address)
             setStartAddressSuggestions([])
         }
@@ -95,8 +100,8 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   const handleSelectEndAddress = (id) => {
     for(let address of endAddressSuggestions){
-        if(address.properties.id === id){
-            setEndAddress(`${address.properties.label.slice(0,30)}...`)
+        if(address.properties.osm_id === id){
+            setEndAddress(`${addressName(address.properties).slice(0,30)}...`)
             setSelectedEndAddress(address)
             setEndAddressSuggestions([])
         }
@@ -193,13 +198,14 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
             />
             { showStartSuggestions && <ul
               id="startAddressSuggestions"
-              className="absolute z-10 w-full bg-white border-gray-300 rounded-md shadow-lg mt-12 md:mt-10"
+              className="absolute z-10 w-full max-h-[200px] bg-white border-gray-300 rounded-md shadow-lg mt-12 md:mt-10 overflow-y-scroll"
               value={startAddress}
             >
               {startAddressSuggestions.map((suggestion) => {
+                const name = addressName(suggestion.properties)
                 return(                
-                  <li key={suggestion.properties.id} value={suggestion.properties.id} onClick={() => handleSelectStartAddress(suggestion.properties.id)}>
-                    {suggestion.properties.label.length > 40 ? `${suggestion.properties.label.slice(0, 40)}...` : suggestion.properties.label}
+                  <li key={suggestion.properties.osm_id} value={suggestion.properties.osm_id} onClick={() => handleSelectStartAddress(suggestion.properties.osm_id)}>
+                    {name > 40 ? `${name.slice(0, 40)}...` : name}
                   </li>
                 )
               })}
@@ -224,15 +230,18 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
             />
             {showEndSuggestions && <ul
               id="endAddressSuggestions"
-              className="absolute z-10 w-full bg-white border-gray-300 rounded-md shadow-lg mt-1"
+              className="absolute z-10 w-full max-h-[200px] bg-white border-gray-300 rounded-md shadow-lg mt-0 overflow-y-scroll"
               value={endAddress}
-              onChange={handleSelectEndAddress}
+              // onChange={handleSelectEndAddress}
             >
-              {endAddressSuggestions.map((suggestion) => (
-                <li key={suggestion.properties.id} value={suggestion.properties.id} onClick={() => handleSelectEndAddress(suggestion.properties.id)}>
-                  {suggestion.properties.label.length > 40 ? `${suggestion.properties.label.slice(0, 40)}...` : suggestion.properties.label}
+              {endAddressSuggestions.map((suggestion) => {
+                const name = addressName(suggestion.properties)
+                return (
+                <li key={suggestion.properties.osm_id} value={suggestion.properties.osm_id} onClick={() => handleSelectEndAddress(suggestion.properties.osm_id)}>
+                  {name > 40 ? `${name.slice(0, 40)}...` : name}
                 </li>
-              ))}
+              )}
+              )}
             </ul>}
           </div>
           <div className="flex justify-center items-center">

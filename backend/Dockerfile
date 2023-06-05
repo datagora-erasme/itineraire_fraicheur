@@ -10,7 +10,7 @@ RUN pip install -r requirements.txt
 
 COPY ./models/ /app/models
 COPY ./script_python/ /app/script_python
-COPY ./data/osm/final_network_30_05_debug.gpkg /app/data/osm/final_network_30_05_debug.gpkg
+COPY ./data/osm/final_network_iflen.gpkg /app/data/osm/final_network_iflen.gpkg
 COPY ./data/geojson /app/data/geojson
 COPY ./data/data_informations.json /app/data/data_informations.json
 # COPY ./raw_data/ /app/raw_data

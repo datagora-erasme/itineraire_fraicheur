@@ -66,7 +66,16 @@ function Content(){
             </button>
             {showLayers && <ListLayers showLayers={showLayers} setShowLayers={setShowLayers}/>}
 
-            <div className='cursor-pointer secondary-btn secondary-btn-mobile md:main-btn-desktop md:rounded-t-none md:rounded-b-3xl'><a target="_blank" rel="noopener noreferrer" href='https://datagora.erasme.org/projets/sortons-au-frais/'>En savoir plus</a></div>
+            <div className='cursor-pointer secondary-btn secondary-btn-mobile md:main-btn-desktop md:rounded-t-none md:rounded-b-3xl'>
+                <a 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    href='https://datagora.erasme.org/projets/sortons-au-frais/'
+                    onClick={() => window.trackButtonClick('En savoir plus')}
+                    >
+                        En savoir plus
+                    </a>
+            </div>
         </div>
     )
 }

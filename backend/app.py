@@ -75,17 +75,17 @@ def get_itinerary():
 
         results = [
             {
+                "id": "LENGTH",
+                "name": "Itinéraire le plus court",
+                "geojson": geojson_path_length,
+                "color": " #1b2599 "
+            },
+                        {
                 "id": "IF",
                 "name": "Itinéraire le plus frais",
                 "geojson": geojson_path_IF, 
                 "color": "#1f8b2c"
             },
-            {
-                "id": "LENGTH",
-                "name": "Itinéraire le plus court",
-                "geojson": geojson_path_length,
-                "color": " #1b2599 "
-            }
         ]
         # print(results)
         return jsonify(results)

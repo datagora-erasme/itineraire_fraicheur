@@ -12,7 +12,7 @@ function Content(){
     const [showFindFreshness, setShowFindFreshness] = useState(false)
     const [showLayers, setShowLayers] = useState(false);
 
-    const { history, setHistory, showCurrentItineraryDetails } = useContext(MainContext)
+    const { history, setHistory, showCurrentItineraryDetails, setShowCircle, setSelectedLayers, setCurrentItinerary, setSelectedEndAddress, setEndAddress, setShowCurrentItineraryDetails } = useContext(MainContext)
 
     return(
         <div style={{zIndex:1000}} className="absolute md:top-8 bottom-4 flex flex-col gap-4 w-full p-8 md:pd-0 md:w-[400px] md:gap-0 md:rounded-full">
@@ -22,7 +22,11 @@ function Content(){
             <button 
                 onClick={() => {
                     setShowItineraryCalculation(!showItineraryCalculation)
+                    setShowFindFreshness(false)
+                    setShowLayers(false)
                     setHistory([...history, {fn: () => setShowItineraryCalculation(false)}])
+                    setShowCircle(false)
+                    setSelectedLayers([])
                     window.trackButtonClick("OpenCalculateItinerary")
                     }} 
                 className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:rounded-b-none md:border-b-2 md:border-b-gray-100">
@@ -39,7 +43,14 @@ function Content(){
             <button 
                 onClick={() => {
                     setShowFindFreshness(!showFindFreshness)
+                    setShowItineraryCalculation(false)
+                    setShowLayers(false)
                     setHistory([...history, {fn: () => setShowFindFreshness(false)}])
+                    setCurrentItinerary(null)
+                    setSelectedEndAddress(null)
+                    setEndAddress("")
+                    setShowCurrentItineraryDetails(false)
+                    setSelectedLayers([])
                     window.trackButtonClick("OpenFindFreshness")
                 }} 
                 className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:border-b-2 md:border-b-gray-100"
@@ -56,7 +67,14 @@ function Content(){
             <button 
                 onClick={() => {
                     setShowLayers(!showLayers)
+                    setShowItineraryCalculation(false)
+                    setShowFindFreshness(false)
                     setHistory([...history, {fn: () => setShowLayers(false)}])
+                    setCurrentItinerary(null)
+                    setSelectedEndAddress(null)
+                    setEndAddress("")
+                    setShowCurrentItineraryDetails(false)
+                    setShowCircle(false)
                     window.trackButtonClick("OpenLayers")
                 }} 
                 className="main-btn main-btn-mobile md:main-btn-desktop md:rounded-none md:border-b-2 md:border-b-gray-100">

@@ -13,6 +13,9 @@ import chroma from "chroma-js"
 
 // const sp = require("../data/sp_IF_3946.json");
 // const if_joined = require("../data/joined_if_3946.json");
+
+// const network= require("../data/final_network.json")
+
 const colors = {
     "1":" #d6e4d7 ",
     "0.8": "#b6e4ba",
@@ -255,6 +258,8 @@ function Map(){
                         return null
                     })
                 }
+
+                {/* <GeoJSON data={network} key={Math.random()}/> */}
 
                 {currentItinerary && 
                     currentItinerary.map((it, index) => {

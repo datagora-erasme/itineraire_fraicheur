@@ -77,7 +77,7 @@ function ZoomItinerary({zoomToItinerary, setZoomToItinerary, currentItinerary}){
         const bounds = layer.getBounds()
         const centroid = bounds.getCenter()
 
-        map.setView(centroid, 14)
+        map.setView(centroid, 15)
         map.removeLayer(layer)
 
         setZoomToItinerary(false)
@@ -95,7 +95,8 @@ function Map(){
 
     const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, 
         currentItinerary, setCurrentItinerary, selectedStartAddress, selectedEndAddress, radius, showCircle,
-        zoomToItinerary, setZoomToItinerary,freshnessLayers
+        zoomToItinerary, setZoomToItinerary,freshnessLayers, setShowPoiDetails, setHistory, history, setShowFindFreshness,
+        setPoiDetails
      } = useContext(MainContext)
 
     function getColor(data){
@@ -179,6 +180,33 @@ function Map(){
         }).catch((error) => {
             console.error(error)
         })
+    }
+
+    const handleShowDetailsPopupPolygon = (e) => {
+        setPoiDetails(e.target.feature)
+        setShowFindFreshness(false)
+        setShowPoiDetails(true)
+        setHistory([...history, {fn: () => {
+            setShowPoiDetails(false)
+            setShowFindFreshness(true)
+          }}])
+    }
+
+    const showDetailsPopupPolygon = (feature, layer) => {
+        layer.on({
+            click: handleShowDetailsPopupPolygon
+        })
+    }
+
+    const handleShowDetailsPopupMarker = (informations) => {
+        console.log(informations)
+        setPoiDetails(informations)
+        setShowFindFreshness(false)
+        setShowPoiDetails(true)
+        setHistory([...history, {fn: () => {
+            setShowPoiDetails(false)
+            setShowFindFreshness(true)
+          }}])
     }
 
     useEffect(() => {
@@ -323,53 +351,39 @@ function Map(){
 
                 {filteredFeatures.length !== 0 && filteredFeatures.map((data) => {
                     if(data.length !== 0){
-                        console.log("ddddddata: ", data)
+                        // console.log("ddddddata: ", data)
                         const dataType = data[0].geometry.type
                         if(dataType === "MultiPolygon" || dataType === "Polygon"){
                             return(
-                                <GeoJSON key={Math.random()} data={data} style={getColor}/>
+                                <GeoJSON key={Math.random()} data={data} style={getColor} onEachFeature={showDetailsPopupPolygon}/>
                             )
                         } else if (dataType === "Point"){
                             const markerOption = data[0].properties.markerOption
                             return(
                                 <MarkerClusterGroup 
-                                key={data.id} 
+                                key={Math.random()} 
                                 maxClusterRadius={100}
                                 polygonOptions={{
                                     opacity: 0
                                 }}
                                 iconCreateFunction={(cluster) => createClusterCustomIcon(cluster, markerOption)}
+                                // eventHandlers={{
+                                //     click: (cluster) => handleShowDetailsPopupMarker(cluster.sourceTarget)
+                                // }}
                                 >
                                 {data.map((dta,i) => {
                                     // console.log(dta)
                                     const coordinates = [dta.geometry.coordinates[1], dta.geometry.coordinates[0]]
                                     return (
-                                        <Marker key={i} position={coordinates} icon={new L.icon(markerOption)}>
-                                                <Popup>
-                                                    <div className="flex justify-center items-center">
-                                                        <button onClick={() => handleClickMarker(coordinates)} 
-                                                        className={"block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-300"}
-                                                        >
-                                                        {isLoading ? (
-                                                            <div className="flex items-center">
-                                                            <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>
-                                                            <span>Loading...</span>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="flex items-center">
-                                                            <span className="mr-2">Itinéraire | </span>
-                                                            <FaRoute/>
-                                                            </div>
-                                                        )}
-                                                        </button>
-                                                    </div>
-                                                </Popup>
+                                        <Marker key={Math.random()} position={coordinates} icon={new L.icon(markerOption)} eventHandlers={{
+                                            click: () => handleShowDetailsPopupMarker(dta)
+                                        }}>
+
                                         </Marker>
                                     )
                                 })}
                                 </MarkerClusterGroup>
                             )
-
                         }
                     }
                 })}

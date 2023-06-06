@@ -15,6 +15,7 @@ export const MainContextProvider = ({ children }) => {
 
     const [currentItinerary, setCurrentItinerary] = useState(null)
     const [showCurrentItineraryDetails, setShowCurrentItineraryDetails] = useState(false)
+    const [showFindFreshness, setShowFindFreshness] = useState(false)
 
     const [startAddress, setStartAddress] = useState("");
     const [endAddress, setEndAddress] = useState("");
@@ -30,6 +31,10 @@ export const MainContextProvider = ({ children }) => {
     const [radius, setRadius] = useState(1)
 
     const [showCircle, setShowCircle] = useState(false)
+
+    const [showPoiDetails, setShowPoiDetails] = useState(false)
+
+    const [poiDetails, setPoiDetails] = useState(null)
 
     useEffect(() => {
         async function fetchListLayers(){
@@ -70,7 +75,7 @@ export const MainContextProvider = ({ children }) => {
           }
       })
         const fetchFreshPlaces = await axios.get("https://download.data.grandlyon.com/ws/grandlyon/com_donnees_communales.equipementspublicsclimatises/all.json")
-        console.log(fetchFreshPlaces.data.values)
+        // console.log(fetchFreshPlaces.data.values)
         const freshplaces = {
           id: "batiments_frais",
           geojson: {
@@ -82,6 +87,7 @@ export const MainContextProvider = ({ children }) => {
             return {
                 geometry: {coordinates: [val.lon, val.lat], type:"Point"},
                 properties: {
+                  ...val,
                   markerOption: {
                     iconUrl: "building.svg",
                     iconRetinaUrl: "building.svg",
@@ -162,7 +168,13 @@ export const MainContextProvider = ({ children }) => {
                 setShowCircle,
                 zoomToItinerary,
                 setZoomToItinerary,
-                freshnessLayers
+                freshnessLayers,
+                showPoiDetails,
+                setShowPoiDetails,
+                showFindFreshness,
+                setShowFindFreshness,
+                poiDetails, 
+                setPoiDetails
             }}
         >
             {children}

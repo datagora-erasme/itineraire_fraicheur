@@ -12,7 +12,9 @@ function Content(){
     const [showFindFreshness, setShowFindFreshness] = useState(false)
     const [showLayers, setShowLayers] = useState(false);
 
-    const { history, setHistory, showCurrentItineraryDetails, setShowCircle, setSelectedLayers, setCurrentItinerary, setSelectedEndAddress, setEndAddress, setShowCurrentItineraryDetails } = useContext(MainContext)
+    const { history, setHistory, showCurrentItineraryDetails, 
+        setShowCircle, setSelectedLayers, setCurrentItinerary, 
+        setSelectedEndAddress, setEndAddress, setShowCurrentItineraryDetails, setZoomToUserPosition } = useContext(MainContext)
 
     return(
         <div style={{zIndex:1000}} className="absolute md:top-8 bottom-4 flex flex-col gap-4 w-full p-8 md:pd-0 md:w-[400px] md:gap-0 md:rounded-full">
@@ -46,6 +48,8 @@ function Content(){
                     setShowItineraryCalculation(false)
                     setShowLayers(false)
                     setHistory([...history, {fn: () => setShowFindFreshness(false)}])
+                    setShowCircle(true)
+                    setZoomToUserPosition(true)
                     setCurrentItinerary(null)
                     setSelectedEndAddress(null)
                     setEndAddress("")

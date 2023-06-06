@@ -10,6 +10,9 @@ export const MainContextProvider = ({ children }) => {
 
     const [listLayers, setListLayers] = useState([])
     const [selectedLayers, setSelectedLayers] = useState([])
+    const [freshnessLayers, setFreshnessLayers] = useState([])
+
+
     const [currentItinerary, setCurrentItinerary] = useState(null)
     const [showCurrentItineraryDetails, setShowCurrentItineraryDetails] = useState(false)
 
@@ -58,6 +61,53 @@ export const MainContextProvider = ({ children }) => {
           }
         );
       }, []);
+
+    useEffect(() => {
+      async function fetchFreshnessLayers(){
+        const fetchParcs = await axios.get(`${process.env.REACT_APP_URL_SERVER}/data/`, {
+          params:{
+              id: "parcs_jardins_metropole"
+          }
+      })
+        const fetchFreshPlaces = await axios.get("https://download.data.grandlyon.com/ws/grandlyon/com_donnees_communales.equipementspublicsclimatises/all.json")
+        console.log(fetchFreshPlaces.data.values)
+        const freshplaces = {
+          id: "batiments_frais",
+          geojson: {
+            crs: {
+              properties: {name: 'urn:ogc:def:crs:OGC:1.3:CRS84'},
+              type: "name"
+            },
+            features: fetchFreshPlaces.data.values.map((val) => {
+            return {
+                geometry: {coordinates: [val.lon, val.lat], type:"Point"},
+                properties: {
+                  markerOption: {
+                    iconUrl: "building.svg",
+                    iconRetinaUrl: "building.svg",
+                    popupAnchor: [
+                              0,
+                              0
+                          ],
+                    iconSize: [
+                              40,
+                              40
+                          ],
+                    clusterCountStyle: "position:absolute;top:48px;left:0px;color:black;font-weight:bold;"
+                  }
+                },
+                type: "Feature"
+              }
+              }),
+            type: "FeatureCollection"
+        },
+        }
+        // console.log("parcs : ", fetchParcs.data)
+        // console.log("fetchFreshPlaces.data : ", freshplaces)
+        setFreshnessLayers([fetchParcs.data, freshplaces])
+      }
+      fetchFreshnessLayers()
+    }, [])
 
     useEffect(() => {
         if(userPosition){
@@ -111,7 +161,8 @@ export const MainContextProvider = ({ children }) => {
                 showCircle, 
                 setShowCircle,
                 zoomToItinerary,
-                setZoomToItinerary
+                setZoomToItinerary,
+                freshnessLayers
             }}
         >
             {children}

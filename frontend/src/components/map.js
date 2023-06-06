@@ -2,9 +2,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
-import L from 'leaflet'
+import L, { marker } from 'leaflet'
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
-import { FaRoute } from 'react-icons/fa';
+import { FaGofore, FaRoute } from 'react-icons/fa';
 import MainContext from '../contexts/mainContext';
 import chroma from "chroma-js"
 
@@ -27,7 +27,7 @@ const colors = {
 
 const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0.9,1])
 
-function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress, showCircle}){
+function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress, showCircle, freshnessLayers, setFilteredFeatures}){
     const map = useMap()
 
     if(selectedStartAddress && showCircle){
@@ -85,15 +85,17 @@ function ZoomItinerary({zoomToItinerary, setZoomToItinerary, currentItinerary}){
     }
 }
 
+
 function Map(){
 
     const [geojsonFiles, setGeojsonFiles] = useState([])
     const [loadingLayer, setLoadingLayer] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [filteredFeatures ,setFilteredFeatures] = useState([])
 
     const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, 
         currentItinerary, setCurrentItinerary, selectedStartAddress, selectedEndAddress, radius, showCircle,
-        zoomToItinerary, setZoomToItinerary
+        zoomToItinerary, setZoomToItinerary,freshnessLayers
      } = useContext(MainContext)
 
     function getColor(data){
@@ -167,8 +169,8 @@ function Map(){
                     lon: userPosition[1]
                 },
                 end: {
-                    lat : coordinates[1],
-                    lon : coordinates[0]
+                    lat : coordinates[0],
+                    lon : coordinates[1]
                 }
             }
         }).then((response) => {
@@ -178,6 +180,44 @@ function Map(){
             console.error(error)
         })
     }
+
+    useEffect(() => {
+        if(selectedStartAddress && showCircle){
+            const coordinates = [selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]
+            const newfilteredLayers = freshnessLayers.map((layer) => {
+                // console.log("layer : ", layer)
+                const filteredlayer = layer.geojson.features.filter((feature) => {
+                    // console.log("feature into filter : ", feature)
+                    let lat;
+                    let lng;
+                    if(feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon"){
+                        // console.log("ok")
+                        const layer = L.geoJSON(feature)
+                        const bounds = layer.getBounds()
+                        const centroid = bounds.getCenter()
+                        lat = centroid.lat
+                        lng = centroid.lng
+                    } else {
+                        lat = feature.geometry.coordinates[1]
+                        lng = feature.geometry.coordinates[0]
+                    }
+                    
+                    const distance = L.latLng(lat, lng).distanceTo(L.latLng(coordinates))
+        
+                    return distance < radius * 1000
+                })
+                // console.log("filteredlayer: ", filteredlayer)
+
+                // console.log("filteredLayer : ", filteredlayer)
+
+                return filteredlayer
+            })
+            setFilteredFeatures(newfilteredLayers)
+        } else {
+            setFilteredFeatures([])
+        }
+
+    }, [selectedStartAddress, showCircle, radius])
 
     return (
         <div>
@@ -190,7 +230,15 @@ function Map(){
                     // url="https://openmaptiles.data.grandlyon.com/data/v3/{z}/{x}/{y}.pbf"
                 />
                 <ZoomControl position='topright' />
-                <MapFreshness zoomToUserPosition={zoomToUserPosition} radius={radius} setZoomToUserPosition={setZoomToUserPosition} selectedStartAddress={selectedStartAddress} showCircle={showCircle}/>
+                <MapFreshness 
+                    zoomToUserPosition={zoomToUserPosition} 
+                    radius={radius} 
+                    setZoomToUserPosition={setZoomToUserPosition} 
+                    selectedStartAddress={selectedStartAddress} 
+                    showCircle={showCircle} 
+                    freshnessLayers={freshnessLayers}
+                    setFilteredFeatures={setFilteredFeatures}
+                    />
                 <ZoomItinerary zoomToItinerary={zoomToItinerary} setZoomToItinerary={setZoomToItinerary} currentItinerary={currentItinerary}/>
 
                 {geojsonFiles.length !== 0 && 
@@ -214,21 +262,7 @@ function Map(){
                                                     <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)} onEachFeature={handleClickMarker}>
                                                         <Popup>
                                                             <div className="flex justify-center items-center">
-                                                                <button onClick={() => handleClickMarker(coordinates)} 
-                                                                className={"block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-300"}
-                                                                >
-                                                                {isLoading ? (
-                                                                    <div className="flex items-center">
-                                                                    <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>
-                                                                    <span>Loading...</span>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center">
-                                                                    <span className="mr-2">Itinéraire | </span>
-                                                                    <FaRoute/>
-                                                                    </div>
-                                                                )}
-                                                                </button>
+                                                                Informations
                                                             </div>
                                                         </Popup>
                                                     </Marker>
@@ -285,6 +319,60 @@ function Map(){
                     selectedEndAddress &&
                     <Marker position={[selectedEndAddress.geometry.coordinates[1], selectedEndAddress.geometry.coordinates[0]]}></Marker>
                 }
+
+
+                {filteredFeatures.length !== 0 && filteredFeatures.map((data) => {
+                    if(data.length !== 0){
+                        console.log("ddddddata: ", data)
+                        const dataType = data[0].geometry.type
+                        if(dataType === "MultiPolygon" || dataType === "Polygon"){
+                            return(
+                                <GeoJSON key={Math.random()} data={data} style={getColor}/>
+                            )
+                        } else if (dataType === "Point"){
+                            const markerOption = data[0].properties.markerOption
+                            return(
+                                <MarkerClusterGroup 
+                                key={data.id} 
+                                maxClusterRadius={100}
+                                polygonOptions={{
+                                    opacity: 0
+                                }}
+                                iconCreateFunction={(cluster) => createClusterCustomIcon(cluster, markerOption)}
+                                >
+                                {data.map((dta,i) => {
+                                    // console.log(dta)
+                                    const coordinates = [dta.geometry.coordinates[1], dta.geometry.coordinates[0]]
+                                    return (
+                                        <Marker key={i} position={coordinates} icon={new L.icon(markerOption)}>
+                                                <Popup>
+                                                    <div className="flex justify-center items-center">
+                                                        <button onClick={() => handleClickMarker(coordinates)} 
+                                                        className={"block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition duration-300"}
+                                                        >
+                                                        {isLoading ? (
+                                                            <div className="flex items-center">
+                                                            <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>
+                                                            <span>Loading...</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center">
+                                                            <span className="mr-2">Itinéraire | </span>
+                                                            <FaRoute/>
+                                                            </div>
+                                                        )}
+                                                        </button>
+                                                    </div>
+                                                </Popup>
+                                        </Marker>
+                                    )
+                                })}
+                                </MarkerClusterGroup>
+                            )
+
+                        }
+                    }
+                })}
             </MapContainer>
 
         </div>

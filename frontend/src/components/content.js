@@ -95,7 +95,7 @@ function Content(){
             </button>
             {showLayers && <ListLayers showLayers={showLayers} setShowLayers={setShowLayers}/>}
 
-            <div className='cursor-pointer secondary-btn secondary-btn-mobile md:main-btn-desktop md:rounded-t-none md:rounded-b-3xl'>
+            <div className='cursor-pointer secondary-btn secondary-btn-mobile md:overflow-y-hidden md:main-btn-desktop md:rounded-t-none md:rounded-b-3xl'>
                 <a 
                     target="_blank" 
                     rel="noopener noreferrer" 

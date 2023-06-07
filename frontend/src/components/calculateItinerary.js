@@ -30,7 +30,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
       `https://download.data.grandlyon.com/geocoding/photon-bal/api?q=${query}`
     )
     .then((response) => {
-      console.log(response.data.features)
+      // console.log(response.data.features)
       setStartAddressSuggestions(response.data.features);
     })
     .catch((error) => {
@@ -144,7 +144,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
         }
     }).then((response) => {
         const end = performance.now()
-        console.log("duration : ", (end-start)/1000)
+        // console.log("duration : ", (end-start)/1000)
         setCurrentItinerary(response.data)
         setIsLoading(false)
         setShowItineraryCalculation(false)

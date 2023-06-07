@@ -9,9 +9,12 @@ export const MainContextProvider = ({ children }) => {
     const [zoomToItinerary, setZoomToItinerary] = useState(false)
 
     const [listLayers, setListLayers] = useState([])
+    const [layers, setLayers] = useState([])
     const [selectedLayers, setSelectedLayers] = useState([])
     const [freshnessLayers, setFreshnessLayers] = useState([])
 
+    const [filteredFreshnessFeatures ,setFilteredFreshnessFeatures] = useState([])
+    const [filteredItinerariesFeatures, setFilteredItinerariesFeatures] = useState([])
 
     const [currentItinerary, setCurrentItinerary] = useState(null)
     const [showCurrentItineraryDetails, setShowCurrentItineraryDetails] = useState(false)
@@ -53,6 +56,20 @@ export const MainContextProvider = ({ children }) => {
         fetchListLayers()
         setIsLayerLoading(false)
     }, [])
+
+    useEffect(() => {
+      async function fetchLayers(){
+        const res = await axios.get(`${process.env.REACT_APP_URL_SERVER}/data/`, {
+          params:{
+              id: "all"
+          }
+        })
+        setLayers(res.data)
+      }
+        fetchLayers()
+    }, [])
+
+    // console.log("layers: ", layers)
 
     useEffect(() => {
         // Get user's current position using geolocation API
@@ -174,7 +191,12 @@ export const MainContextProvider = ({ children }) => {
                 showFindFreshness,
                 setShowFindFreshness,
                 poiDetails, 
-                setPoiDetails
+                setPoiDetails,
+                layers,
+                filteredFreshnessFeatures,
+                setFilteredFreshnessFeatures,
+                filteredItinerariesFeatures,
+                setFilteredItinerariesFeatures
             }}
         >
             {children}

@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
 import L, { marker } from 'leaflet'
+import {polygon, lineString, buffer, union, featureCollection, dissolve, booleanPointInPolygon} from "@turf/turf"
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import { FaGofore, FaRoute } from 'react-icons/fa';
 import MainContext from '../contexts/mainContext';
@@ -27,7 +28,7 @@ const colors = {
 
 const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0.9,1])
 
-function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress, showCircle, freshnessLayers, setFilteredFeatures}){
+function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress, showCircle}){
     const map = useMap()
 
     if(selectedStartAddress && showCircle){
@@ -75,9 +76,10 @@ function ZoomItinerary({zoomToItinerary, setZoomToItinerary, currentItinerary}){
         const geojsonData = currentItinerary[0].geojson
         const layer = L.geoJSON(geojsonData)
         const bounds = layer.getBounds()
-        const centroid = bounds.getCenter()
+        // const centroid = bounds.getCenter()
+        map.fitBounds(bounds)
 
-        map.setView(centroid, 15)
+        // map.setView(centroid, 15)
         map.removeLayer(layer)
 
         setZoomToItinerary(false)
@@ -91,12 +93,13 @@ function Map(){
     const [geojsonFiles, setGeojsonFiles] = useState([])
     const [loadingLayer, setLoadingLayer] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [filteredFeatures ,setFilteredFeatures] = useState([])
+    const [bufferedItineraries, setBufferedItineraries] = useState([])
 
     const { userPosition, zoomToUserPosition, setZoomToUserPosition, selectedLayers, 
         currentItinerary, setCurrentItinerary, selectedStartAddress, selectedEndAddress, radius, showCircle,
         zoomToItinerary, setZoomToItinerary,freshnessLayers, setShowPoiDetails, setHistory, history, setShowFindFreshness,
-        setPoiDetails
+        setPoiDetails, layers, filteredFreshnessFeatures, setFilteredFreshnessFeatures, filteredItinerariesFeatures,
+        setFilteredItinerariesFeatures
      } = useContext(MainContext)
 
     function getColor(data){
@@ -199,7 +202,7 @@ function Map(){
     }
 
     const handleShowDetailsPopupMarker = (informations) => {
-        console.log(informations)
+        // console.log(informations)
         setPoiDetails(informations)
         setShowFindFreshness(false)
         setShowPoiDetails(true)
@@ -240,12 +243,72 @@ function Map(){
 
                 return filteredlayer
             })
-            setFilteredFeatures(newfilteredLayers)
+            setFilteredFreshnessFeatures(newfilteredLayers)
         } else {
-            setFilteredFeatures([])
+            setFilteredFreshnessFeatures([])
         }
 
     }, [selectedStartAddress, showCircle, radius])
+
+    useEffect(() => {
+        setBufferedItineraries([])
+        if(currentItinerary && currentItinerary.length !== 0){
+            for(let it of currentItinerary){
+                const geojsonLayer = L.geoJSON(it.geojson)
+                const bufferedFeatures = geojsonLayer.toGeoJSON().features.map((feature) => {
+                    if (feature.geometry.type === 'LineString') {
+                      const line = lineString(feature.geometry.coordinates);
+                      const bufferedLine = buffer(line, 100, { units: 'meters' });
+                      return bufferedLine;
+                    }
+                    return feature;
+                  });
+                
+                const dissolvedFeature = {...dissolve(featureCollection(bufferedFeatures)), id: it.id}
+                // console.log(geojsonLayer)
+                // console.log("bufferedFeatures: ", bufferedFeatures)
+                
+                setBufferedItineraries((prevBufferedItineraries) => [...prevBufferedItineraries, dissolvedFeature])
+            }
+        }
+    }, [currentItinerary])
+
+    // console.log("current : ", currentItinerary)
+
+    useEffect(() => {
+        setFilteredItinerariesFeatures([])
+        if(bufferedItineraries.length !== 0 && layers.length !== 0){
+            const newFiltereditinerariesFeatures = layers.map((layer,i) => {
+                // console.log("layer : ", layer)
+                const filteredLayer = layer.geojson.features.filter((feat) => {
+                    let point;
+                    if(feat.geometry.type === "Point"){
+                        point = feat.geometry.coordinates
+                    } else if (feat.geometry.type === "Polygon" || feat.geometry.type === "MultiPolygon"){
+                        const layer = L.geoJSON(feat)
+                        const bounds = layer.getBounds()
+                        const centroid = bounds.getCenter()
+                        point = [centroid.lat, centroid.lng]
+                    }
+                    // console.log("bufferd : ", bufferedItineraries)
+                    for(let bufferedIt of bufferedItineraries){
+                        if(bufferedIt.id === "IF" && booleanPointInPolygon(point, bufferedIt.features[0])){
+                            return true
+                        }
+                    }
+                    return false
+                })
+                return {
+                    id: layer.id,
+                    geojson: filteredLayer,
+                    markerOption: layer.markerOption
+                }
+            })
+            setFilteredItinerariesFeatures(newFiltereditinerariesFeatures)
+        }
+    }, [bufferedItineraries])
+
+    // console.log(bufferedItineraries)
 
     return (
         <div>
@@ -265,7 +328,7 @@ function Map(){
                     selectedStartAddress={selectedStartAddress} 
                     showCircle={showCircle} 
                     freshnessLayers={freshnessLayers}
-                    setFilteredFeatures={setFilteredFeatures}
+                    setFilteredFreshnessFeatures={setFilteredFreshnessFeatures}
                     />
                 <ZoomItinerary zoomToItinerary={zoomToItinerary} setZoomToItinerary={setZoomToItinerary} currentItinerary={currentItinerary}/>
 
@@ -340,6 +403,22 @@ function Map(){
                         )
                     })
                 }
+
+                {bufferedItineraries.length !== 0 &&
+                    bufferedItineraries.map((it, index) => {
+                        // console.log(it)
+                        if(it.id ==="IF"){
+                            return(
+                                <GeoJSON data={it} key={Math.random()} style={{
+                                    color: "rgba(128, 128, 128, 0.2)",
+                                    fillColor: "rgba(128, 128, 128, 1)",
+                                    // fillOpacity: 0.2
+                                }}/>
+                            )
+                        }
+                    })
+                }
+
                 { selectedStartAddress &&
                     <Marker position={[selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]}></Marker>
                 }
@@ -349,7 +428,7 @@ function Map(){
                 }
 
 
-                {filteredFeatures.length !== 0 && filteredFeatures.map((data) => {
+                {filteredFreshnessFeatures.length !== 0 && filteredFreshnessFeatures.map((data) => {
                     if(data.length !== 0){
                         // console.log("ddddddata: ", data)
                         const dataType = data[0].geometry.type
@@ -378,6 +457,42 @@ function Map(){
                                         <Marker key={Math.random()} position={coordinates} icon={new L.icon(markerOption)} eventHandlers={{
                                             click: () => handleShowDetailsPopupMarker(dta)
                                         }}>
+
+                                        </Marker>
+                                    )
+                                })}
+                                </MarkerClusterGroup>
+                            )
+                        }
+                    }
+                })}
+                {filteredItinerariesFeatures.length !== 0 && filteredItinerariesFeatures.map((data) => {
+                    if(data.geojson.length !== 0){
+                        // console.log("ddddddata: ", data)
+                        const dataType = data.geojson[0].geometry.type
+                        if(dataType === "MultiPolygon" || dataType === "Polygon"){
+                            return(
+                                <GeoJSON key={Math.random()} data={data.geojson} style={getColor} onEachFeature={showDetailsPopupPolygon}/>
+                            )
+                        } else if (dataType === "Point"){
+                            const markerOption = data.markerOption
+                            return(
+                                <MarkerClusterGroup 
+                                key={Math.random()} 
+                                maxClusterRadius={100}
+                                polygonOptions={{
+                                    opacity: 0
+                                }}
+                                iconCreateFunction={(cluster) => createClusterCustomIcon(cluster, markerOption)}
+                                // eventHandlers={{
+                                //     click: (cluster) => handleShowDetailsPopupMarker(cluster.sourceTarget)
+                                // }}
+                                >
+                                {data.geojson.map((dta,i) => {
+                                    // console.log(dta)
+                                    const coordinates = [dta.geometry.coordinates[1], dta.geometry.coordinates[0]]
+                                    return (
+                                        <Marker key={Math.random()} position={coordinates} icon={new L.icon(markerOption)}>
 
                                         </Marker>
                                     )

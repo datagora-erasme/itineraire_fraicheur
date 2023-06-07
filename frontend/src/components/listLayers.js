@@ -55,7 +55,7 @@ function ListLayers({ showLayers, setShowLayers }){
                               checkbox.checked = !checkbox.checked;
                               const img = document.getElementById(`img_${layer.id}`)
                               if(checkbox.checked){
-                                console.log(img.class)
+                                // console.log(img.class)
                                 img.className = 'bg-gray-300 border-solid border-2 rounded-full p-4 cursor-pointer'
                               } else {
                                 img.className = 'border-solid border-2 rounded-full p-4 hover:bg-gray-100 cursor-pointer'

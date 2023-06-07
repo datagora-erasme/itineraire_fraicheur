@@ -35,15 +35,26 @@ def get_layers():
     layer_id = request.args.get('id')
     print("request", request)
     if layer_id:
-        try:
-            print("one layer")
-            data = findOne(layer_id)
-            if not data:
-                return '', 404
-            return jsonify(data)
-        except Exception as e:
-            print(e)
-            return '', 500
+        if layer_id == "all":
+            try:
+                all_id = findMany()
+                data = [findOne(id["id"]) for id in all_id]
+                if not data:
+                    return '', 404
+                return jsonify(data)
+            except Exception as e:
+                print(e)
+                return '', 500
+        else:
+            try:
+                print("one layer")
+                data = findOne(layer_id)
+                if not data:
+                    return '', 404
+                return jsonify(data)
+            except Exception as e:
+                print(e)
+                return '', 500
     else:
         try:
             results = findMany()

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import MainContext from "../contexts/mainContext";
 import { FaHourglassStart } from "react-icons/fa";
+import {BiX} from "react-icons/bi"
 
 const CurrentItineraryDetails = () => {
-    const { currentItinerary } = useContext(MainContext)
+    const { currentItinerary, filteredItinerariesFeatures, setHistory, setShowCurrentItineraryDetails } = useContext(MainContext)
     const [details, setDetails] = useState([])
 
     useEffect(() => {
@@ -37,6 +38,14 @@ const CurrentItineraryDetails = () => {
 
     return(
         <div className="card md:card-details-desktop">
+            <div 
+                className="absolute -ml-6 -mt-2 w-full flex justify-end cursor-pointer" 
+                onClick={() =>{ 
+                    setHistory([])
+                    setShowCurrentItineraryDetails(false)
+                    }}
+                >
+                <BiX className="w-6 h-6"/></div>
             <div className="flex flex-col gap-4">
                 {details.map((det, i) => {
                     return(
@@ -62,6 +71,23 @@ const CurrentItineraryDetails = () => {
                         </div>
                     )
                 })}
+            </div>
+            <div className="mt-2 flex flex-col items-start gap-2">
+                <h6 className="font-bold text-mainText">Sur votre chemin : </h6>
+                <ul className="flex flex-row gap-8 flex-wrap">
+                    {
+                        filteredItinerariesFeatures.map((layer) => {
+                            if(layer.geojson.length !== 0){
+                                return(
+                                    <li className="flex flex-row gap-2 items-center">
+                                        {layer.geojson.length}
+                                        <img className="w-8 h-8" src={layer.markerOption.iconUrl}/>
+                                    </li>
+                                )
+                            }
+                        })
+                    }
+                </ul>
             </div>
         </div>
     )

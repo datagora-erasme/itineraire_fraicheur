@@ -7,7 +7,7 @@ import axios from "axios";
 const PoiDetails = () => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const {poiDetails, setPoiDetails, setCurrentItinerary, userPosition, setShowCircle} = useContext(MainContext)
+    const {poiDetails, setPoiDetails, setCurrentItinerary, userPosition, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress} = useContext(MainContext)
 
     const calculateItinerary = () => {
         let coordinates;
@@ -27,8 +27,8 @@ const PoiDetails = () => {
             url: "/itinerary/",
             params: {
                 start: {
-                    lat: userPosition[0], 
-                    lon: userPosition[1]
+                    lat: selectedStartAddress.geometry.coordinates[1], 
+                    lon: selectedStartAddress.geometry.coordinates[0]
                 },
                 end: {
                     lat : coordinates[0],
@@ -37,14 +37,14 @@ const PoiDetails = () => {
             }
         }).then((response) => {
             setCurrentItinerary(response.data)
+            setShowPoiDetails(false)
+            setShowCurrentItineraryDetails(true)
             setIsLoading(false)
             setShowCircle(false)
         }).catch((error) => {
             console.error(error)
         })
     }
-
-    console.log("PoiDetails: ",poiDetails)
 
     return(
         <div className="card md:card-details-desktop">

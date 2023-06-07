@@ -20,7 +20,7 @@ def shortest_path(G, start, end, G_multidigraph):
 
     print("Finding shortest path IF ...")
 
-    shortest_path_if = nx.shortest_path(G, source=origin_node, target=destination_node, weight="IF_LENGTH_7030")
+    shortest_path_if = nx.shortest_path(G, source=origin_node, target=destination_node, weight="IF_LENGTH_7030") #IF_LENGTH_7030
 
     route_edges_if = ox.utils_graph.get_route_edge_attributes(G_multidigraph, shortest_path_if)
 

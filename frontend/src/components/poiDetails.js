@@ -11,10 +11,15 @@ const PoiDetails = () => {
 
     const calculateItinerary = () => {
         let coordinates;
-        if(poiDetails.geometry.type === "Polygon"){
+        console.log("bijour")
+        console.log(poiDetails)
+        if(poiDetails.geometry.type === "Polygon" || poiDetails.geometry.type === "MultiPolygon"){
+            console.log("ok")
             const layer = L.geoJSON(poiDetails)
             const bounds = layer.getBounds()
             const centroid = bounds.getCenter()
+
+            console.log(centroid)
 
             coordinates = [centroid.lat, centroid.lng]
         } else if(poiDetails.geometry.type === "Point"){
@@ -45,6 +50,8 @@ const PoiDetails = () => {
             console.error(error)
         })
     }
+
+    // console.log(poiDetails)
 
     return(
         <div className="card md:card-details-desktop">

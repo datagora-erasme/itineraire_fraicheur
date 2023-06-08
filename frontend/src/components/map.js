@@ -2,10 +2,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
-import L, { marker } from 'leaflet'
-import {polygon, lineString, buffer, union, featureCollection, dissolve, booleanPointInPolygon} from "@turf/turf"
+import L from 'leaflet'
+import { lineString, buffer, featureCollection, dissolve, booleanPointInPolygon} from "@turf/turf"
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
-import { FaGofore, FaRoute } from 'react-icons/fa';
 import MainContext from '../contexts/mainContext';
 import chroma from "chroma-js"
 

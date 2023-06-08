@@ -14,7 +14,7 @@ const CurrentItineraryDetails = () => {
                 let tot = 0
                 let dist = 0
                 let duration = 0
-                it.geojson.features.map((feat) => {
+                it.geojson.features.forEach((feat) => {
                     tot = tot + feat.properties.length
                 })
                 if(tot > 1000){
@@ -81,10 +81,11 @@ const CurrentItineraryDetails = () => {
                                 return(
                                     <li className="flex flex-row gap-2 items-center">
                                         {layer.geojson.length}
-                                        <img className="w-8 h-8" src={layer.markerOption.iconUrl}/>
+                                        <img className="w-8 h-8" alt={`${layer.id}_icon`} src={layer.markerOption.iconUrl}/>
                                     </li>
                                 )
                             }
+                            return null
                         })
                     }
                 </ul>

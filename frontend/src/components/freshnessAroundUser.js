@@ -10,7 +10,7 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     const [showStartSuggestions, setShowStartSuggestions] = useState(false);
     // const [startAddress, setStartAddress] = useState("")
     
-    const { userPosition, setZoomToUserPosition, setUserPosition, history, setHistory, 
+    const { setZoomToUserPosition, setUserPosition, history, setHistory, 
         startAddress, setStartAddress, selectedStartAddress, setSelectedStartAddress, userAddress,
         radius, setRadius, showCircle, setShowCircle
     } = useContext(MainContext)

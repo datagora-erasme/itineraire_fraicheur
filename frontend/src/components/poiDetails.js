@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import MainContext from "../contexts/mainContext";
-import { FaChevronDown, FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import L from "leaflet"
 import axios from "axios";
 
 const PoiDetails = () => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const {poiDetails, setPoiDetails, setCurrentItinerary, userPosition, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress} = useContext(MainContext)
+    const {poiDetails, setCurrentItinerary, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress} = useContext(MainContext)
 
     const calculateItinerary = () => {
         let coordinates;

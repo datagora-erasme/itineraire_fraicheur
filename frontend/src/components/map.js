@@ -210,16 +210,19 @@ function Map(){
             setShowFindFreshness(true)
           }}])
     }
+    console.log(freshnessLayers)
 
     useEffect(() => {
         if(selectedStartAddress && showCircle){
             const coordinates = [selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]
+            
             const newfilteredLayers = freshnessLayers.map((layer) => {
                 // console.log("layer : ", layer)
                 const filteredlayer = layer.geojson.features.filter((feature) => {
                     // console.log("feature into filter : ", feature)
                     let lat;
                     let lng;
+                    console.log(feature)
                     if(feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon"){
                         // console.log("ok")
                         const layer = L.geoJSON(feature)
@@ -227,14 +230,18 @@ function Map(){
                         const centroid = bounds.getCenter()
                         lat = centroid.lat
                         lng = centroid.lng
-                    } else {
+                    } 
+                    else {
                         lat = feature.geometry.coordinates[1]
                         lng = feature.geometry.coordinates[0]
                     }
-                    
-                    const distance = L.latLng(lat, lng).distanceTo(L.latLng(coordinates))
+
+                    if(lat && lng){
+                        const distance = L.latLng(lat, lng).distanceTo(L.latLng(coordinates))
         
-                    return distance < radius * 1000
+                        return distance < radius * 1000
+                    }
+                    return false
                 })
                 // console.log("filteredlayer: ", filteredlayer)
 

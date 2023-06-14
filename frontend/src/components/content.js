@@ -6,6 +6,7 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import MainContext from '../contexts/mainContext';
 import CurrentItineraryDetails from './currentItineraryDetails';
 import PoiDetails from './poiDetails';
+import HeadBand from './headband';
 
 
 function Content(){
@@ -94,8 +95,8 @@ function Content(){
                 <span>Consulter la carte fraîcheur</span>
             </button>
             {showLayers && <ListLayers showLayers={showLayers} setShowLayers={setShowLayers}/>}
-
-            <div className='cursor-pointer secondary-btn secondary-btn-mobile md:overflow-y-hidden md:main-btn-desktop md:rounded-t-none md:rounded-b-3xl'>
+            
+            <div className='cursor-pointer secondary-btn secondary-btn-mobile md:overflow-y-hidden md:main-btn-desktop md:rounded-t-none md:rounded-b-none md:rounded-b-3xl'>
                 <a 
                     target="_blank" 
                     rel="noopener noreferrer" 
@@ -104,6 +105,7 @@ function Content(){
                         En savoir plus
                     </a>
             </div>
+            <HeadBand/>
         </div>
     )
 }

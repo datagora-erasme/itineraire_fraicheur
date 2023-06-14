@@ -9,7 +9,7 @@ import HeadBand from '../components/headband';
 function Home(){
     return (
         <div style={{position: 'relative'}} className="min-h-screen max-h-screen">
-            <HeadBand/>
+            {/* <HeadBand/> */}
             <BackButton/>
             <Content/>
             <Map/>

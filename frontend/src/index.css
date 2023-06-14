@@ -21,7 +21,7 @@ code {
     @apply p-4
   }
   .main-btn-mobile {
-    @apply bg-primary text-bgWhite rounded-full;
+    @apply bg-primary text-mainText font-bold rounded-full;
   }
   .main-btn-desktop {
     @apply bg-bgWhite text-mainText font-bold flex flex-row gap-2;

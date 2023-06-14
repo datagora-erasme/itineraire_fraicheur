@@ -7,8 +7,8 @@ module.exports = {
     extend: {
       colors: {
         bgWhite: 'white',
-        primary: 'black',
-        mainText: '#343F56',
+        primary: '#D6EFF8',
+        mainText: '#1F3D47',
         startGradientLegend: '#900C3F',
         endGradientLegend: '#1f8b2c'
       },

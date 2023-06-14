@@ -3,8 +3,9 @@ import MainContext from "../contexts/mainContext";
 import { FaCheck } from "react-icons/fa";
 import L from "leaflet"
 import axios from "axios";
+import {BiX} from "react-icons/bi"
 
-const PoiDetails = () => {
+const PoiDetails = ({showMenu}) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const {poiDetails, setCurrentItinerary, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress} = useContext(MainContext)
@@ -54,29 +55,39 @@ const PoiDetails = () => {
     // console.log(poiDetails)
 
     return(
-        <div className="card md:card-details-desktop">
-            {poiDetails && (
-                <div className="mb-4 font-bold text-mainText"> 
-                    {poiDetails.properties.nom}
+        <div className={`${showMenu ? "": "hidden"} md:block mt-4 md:mt-0 card md:card-details-desktop`}>
+            <div 
+                className="absolute -ml-6 -mt-2 w-full flex justify-end cursor-pointer" 
+                onClick={() =>{ 
+                    setShowPoiDetails(false)
+                    }}
+                >
+                <BiX className="w-6 h-6"/>
+            </div>
+            <div className="flex flex-col gap-4">
+                {poiDetails && (
+                    <div className="mb-4 font-bold text-mainText"> 
+                        {poiDetails.properties.nom}
+                    </div>
+                )}
+                <div className="flex justify-center items-center">
+                <button onClick={calculateItinerary} 
+                className={` main-btn bg-primary md:opacity-80 hover:opacity-100 text-mainText font-bold rounded-full transition duration-300`}
+                >
+                {isLoading ? (
+                    <div className="flex items-center gap-2">
+                    <span>En cours de chargement</span>
+                    <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-primary animate-spin mr-3"></div>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2" onClick={() => window.trackButtonClick("ValidateCalculateItinerary")}>
+                    <span className="">Valider ma recherche </span>
+                    <FaCheck/>
+                    </div>
+                )}
+                </button>
                 </div>
-            )}
-            <div className="flex justify-center items-center">
-            <button onClick={calculateItinerary} 
-            className={` main-btn bg-primary text-white rounded-full transition duration-300`}
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <span>En cours de chargement</span>
-                  <div className="w-6 h-6 rounded-full border-4 border-gray-300 border-t-primary animate-spin mr-3"></div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2" onClick={() => window.trackButtonClick("ValidateCalculateItinerary")}>
-                  <span className="">Valider ma recherche </span>
-                  <FaCheck/>
-                </div>
-              )}
-            </button>
-          </div>
+            </div>
         </div>
     )
 }

@@ -210,7 +210,6 @@ function Map(){
             setShowFindFreshness(true)
           }}])
     }
-    console.log(freshnessLayers)
 
     useEffect(() => {
         if(selectedStartAddress && showCircle){
@@ -222,7 +221,6 @@ function Map(){
                     // console.log("feature into filter : ", feature)
                     let lat;
                     let lng;
-                    console.log(feature)
                     if(feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon"){
                         // console.log("ok")
                         const layer = L.geoJSON(feature)

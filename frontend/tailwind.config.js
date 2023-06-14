@@ -6,9 +6,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bgWhite: 'white',
+        bgWhite: '#F8F9F9',
+        bgGray: '#EEEEEE',
         primary: '#D6EFF8',
         mainText: '#1F3D47',
+        ligneModale: "#BDBDBD",
         startGradientLegend: '#900C3F',
         endGradientLegend: '#1f8b2c'
       },

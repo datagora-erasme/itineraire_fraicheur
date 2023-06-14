@@ -246,7 +246,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
           </div>
           <div className="flex justify-center items-center">
             <button onClick={calculateItinerary} 
-            className={` main-btn ${!selectedStartAddress || !selectedEndAddress ? "bg-gray-300 hover:bg-gray-400" : "bg-primary"} text-white rounded-full transition duration-300`}
+            className={` main-btn ${!selectedStartAddress || !selectedEndAddress ? "bg-gray-300 hover:bg-gray-400" : "bg-primary md:opacity-80 hover:opacity-100"} text-mainText font-bold rounded-full transition duration-300`}
             disabled={!selectedStartAddress || !selectedEndAddress}
             >
               {isLoading ? (

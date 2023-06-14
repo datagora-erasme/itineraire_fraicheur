@@ -3,7 +3,7 @@ import MainContext from "../contexts/mainContext";
 import { FaHourglassStart } from "react-icons/fa";
 import {BiX} from "react-icons/bi"
 
-const CurrentItineraryDetails = () => {
+const CurrentItineraryDetails = ({showMenu}) => {
     const { currentItinerary, filteredItinerariesFeatures, setHistory, setShowCurrentItineraryDetails } = useContext(MainContext)
     const [details, setDetails] = useState([])
 
@@ -37,11 +37,10 @@ const CurrentItineraryDetails = () => {
     }, [currentItinerary])
 
     return(
-        <div className="card md:card-details-desktop">
+        <div className={`${showMenu ? "" : "hidden"} md:block mt-4 md:mt-0 card md:card-details-desktop`}>
             <div 
                 className="absolute -ml-6 -mt-2 w-full flex justify-end cursor-pointer" 
                 onClick={() =>{ 
-                    setHistory([])
                     setShowCurrentItineraryDetails(false)
                     }}
                 >

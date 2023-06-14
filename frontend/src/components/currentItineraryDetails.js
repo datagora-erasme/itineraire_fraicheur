@@ -39,7 +39,7 @@ const CurrentItineraryDetails = ({showMenu}) => {
     return(
         <div className={`${showMenu ? "" : "hidden"} md:block mt-4 md:mt-0 card md:card-details-desktop`}>
             <div 
-                className="absolute -ml-6 -mt-2 w-full flex justify-end cursor-pointer" 
+                className="absolute -ml-6 -mt-2 w-full flex justify-end cursor-pointer hidden md:block" 
                 onClick={() =>{ 
                     setShowCurrentItineraryDetails(false)
                     }}

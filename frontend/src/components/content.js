@@ -7,6 +7,7 @@ import MainContext from '../contexts/mainContext';
 import CurrentItineraryDetails from './currentItineraryDetails';
 import PoiDetails from './poiDetails';
 import HeadBand from './headband';
+import BackButton from './backButton';
 
 
 function Content({showMenu, setShowMenu}){
@@ -24,8 +25,9 @@ function Content({showMenu, setShowMenu}){
                 <div className="hidden md:block bg-bgWhite w-[300px] ml-[20px] p-4 absolute top-0 rounded-full font-bold text-xl drop-shadow-lg">Sortons au frais !</div>
                 <div className="hidden md:block h-8 bg-bgWhite rounded-t-3xl"></div>
                 {/* <div style={{zIndex:1000}} className="md:hidden absolute h-16 bg-transparent -mt-16 w-[100vw] -ml-8 rounded-bl-full">EO</div> */}
-                <div className=" md:hidden flex justify-center" onClick={() => setShowMenu(!showMenu)}>
-                    <div className="h-[12px] w-[100px] bg-ligneModale rounded-3xl -mt-2 mb-2"></div>
+                <div className=" md:hidden flex flex-row justify-center">
+                    <BackButton showMenu={showMenu}/>
+                    <div className="h-[12px] w-[100px] bg-ligneModale rounded-3xl -mt-2 mb-2" onClick={() => setShowMenu(!showMenu)}></div>
                 </div>
                 {showCurrentItineraryDetails && <CurrentItineraryDetails showMenu={showMenu}/>}
                 {showPoiDetails && <PoiDetails showMenu={showMenu}/>}

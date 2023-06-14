@@ -47,7 +47,7 @@ code {
   }
 
   .card-title {
-    @apply flex flex-row gap-2 font-bold text-mainText
+    @apply flex flex-row gap-2 font-bold text-mainText -mt-4
   }
 
   .main-input {

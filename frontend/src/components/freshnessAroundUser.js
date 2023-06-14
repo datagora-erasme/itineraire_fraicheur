@@ -101,12 +101,12 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
         <div className="card md:card-desktop">
             <button
                 className="md:hidden card-title"
-                onClick={() => {
-                    setShowFindFreshness(!showFindFreshness)
-                    setHistory(history.slice(0,-1))
-                }}
+                // onClick={() => {
+                //     setShowFindFreshness(!showFindFreshness)
+                //     setHistory(history.slice(0,-1))
+                // }}
             >
-                <FaChevronDown className="text-gray-500 mt-1" />
+                <FaChevronDown className="text-gray-500 mt-1 hidden md:block" />
                 <span className="text-lg font-bold mr-2">Lieu le plus frais autour de moi</span>
             </button>
 

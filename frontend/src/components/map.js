@@ -150,10 +150,12 @@ function Map(){
 
     const createClusterCustomIcon = function (cluster, markerOption) {
 
+        //<span style=${markerOption.clusterCountStyle}>${cluster.getChildCount()}</span>
+
         return L.divIcon({
-            html: `<span style="position: relative; width:25px; height:25px;">
+            html: `<span class="flex flex-col items-center justify-center">
                         <img src=${markerOption.iconUrl} style="display: block, width: 40px; height:40px;" />
-                        <span style=${markerOption.clusterCountStyle}>${cluster.getChildCount()}</span>
+                        <span class="text-bgWhite bg-mainText w-2/3 h-4 rounded-sm font-bold">${cluster.getChildCount()}</span>
                     </span>`,
             className: 'custom-marker-cluster',
             iconSize: L.point(33, 33, true),

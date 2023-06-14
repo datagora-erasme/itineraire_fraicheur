@@ -4,7 +4,7 @@ import MainContext from '../contexts/mainContext';
 
 function ListLayers({ showLayers, setShowLayers }){
 
-    const { listLayers, selectedLayers, setSelectedLayers, isLayerLoading, history, setHistory } = useContext(MainContext)
+    const { listLayers, selectedLayers, setSelectedLayers, isLayerLoading, history, setHistory } = useContext(MainContext)  
 
     function handleCheckBoxList(event){
         const {value, checked} = event.target;
@@ -20,13 +20,13 @@ function ListLayers({ showLayers, setShowLayers }){
         <div className="card md:card-desktop">
         <button
           className="md:hidden card-title"
-          onClick={() => {
-            setShowLayers(!showLayers)
-            setHistory(history.slice(0,-1))
-          }}
+          // onClick={() => {
+          //   setShowLayers(!showLayers)
+          //   setHistory(history.slice(0,-1))
+          // }}
         >
         {isLayerLoading && <div class="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>}
-          <FaChevronDown className="text-gray-500 mt-1" />
+          <FaChevronDown className="text-gray-500 mt-1 hidden md:block" />
           <span className="text-lg font-bold mr-2">Afficher sur la carte</span>
         </button>
         {listLayers.length !== 0 ? (

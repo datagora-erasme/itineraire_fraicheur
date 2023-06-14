@@ -172,13 +172,13 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
   return (
       <div className="card md:card-desktop">
           <button 
-            onClick={() => {
-              setShowItineraryCalculation(!showItineraryCalculation)
-              setHistory(history.slice(0,-1))
-            }} 
+            // onClick={() => {
+            //   setShowItineraryCalculation(!showItineraryCalculation)
+            //   setHistory(history.slice(0,-1))
+            // }} 
             className="md:hidden card-title"
             >
-              <FaChevronDown className="text-gray-500 mt-1" />
+              <FaChevronDown className="text-gray-500 mt-1 hidden md:block" />
               <span>Calculer un itinéraire</span>
           </button>
           <label htmlFor="startAddress" className="block mb-1 mt-4 flex">

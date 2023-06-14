@@ -11,7 +11,7 @@ function Home(){
     return (
         <div style={{position: 'relative'}} className="min-h-screen max-h-screen">
             {/* <HeadBand/> */}
-            <BackButton showMenu={showMenu}/>
+            {/* <BackButton showMenu={showMenu}/> */}
             <Content showMenu={showMenu} setShowMenu={setShowMenu}/>
             <Map/>
         

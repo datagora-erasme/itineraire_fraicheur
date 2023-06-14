@@ -1,9 +1,9 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap, Polygon } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
-import { lineString, buffer, featureCollection, dissolve, booleanPointInPolygon} from "@turf/turf"
+import { lineString, buffer, featureCollection, dissolve, booleanPointInPolygon, difference, polygon, circle} from "@turf/turf"
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import MainContext from '../contexts/mainContext';
 import chroma from "chroma-js"
@@ -33,16 +33,29 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, select
     if(selectedStartAddress && showCircle){
         const coordinates = [selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]
         map.eachLayer((layer) => {
-            if (layer.options && (layer.options.id === "freshnessAroundUser" || layer.options.id === "userPosition")) {
+            if (layer.options && (layer.options.id === "freshnessAroundUser" || layer.options.id === "userPosition" || layer.options.id === "doughnuts")) {
               map.removeLayer(layer);
             }
           });
 
-        const circle = L.circle(coordinates, {
-            id:"freshnessAroundUser",
-            radius: radius*1000,
-            color: 'green',
-        }).addTo(map);
+        const littleCircle = circle([coordinates[1], coordinates[0]], radius=radius)
+        const bigCircle = circle([coordinates[1], coordinates[0]], radius=1000)
+
+        const doughnuts = difference(bigCircle, littleCircle)
+
+        const mapLittleCircle = L.geoJSON(littleCircle, {
+            id: "freshnessAroundUser",
+            color: "white"
+        })
+
+        const mapDoughnuts = L.geoJSON(doughnuts, {
+            id: "doughnuts",
+            color: "gray",
+            fillOpacity: 0.5
+        })
+
+        mapLittleCircle.addTo(map)
+        mapDoughnuts.addTo(map)
 
         /*eslint-disable*/
         let marker = L.marker(coordinates, {
@@ -54,14 +67,14 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, select
       
         // zoom to circle
         if(zoomToUserPosition){
-            map.fitBounds(circle.getBounds());
+            map.fitBounds(mapLittleCircle.getBounds());
             setZoomToUserPosition(false)
         }
 
 
     } else if (!showCircle){
         map.eachLayer((layer) => {
-            if (layer.options && (layer.options.id === "freshnessAroundUser" || layer.options.id === "userPosition")) {
+            if (layer.options && (layer.options.id === "freshnessAroundUser" || layer.options.id === "userPosition" || layer.options.id === "doughnuts")) {
               map.removeLayer(layer);
             }
           });

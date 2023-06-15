@@ -39,12 +39,13 @@ const CurrentItineraryDetails = ({showMenu}) => {
     return(
         <div className={`${showMenu ? "" : "hidden"} md:block mt-4 md:mt-0 card md:card-details-desktop`}>
             <div 
-                className="absolute -ml-6 -mt-2 w-full flex justify-end cursor-pointer hidden md:block" 
+                className="absolute w-full md:flex justify-end -mt-2 -ml-6 cursor-pointer hidden" 
                 onClick={() =>{ 
                     setShowCurrentItineraryDetails(false)
                     }}
                 >
-                <BiX className="w-6 h-6"/></div>
+                <BiX className="w-6 h-6"/>
+            </div>
             <div className="flex flex-col gap-4">
                 {details.map((det, i) => {
                     return(

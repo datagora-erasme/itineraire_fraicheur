@@ -21,7 +21,7 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
     const handleStartAddressAPI = (query) => {
             axios
             .get(
-            `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5&lat=45.763&lon=4.836`
+                `https://download.data.grandlyon.com/geocoding/photon-bal/api?q=${query}`
             )
             .then((response) => {
             setStartAddressSuggestions(response.data.features);
@@ -32,6 +32,10 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
         }
     /*eslint-disable*/
     const debounceStartAddress = useCallback(_debounce(handleStartAddressAPI, 300), [])
+
+    const addressName = ({city, street, postcode, housenumber}) => {
+        return `${housenumber ? housenumber : ""} ${street}, ${postcode} ${city.toUpperCase()}`
+      }
 
     const handleStartAddressChange = (event) => {
         const value = event.target.value;
@@ -59,8 +63,8 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
 
     const handleSelectStartAddress = (id) => {
         for(let address of startAddressSuggestions){
-            if(address.properties.id === id){
-                setStartAddress(`${address.properties.label.slice(0,30)}...`)
+            if(address.properties.osm_id === id){
+                setStartAddress(`${addressName(address.properties).slice(0,30)}...`)
                 setSelectedStartAddress(address)
                 setStartAddressSuggestions([])
             }
@@ -133,9 +137,10 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
                         value={startAddress}
                         >
                         {startAddressSuggestions.map((suggestion) => {
+                            const name = addressName(suggestion.properties)
                             return(                
-                            <li key={suggestion.properties.id} value={suggestion.properties.id} onClick={() => handleSelectStartAddress(suggestion.properties.id)}>
-                                {suggestion.properties.label.length > 40 ? `${suggestion.properties.label.slice(0, 40)}...` : suggestion.properties.label}
+                            <li key={suggestion.properties.osm_id} value={suggestion.properties.osm_id} onClick={() => handleSelectStartAddress(suggestion.properties.osm_id)}>
+                                {name > 40 ? `${name.slice(0, 40)}...` : name}
                             </li>
                             )
                         })}

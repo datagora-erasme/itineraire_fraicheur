@@ -8,14 +8,11 @@ import {BiX} from "react-icons/bi"
 const PoiDetails = ({showMenu}) => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const {poiDetails, setCurrentItinerary, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress} = useContext(MainContext)
+    const {poiDetails, setCurrentItinerary, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress, history, setHistory} = useContext(MainContext)
 
     const calculateItinerary = () => {
         let coordinates;
-        console.log("bijour")
-        console.log(poiDetails)
         if(poiDetails.geometry.type === "Polygon" || poiDetails.geometry.type === "MultiPolygon"){
-            console.log("ok")
             const layer = L.geoJSON(poiDetails)
             const bounds = layer.getBounds()
             const centroid = bounds.getCenter()
@@ -47,6 +44,10 @@ const PoiDetails = ({showMenu}) => {
             setShowCurrentItineraryDetails(true)
             setIsLoading(false)
             setShowCircle(false)
+            setHistory([...history, {fn: () => {
+                setShowCurrentItineraryDetails(false)
+                setShowPoiDetails(true)
+            }}])
         }).catch((error) => {
             console.error(error)
         })
@@ -57,7 +58,7 @@ const PoiDetails = ({showMenu}) => {
     return(
         <div className={`${showMenu ? "": "hidden"} md:block mt-4 md:mt-0 card md:card-details-desktop`}>
             <div 
-                className="absolute -ml-6 -mt-2 w-full flex justify-end cursor-pointer hidden md:block" 
+                className="absolute -ml-6 -mt-2 w-full md:flex justify-end cursor-pointer hidden" 
                 onClick={() =>{ 
                     setShowPoiDetails(false)
                     }}

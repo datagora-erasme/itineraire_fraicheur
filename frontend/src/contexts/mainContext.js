@@ -151,6 +151,8 @@ export const MainContextProvider = ({ children }) => {
       setZoomToItinerary(true)
     }, [currentItinerary])
 
+    console.log("history: ", history)
+
     return(
         <MainContext.Provider
             value={{

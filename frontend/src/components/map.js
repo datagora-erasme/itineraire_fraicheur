@@ -336,7 +336,9 @@ function Map(){
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     // url="http://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png"
-                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                    // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                    url="https://openmaptiles.data.grandlyon.com/styles/klokantech-basic/{z}/{x}/{y}.png"
+
                     // url="https://openmaptiles.data.grandlyon.com/data/v3/{z}/{x}/{y}.pbf"
                 />
                 <ZoomControl position='topright' />

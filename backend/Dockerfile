@@ -9,10 +9,11 @@ COPY ./requirements.txt /app/
 RUN pip install -r requirements.txt
 
 COPY ./models/ /app/models
-COPY ./script_python/ /app/script_python
-COPY ./data/osm/final_network_iflen.gpkg /app/data/osm/final_network_iflen.gpkg
-COPY ./data/geojson /app/data/geojson
-COPY ./data/data_informations.json /app/data/data_informations.json
+# COPY ./script_python/ /app/script_python
+COPY ./score_calculation/input_data /app/score_calculation/input_data
+COPY ./score_calculation/output_data/network/graph/final_network_2606.gpkg /app/score_calculation/output_data/network/graph/final_network_2606.gpkg
+# COPY ./data/geojson /app/data/geojson
+COPY ./data_informations.json /app/data_informations.json
 # COPY ./raw_data/ /app/raw_data
 
 COPY ./calculate_itinerary.py /app/

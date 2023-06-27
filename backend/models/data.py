@@ -1,7 +1,7 @@
 import json
 import os
 
-with open('./data/data_informations.json') as f:
+with open('./data_informations.json') as f:
     data_informations = json.load(f)
 
 def get_layer_list():

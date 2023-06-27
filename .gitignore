@@ -4,6 +4,14 @@ data/
 cache/
 optimization_files/
 
+backend/score_calculation/output_data/network/edges/
+backend/score_calculation/output_data/bancs/
+backend/score_calculation/output_data/eaux/
+backend/score_calculation/output_data/fontaines/
+backend/score_calculation/output_data/parcs/
+backend/score_calculation/output_data/toilettes/
+backend/score_calculation/output_data/vegetation/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

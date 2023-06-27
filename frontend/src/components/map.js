@@ -330,7 +330,7 @@ function Map(){
     return (
         <div>
             {loadingLayer && "Loading ...."}
-            <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={true} className="mapContainer" zoomControl={false} maxZoom={0}>
+            <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={true} className="mapContainer" zoomControl={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     // url="http://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png"
@@ -415,7 +415,7 @@ function Map(){
                                 weight: it.id === "LENGTH" ? 5 : 10, 
                                 lineCap: "round", 
                                 lineJoin: "round",
-                                // dashArray: it.id === "LENGTH" ? '10, 10' : '', 
+                                dashArray: it.id === "LENGTH" ? '1, 10' : '', 
                                 dashOffset: '0'
                                 })} 
                             key={Math.random()}/>

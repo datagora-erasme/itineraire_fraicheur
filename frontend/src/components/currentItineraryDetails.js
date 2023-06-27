@@ -54,7 +54,7 @@ const CurrentItineraryDetails = ({showMenu}) => {
                             <div className="flex w-full items-center gap-6">
                                 <h6 className="font-bold text-mainText">{det.name}</h6>
                                 <div className={`bg-gradient-to-r from-startGradientLegend to-endGradientLegend w-[100px] ${det.id === "LENGTH" ? "h-[5px]" : "h-[10px]"} flex flex-row gap-4 pl-4`}>
-                                    {/* {det.id === "LENGTH" && (
+                                    {det.id === "LENGTH" && (
                                         <>
                                             <div className="h-full w-[10px] bg-white"> </div>
                                             <div className="h-full w-[10px] bg-white"> </div>
@@ -62,7 +62,7 @@ const CurrentItineraryDetails = ({showMenu}) => {
                                             <div className="h-full w-[10px] bg-white"> </div>
                                             <div className="h-full w-[10px] bg-white"> </div>
                                         </>
-                                    )} */}
+                                    )}
                                 </div>
                             </div>
                             <div className="flex gap-4">

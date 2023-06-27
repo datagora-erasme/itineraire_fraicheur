@@ -16,7 +16,7 @@ def load_network(network_path, pickle_path, network_multidigraph_pickle_path):
     gdf_nodes["x"] = gdf_nodes["lon"]
 
     #remove unecessary columns in order to lightened the network
-    new_edges = gdf_edges[["u", "v", "key", "osmid", "length", "from", "to", "score_distance", "total_score", "geometry"]].set_geometry("geometry")
+    new_edges = gdf_edges[["u", "v", "key", "osmid", "length", "from", "to", "score_distance", "total_score", "freshness_score", "geometry"]].set_geometry("geometry")
     new_edges.to_crs(gdf_edges.crs)
 
     new_edges = new_edges.set_index(["u", "v", "key"])

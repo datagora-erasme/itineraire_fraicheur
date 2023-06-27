@@ -25,7 +25,7 @@ const colors = {
     "0.01": "#28572c"
 }
 
-const colorIfScale = chroma.scale(["#1f8b2c", "#900C3F"]).domain([0.9,1])
+const colorIfScale = chroma.scale(["#f42a2d", "#3d83f5"]).domain([0,10])
 
 function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, selectedStartAddress, showCircle}){
     const map = useMap()
@@ -327,12 +327,10 @@ function Map(){
         }
     }, [bufferedItineraries])
 
-    // console.log(bufferedItineraries)
-
     return (
         <div>
             {loadingLayer && "Loading ...."}
-            <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={true} className="mapContainer" zoomControl={false}>
+            <MapContainer id="map" center={[45.76309302427536, 4.836502750843036]} zoom={13} scrollWheelZoom={true} className="mapContainer" zoomControl={false} maxZoom={0}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     // url="http://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png"
@@ -413,11 +411,11 @@ function Map(){
                             <GeoJSON 
                             data={it.geojson} 
                             style={(feature) => ({
-                                color: colorIfScale(feature.properties.IF).hex(), 
-                                weight: 5, 
+                                color: colorIfScale(feature.properties.freshness_score).hex(), 
+                                weight: it.id === "LENGTH" ? 5 : 10, 
                                 lineCap: "round", 
                                 lineJoin: "round",
-                                dashArray: it.id === "LENGTH" ? '5, 15' : '', 
+                                // dashArray: it.id === "LENGTH" ? '10, 10' : '', 
                                 dashOffset: '0'
                                 })} 
                             key={Math.random()}/>

@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import MainContext from "../contexts/mainContext";
-import { FaHourglassStart } from "react-icons/fa";
+import { FaHourglassStart, FaSnowflake } from "react-icons/fa";
+import { GiPathDistance } from "react-icons/gi"
 import {BiX} from "react-icons/bi"
 
 const CurrentItineraryDetails = ({showMenu}) => {
-    const { currentItinerary, filteredItinerariesFeatures, setHistory, setShowCurrentItineraryDetails } = useContext(MainContext)
+    const { currentItinerary, filteredItinerariesFeatures, setHistory, setShowCurrentItineraryDetails, ifScore, lenScore } = useContext(MainContext)
     const [details, setDetails] = useState([])
 
     useEffect(() => {
@@ -52,8 +53,8 @@ const CurrentItineraryDetails = ({showMenu}) => {
                         <div key={i} className="flex flex-col items-start w-full">
                             <div className="flex w-full items-center gap-6">
                                 <h6 className="font-bold text-mainText">{det.name}</h6>
-                                <div className="bg-gradient-to-r from-startGradientLegend to-endGradientLegend w-[100px] h-[5px] flex flex-row gap-4 pl-4">
-                                    {det.id === "LENGTH" && (
+                                <div className={`bg-gradient-to-r from-startGradientLegend to-endGradientLegend w-[100px] ${det.id === "LENGTH" ? "h-[5px]" : "h-[10px]"} flex flex-row gap-4 pl-4`}>
+                                    {/* {det.id === "LENGTH" && (
                                         <>
                                             <div className="h-full w-[10px] bg-white"> </div>
                                             <div className="h-full w-[10px] bg-white"> </div>
@@ -61,12 +62,13 @@ const CurrentItineraryDetails = ({showMenu}) => {
                                             <div className="h-full w-[10px] bg-white"> </div>
                                             <div className="h-full w-[10px] bg-white"> </div>
                                         </>
-                                    )}
+                                    )} */}
                                 </div>
                             </div>
                             <div className="flex gap-4">
-                                <div className="px-2">Distance : {det.distance}</div>
+                                <div className="px-2 flex gap-1"><GiPathDistance className="mt-1"/> {det.distance}</div>
                                 <div className="px-2 flex"><FaHourglassStart className="mt-1"/> {det.duration}</div>
+                                <div className="px-2 flex gap-1"><FaSnowflake className="mt-1 text-endGradientLegend"/> {det.id === "LENGTH" ? lenScore : ifScore}/10</div>
                             </div>
                         </div>
                     )

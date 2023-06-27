@@ -11,8 +11,8 @@ module.exports = {
         primary: '#D6EFF8',
         mainText: '#000000',
         ligneModale: "#BDBDBD",
-        startGradientLegend: '#900C3F',
-        endGradientLegend: '#1f8b2c'
+        startGradientLegend: '#f42a2d',
+        endGradientLegend: '#3d83f5'
       },
     },
   },

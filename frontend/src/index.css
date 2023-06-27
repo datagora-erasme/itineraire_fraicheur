@@ -43,7 +43,7 @@ code {
   }
 
   .card-details-desktop {
-    @apply bg-bgWhite min-h-[100px] max-w-[350px] top-16 left-[400px] flex flex-col gap-0 rounded-3xl;
+    @apply bg-bgWhite min-h-[100px] max-w-[400px] top-16 left-[400px] flex flex-col gap-0 rounded-3xl;
   }
 
   .card-title {

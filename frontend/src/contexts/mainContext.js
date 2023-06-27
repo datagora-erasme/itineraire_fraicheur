@@ -39,6 +39,17 @@ export const MainContextProvider = ({ children }) => {
 
     const [poiDetails, setPoiDetails] = useState(null)
 
+    const [ifScore, setIfScore] = useState(null)
+
+    const [lenScore, setLenScore] = useState(null)
+
+    const calculateMeanScore = (itinerary) => {
+      const freshness_scores = itinerary.geojson.features.map((feat) => feat.properties.freshness_score)
+      const initialValue = 0
+      const sum = freshness_scores.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
+      return Math.round((sum/freshness_scores.length)*10)/10
+    }
+
     useEffect(() => {
         async function fetchListLayers(){
             try{
@@ -92,7 +103,6 @@ export const MainContextProvider = ({ children }) => {
           }
       })
         const fetchFreshPlaces = await axios.get("https://download.data.grandlyon.com/ws/grandlyon/com_donnees_communales.equipementspublicsclimatises/all.json")
-        // console.log(fetchFreshPlaces.data.values)
         const freshplaces = {
           id: "batiments_frais",
           geojson: {
@@ -148,10 +158,12 @@ export const MainContextProvider = ({ children }) => {
     }, [userPosition])
 
     useEffect(() => {
-      setZoomToItinerary(true)
+      if(currentItinerary){
+        setZoomToItinerary(true)
+        setIfScore(() => calculateMeanScore(currentItinerary[1]))
+        setLenScore(() => calculateMeanScore(currentItinerary[0]))
+      }
     }, [currentItinerary])
-
-    console.log("history: ", history)
 
     return(
         <MainContext.Provider
@@ -198,7 +210,9 @@ export const MainContextProvider = ({ children }) => {
                 filteredFreshnessFeatures,
                 setFilteredFreshnessFeatures,
                 filteredItinerariesFeatures,
-                setFilteredItinerariesFeatures
+                setFilteredItinerariesFeatures, 
+                ifScore,
+                lenScore
             }}
         >
             {children}

@@ -49,7 +49,7 @@ function Content({showMenu, setShowMenu}){
                     ) : (
                     <FaChevronDown className="hidden md:block text-gray-500 mt-1" />
                     )}
-                    <span>Calculer un itinéraire</span>
+                    <span>Calculer un itinéraire piéton</span>
                     {/* <span className="hidden md:block">Je calcule mon itinéraire fraîcheur</span> */}
                 </button>
                 {showItineraryCalculation && <CalculateItinerary showItineraryCalculation={showItineraryCalculation} setShowItineraryCalculation={setShowItineraryCalculation}/>}

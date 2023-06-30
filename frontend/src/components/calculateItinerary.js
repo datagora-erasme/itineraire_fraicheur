@@ -179,7 +179,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
             className="md:hidden card-title"
             >
               <FaChevronDown className="text-gray-500 mt-1 hidden md:block" />
-              <span>Calculer un itinéraire</span>
+              <span>Calculer un itinéraire piéton</span>
           </button>
           <label htmlFor="startAddress" className="block mb-1 mt-4 flex">
             Départ

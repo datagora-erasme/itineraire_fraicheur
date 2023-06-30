@@ -44,7 +44,7 @@ export const MainContextProvider = ({ children }) => {
     const [lenScore, setLenScore] = useState(null)
 
     const calculateMeanScore = (itinerary) => {
-      const freshness_scores = itinerary.geojson.features.map((feat) => feat.properties.freshness_score)
+      const freshness_scores = itinerary.geojson.features.map((feat) => feat.properties.exp_fresh_score)
       const initialValue = 0
       const sum = freshness_scores.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
       return Math.round((sum/freshness_scores.length)*10)/10

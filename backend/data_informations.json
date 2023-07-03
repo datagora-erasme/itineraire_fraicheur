@@ -33,8 +33,8 @@
                 ],
                 "clusterCountStyle": "position:absolute;top:20px;left:-9px;color:white;font-weight:bold;"
             },
-            "gpkg_path": "./score_calculation/input_data/fontaines/fontaines_potables.gpkg",
-            "geojson_path": "./score_calculation/input_data/fontaines/fontaines_potables.json"
+            "gpkg_path": "./score_calculation_it/input_data/fontaines/fontaines_potables.gpkg",
+            "geojson_path": "./score_calculation_it/input_data/fontaines/fontaines_potables.json"
         },
         "toilettes_publiques": {
             "name": "Toilettes publiques",
@@ -51,8 +51,8 @@
                 ],
                 "clusterCountStyle": "position:absolute;top:48px;left:-6px;color:black;font-weight:bold;"
             },
-            "gpkg_path": "./score_calculation/input_data/toilettes/toilettes.gpkg",
-            "geojson_path": "./score_calculation/input_data/toilettes/toilettes.json"
+            "gpkg_path": "./score_calculation_it/input_data/toilettes/toilettes.gpkg",
+            "geojson_path": "./score_calculation_it/input_data/toilettes/toilettes.json"
         },
         "fontaines_ornementales": {
             "name": "Fontaines ornementales",
@@ -69,16 +69,16 @@
                 ],
                 "clusterCountStyle": "position:absolute;top:48px;left:0px;color:black;font-weight:bold;"
             },
-            "gpkg_path": "./score_calculation/input_data/fontaines/fontaines_ornementales.gpkg",
-            "geojson_path": "./score_calculation/input_data/fontaines/fontaines_ornementales.json"
+            "gpkg_path": "./score_calculation_it/input_data/fontaines/fontaines_ornementales.gpkg",
+            "geojson_path": "./score_calculation_it/input_data/fontaines/fontaines_ornementales.json"
         },
         "parcs_jardins_metropole": {
             "name": "Parcs et jardins",
             "marker_option": {
                 "iconUrl": "arbre.svg"
             },
-            "gpkg_path": "./score_calculation/input_data/parcs/parcs.gpkg",
-            "geojson_path": "./score_calculation/input_data/parcs/parcs.json"
+            "gpkg_path": "./score_calculation_it/input_data/parcs/parcs.gpkg",
+            "geojson_path": "./score_calculation_it/input_data/parcs/parcs.json"
         },
         "bancs": {
             "name": "Bancs",
@@ -95,19 +95,19 @@
                 ],
                 "clusterCountStyle": "position:absolute;top:40px;left:0px;color:white;background-color:#d6eff8;font-weight:bold;"
             },
-            "gpkg_path": "./score_calculation/input_data/bancs/bancs.gpkg",
-            "geojson_path": "./score_calculation/input_data/bancs/bancs.json"
+            "gpkg_path": "./score_calculation_it/input_data/bancs/bancs.gpkg",
+            "geojson_path": "./score_calculation_it/input_data/bancs/bancs.json"
         }
     },
     "data_raw": {
         "temp_surface_road_raw": {
             "name": "Temp\u00e9rature de surface",
-            "gpkg_path": "./score_calculation/input_data/temperature/temp_0722.gpkg",
+            "gpkg_path": "./score_calculation_it/input_data/temperature/temp_0722.gpkg",
             "geojson_path": "./data/geojson/temp_surface_road_raw.json"
         },
         "veget_raw": {
             "name": "V\u00e9g\u00e9tation stratifi\u00e9e",
-            "gpkg_path": "./score_calculation/input_data/vegetation/clipped_veget_12.gpkg",
+            "gpkg_path": "./score_calculation_it/input_data/vegetation/clipped_veget_12.gpkg",
             "geojson_path": "./data/geojson/veget_raw.json"
         }
     }

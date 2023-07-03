@@ -422,7 +422,7 @@ function Map(){
                         )
                     })
                 }
-
+{/* 
                 {bufferedItineraries.length !== 0 &&
                     bufferedItineraries.map((it, index) => {
                         // console.log(it)
@@ -436,7 +436,7 @@ function Map(){
                             )
                         }
                     })
-                }
+                } */}
 
                 { selectedStartAddress &&
                     <Marker position={[selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]}></Marker>

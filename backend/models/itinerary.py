@@ -30,7 +30,7 @@ def shortest_path(G, start, end, G_multidigraph):
 
     geojson_if = json.loads(gdf_route_edges_if.to_json())
 
-    gdf_route_edges_if.to_file("./temp/if_test_2806_ts.json", driver="GeoJSON")
+    # gdf_route_edges_if.to_file("./temp/if_test_2806_ts.json", driver="GeoJSON")
 
     print("Finding shortest path Length ...")
 
@@ -44,7 +44,7 @@ def shortest_path(G, start, end, G_multidigraph):
 
     geojson_len = json.loads(gdf_route_edges_len.to_json())
 
-    gdf_route_edges_len.to_file("./temp/len_test_2806_ts.json", driver="GeoJSON")
+    # gdf_route_edges_len.to_file("./temp/len_test_2806_ts.json", driver="GeoJSON")
 
     return geojson_if, geojson_len
 

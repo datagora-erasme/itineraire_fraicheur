@@ -8,7 +8,7 @@ import {BiX} from "react-icons/bi"
 const PoiDetails = ({showMenu}) => {
 
     const [isLoading, setIsLoading] = useState(false)
-    const {poiDetails, setCurrentItinerary, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress, history, setHistory} = useContext(MainContext)
+    const {poiDetails, setCurrentItinerary, setShowCircle, setShowPoiDetails, setShowCurrentItineraryDetails, selectedStartAddress, history, setHistory, roundItineraries} = useContext(MainContext)
 
     const transformOpeningHours = (openinghours) => {
         const new_s = openinghours.split(";")
@@ -56,7 +56,8 @@ const PoiDetails = ({showMenu}) => {
                 }
             }
         }).then((response) => {
-            setCurrentItinerary(response.data)
+            const roundIt = roundItineraries(response.data)
+            setCurrentItinerary(roundIt)
             setShowPoiDetails(false)
             setShowCurrentItineraryDetails(true)
             setIsLoading(false)

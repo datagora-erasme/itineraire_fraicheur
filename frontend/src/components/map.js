@@ -111,7 +111,7 @@ function Map(){
         currentItinerary, setCurrentItinerary, selectedStartAddress, selectedEndAddress, radius, showCircle,
         zoomToItinerary, setZoomToItinerary,freshnessLayers, setShowPoiDetails, setHistory, history, setShowFindFreshness,
         setPoiDetails, layers, filteredFreshnessFeatures, setFilteredFreshnessFeatures, filteredItinerariesFeatures,
-        setFilteredItinerariesFeatures
+        setFilteredItinerariesFeatures, roundItineraries
      } = useContext(MainContext)
 
     function getColor(data){
@@ -192,7 +192,8 @@ function Map(){
                 }
             }
         }).then((response) => {
-            setCurrentItinerary(response.data)
+            const roundIt = roundItineraries(response.data)
+            setCurrentItinerary(roundIt)
             setIsLoading(false)
         }).catch((error) => {
             console.error(error)
@@ -282,8 +283,23 @@ function Map(){
                     }
                     return feature;
                   });
+
+                //round coordinates in order to avoid bug with dissolve
+                const bufferedFeaturesRounded = bufferedFeatures.map((feat) => {
+                    return {
+                        ...feat,
+                        geometry: {
+                            ...feat.geometry,
+                            coordinates: feat.geometry.coordinates.map((coords) => {
+                                return coords.map((coord) => {
+                                    return coord.map((co) => Math.round(co*1000)/1000)
+                                })
+                            })
+                        }
+                    }
+                })
                 
-                const dissolvedFeature = {...dissolve(featureCollection(bufferedFeatures)), id: it.id}
+                const dissolvedFeature = {...dissolve(featureCollection(bufferedFeaturesRounded)), id: it.id}
                 // console.log(geojsonLayer)
                 // console.log("bufferedFeatures: ", bufferedFeatures)
                 

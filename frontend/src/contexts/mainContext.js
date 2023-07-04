@@ -50,6 +50,28 @@ export const MainContextProvider = ({ children }) => {
       return Math.round((sum/freshness_scores.length)*10)/10
     }
 
+    const roundItineraries = (itineraries) => {
+      return itineraries.map((it) => {
+        return {
+          ...it,
+          geojson: {
+            ...it.geojson,
+            features: it.geojson.features.map((feat) => {
+              return {
+                ...feat,
+                geometry: {
+                  ...feat.geometry,
+                  coordinates: feat.geometry.coordinates.map((coord) => {
+                    return coord.map((co) => Math.round(co*100000)/100000)
+                  })
+                }
+              }
+            })
+          }
+        }
+      })
+    }
+
     useEffect(() => {
         async function fetchListLayers(){
             try{
@@ -160,6 +182,8 @@ export const MainContextProvider = ({ children }) => {
     useEffect(() => {
       if(currentItinerary){
         setZoomToItinerary(true)
+        const roundIt = roundItineraries(currentItinerary)
+        // console.log("roundIt: ", roundIt)
         setIfScore(() => calculateMeanScore(currentItinerary[1]))
         setLenScore(() => calculateMeanScore(currentItinerary[0]))
       }
@@ -212,7 +236,8 @@ export const MainContextProvider = ({ children }) => {
                 filteredItinerariesFeatures,
                 setFilteredItinerariesFeatures, 
                 ifScore,
-                lenScore
+                lenScore,
+                roundItineraries
             }}
         >
             {children}

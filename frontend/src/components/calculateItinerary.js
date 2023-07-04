@@ -17,7 +17,7 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
 
   const { setCurrentItinerary, userAddress, history, setHistory, setShowCurrentItineraryDetails, 
     selectedStartAddress, setSelectedStartAddress, selectedEndAddress, setSelectedEndAddress,
-    startAddress, setStartAddress, endAddress, setEndAddress, setUserPosition
+    startAddress, setStartAddress, endAddress, setEndAddress, setUserPosition, roundItineraries
    } = useContext(MainContext)
 
   // const handleToggleItineraryCalculation = () => {
@@ -145,7 +145,8 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
     }).then((response) => {
         const end = performance.now()
         // console.log("duration : ", (end-start)/1000)
-        setCurrentItinerary(response.data)
+        const roundIt = roundItineraries(response.data)
+        setCurrentItinerary(roundIt)
         setIsLoading(false)
         setShowItineraryCalculation(false)
         setShowCurrentItineraryDetails(true)

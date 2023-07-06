@@ -24,7 +24,7 @@ edges_buffer_arbustes_prop_path = "./output_data/network/edges/edges_buffered_ar
 edges_buffer_prairies_prop_path = "./output_data/network/edges/edges_buffered_prairies_prop_bounding.gpkg"
 
 edges_buffer_parcs_prop_path = "./output_data/network/edges/edges_buffered_parcs_prop_canop_bounding.gpkg"
-edges_buffer_temp_wavg_path = "./output_data/network/edges/edges_buffered_temp_wavg_bounding.gpkg"
+edges_buffer_temp_wavg_path = "./output_data/network/edges/edges_buffered_temp_wavg_bounding_no_na.gpkg"
 edges_buffer_eaux_prop_path = "./output_data/network/edges/edges_buffered_eaux_prop_bounding.gpkg"
 edges_buffer_toilettes_path = "./output_data/network/edges/edges_buffered_toilette.gpkg"
 edges_buffer_fontaines_potables_path = "./output_data/network/edges/edges_buffered_fontaines_potables.gpkg"
@@ -41,7 +41,7 @@ edges_buffer_total_score_distance_freshness_path = "./output_data/network/edges/
 
 metrop_network_path = "./input_data/network/metrop_network_bounding.gpkg"
 # metrop_network_bounding_path = "./output_data/network/graph/metrop_network_bounding.gpkg"
-final_network_path = "./output_data/network/graph/final_network_bounding_no_poi_15.gpkg"
+final_network_path = "./output_data/network/graph/final_network_bounding_scaled_01.gpkg"
 
 # bouding_mask_path = "./input_data/bounding_metrop.gpkg"
 
@@ -49,32 +49,32 @@ params = {
     "prairies_prop" : {
         "edges_path": edges_buffer_prairies_prop_path,
         "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
-        "fn_cont": lambda x: -3*x+3
+        "fn_cont": lambda x: -0.06*x+0.06
         },
     "arbustes_prop": {
         "edges_path": edges_buffer_arbustes_prop_path,
         "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
-        "fn_cont": lambda x: -5*x+5
+        "fn_cont": lambda x: -0.1*x+0.1
         },
     "arbres_prop": {
         "edges_path": edges_buffer_arbres_prop_path,
         "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
-        "fn_cont": lambda x: -20*x+20
+        "fn_cont": lambda x: -0.4*x+0.4
         },
-    "C_wavg": {
+    "C_wavg_scaled": {
         "edges_path": edges_buffer_temp_wavg_path,
         "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
-        "fn_cont": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10)
+        "fn_cont": lambda x: -0.2*x+0.2
         },
     "eaux_prop": {
         "edges_path": edges_buffer_eaux_prop_path,
         "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
-        "fn_cont": lambda x: -7*x+7
+        "fn_cont": lambda x: -0.14*x+0.14
         },
     "canop": {
         "edges_path": edges_buffer_parcs_prop_path,
         "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
-        "fn_cont": lambda x: -5*x+5
+        "fn_cont": lambda x: -0.1*x+0.1
         },
     # "toilettes" :{
     #     "edges_path": edges_buffer_toilettes_path,
@@ -115,10 +115,13 @@ def total_score(input_path, output_path, score_columns):
     edges = gpd.read_file(input_path)
     edges["total_score"] = edges[score_columns].sum(axis=1)
     min_score = edges["total_score"].min()
-    edges["total_score"] = edges.apply(lambda x: min_score if(x["score_canop"] < 2.5) else x["total_score"], axis=1)
+    edges["total_score"] = edges.apply(lambda x: min_score if(x["score_canop"] < 0.05) else x["total_score"], axis=1)
     
     min_score = edges["total_score"].min()
     max_score = edges["total_score"].max()
+
+    print("min_score: ", min_score)
+    print("max_score: ", max_score)
 
     normalize_score = edges["total_score"].apply(lambda x: (x-min_score)/(max_score-min_score))
 
@@ -265,8 +268,8 @@ def create_graph(graph_path, edges_buffered_path, graph_output_path):
 
 s = time.time()
 
-# score_columns = score_edges(edges_buffer_path, edges_buffer_scored_path, params)
-score_columns = ["score_prairies_prop", "score_arbustes_prop", "score_arbres_prop", "score_C_wavg", "score_eaux_prop", "score_canop"]
+#score_columns = score_edges(edges_buffer_path, edges_buffer_scored_path, params)
+score_columns = ["score_prairies_prop", "score_arbustes_prop", "score_arbres_prop", "score_C_wavg_scaled", "score_eaux_prop", "score_canop"]
 
 # clip_bouding_data(edges_buffer_scored_path, bouding_mask_path, edges_buffer_scored_bounding_path)
 

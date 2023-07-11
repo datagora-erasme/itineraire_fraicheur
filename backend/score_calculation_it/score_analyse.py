@@ -47,8 +47,6 @@ def shortest_path(G, start, end, G_multidigraph, index, global_gdf):
     gdf_route_edges_if = gdf_route_edges_if.reset_index()
     gdf_route_edges_if = gdf_route_edges_if.set_index(["u", "v", "key", "type", "id_it"])
 
-    # geojson_if = json.loads(gdf_route_edges_if.to_json())
-
     print("Finding shortest path Length ...")
 
     shortest_path_len = nx.shortest_path(G, source=origin_node, target=destination_node, weight="length")
@@ -65,77 +63,85 @@ def shortest_path(G, start, end, G_multidigraph, index, global_gdf):
     gdf_route_edges_len = gdf_route_edges_len.reset_index()
     gdf_route_edges_len = gdf_route_edges_len.set_index(["u", "v", "key", "type", "id_it"])
 
-    # geojson_len = json.loads(gdf_route_edges_len.to_json())
-
     sum_distance = gdf_route_edges_len["length"].sum()
 
     if(sum_distance >= 200):
-        # gdf_route_edges_if.to_file(f"./output_data/studies_zones/tetedor/if_{index}.json", driver="GeoJSON")
-        # gdf_route_edges_len.to_file(f"./output_data/studies_zones/tetedor/len_{index}.json", driver="GeoJSON")
         global_gdf = pd.concat([global_gdf, gdf_route_edges_if])
         global_gdf = pd.concat([global_gdf, gdf_route_edges_len])
 
     return global_gdf
 
+def clipp_graph_nodes_from_zone(zone_path, zone_id, graph_path, clipped_nodes_path):
+    ## CLIP GRAPH NODES
+    print("read zones file")
+    studies_zones = gpd.read_file(zone_path)
+
+    zone = studies_zones[studies_zones["zone_id"] == zone_id]
+    zone = zone.to_crs(3946)
+
+    print(zone)
+
+    print("read graph file")
+
+    graph_n = gpd.read_file(graph_path, layer="nodes")
+
+    graph_n = graph_n.to_crs(3946)
+
+    graph_n_zone = graph_n.overlay(zone, how="intersection")
+
+    print("saving file")
+    graph_n_zone.to_file(clipped_nodes_path, layer="nodes", driver="GPKG")
+    print("ALL DONE")
+
+
+def create_random_itineraries(nodes_path, graph_path, multidigraph_path, n_itineraries, itineraries_path):
+    ## SELECT RANDOM POINTS
+    nodes = gpd.read_file(nodes_path, layer="nodes").set_index(["osmid"])
+
+    random_nodes = nodes.sample(n=n_itineraries)
+    start_nodes = random_nodes[0:round((n_itineraries)/2)]
+    end_nodes = random_nodes[100:n_itineraries]
+
+    ## CREATE RANDOM ITINERARIES
+    G = load_graph_from_pickle(graph_path)
+    MG = load_graph_from_pickle(multidigraph_path)
+
+    count = 0
+
+    global_gdf = gpd.GeoDataFrame()
+
+    for i in range(0,round(n_itineraries/2)):
+        print(f"It {i} .. ")
+        start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
+        end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
+        print(start, end)
+        global_gdf = shortest_path(G, start, end, MG, count, global_gdf)
+        count+=1
+
+    print("saving file")
+    global_gdf.to_file(itineraries_path, driver="GPKG", layer="itineraries")
+    print("ALL DONE")
+
+
 ## GLOBAL VARIABLES
-tetedor_path = "./input_data/studies_zones/studies_sectors.gpkg"
+zones_path = "./input_data/studies_zones/studies_sectors.gpkg"
 graph_path = "./output_data/network/graph/final_network_bounding_scaled_no_na.gpkg"
-clipped_nodes_path = "./output_data/studies_zones/tetedor_nodes.gpkg"
+clipped_nodes_tetedor_path = "./output_data/studies_zones/tetedor_nodes.gpkg"
+clipped_nodes_partdieu_path = "./output_data/studies_zones/partdieu/partdieu_nodes.gpkg"
 
 graph_pickle = "./output_data/network/graph/final_network_bounding_scaled_no_na.pickle"
 multidigraph_pickle = "./output_data/network/graph/final_network_bounding_scaled_no_na_multidigraph.pickle"
 
+tetedor_itineraries_path = "./output_data/studies_zones/tetedor/100_it.gpkg"
+partdieu_itineraries_path = "./output_data/studies_zones/partdieu/partdieu_100_it.gpkg"
 
-## CLIP GRAPH NODES
-# print("read file")
-# studies_zones = gpd.read_file(tetedor_path)
+## SCRIPT
 
-# print(studies_zones)
+### TETE D'OR
 
-# tetedor = studies_zones[studies_zones["zone_id"] == "tetedor"]
-# print(tetedor)
-# tetedor = tetedor.to_crs(3946)
+# clipp_graph_nodes_from_zone(zones_path, "tetedor", graph_path, clipped_nodes_tetedor_path)
+# create_random_itineraries(clipped_nodes_tetedor_path, graph_pickle, multidigraph_pickle, 200, tetedor_itineraries_path)
 
-# print("read graph")
-
-# graph_n = gpd.read_file(graph_path, layer="nodes")
-
-# graph_n = graph_n.to_crs(3946)
-
-# print("intersect nodes")
-# graph_n_tetedor = graph_n.overlay(tetedor, how="intersection")
-# print(graph_n_tetedor)
-
-# graph_n_tetedor.to_file(clipped_nodes_path, layer="nodes", driver="GPKG")
-
-## SELECT RANDOM POINTS
-nodes = gpd.read_file(clipped_nodes_path, layer="nodes").set_index(["osmid"])
-
-random_nodes = nodes.sample(n=200)
-start_nodes = random_nodes[0:99]
-end_nodes = random_nodes[100:199]
-
-G = load_graph_from_pickle(graph_pickle)
-MG = load_graph_from_pickle(multidigraph_pickle)
-
-
-# print(start_nodes)
-count = 0
-# for _, s in start_nodes.iterrows():
-#     for _, e in end_nodes.iterrows():
-#         start = (s["lon"], s["lat"])
-#         end = (e["lon"], e["lat"])
-#         print(start, end)
-#         shortest_path(G, start, end, MG, count)
-#         count+=1
-
-global_gdf = gpd.GeoDataFrame()
-
-for i in range(0,98):
-    start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
-    end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
-    print(start, end)
-    global_gdf = shortest_path(G, start, end, MG, count, global_gdf)
-    count+=1
-
-global_gdf.to_file("./output_data/studies_zones/tetedor/100_it.gpkg", driver="GPKG", layer="itineraries")
+## PART DIEU
+clipp_graph_nodes_from_zone(zones_path, "partdieu", graph_path, clipped_nodes_partdieu_path)
+create_random_itineraries(clipped_nodes_partdieu_path, graph_pickle, multidigraph_pickle, 200, partdieu_itineraries_path)

@@ -23,7 +23,7 @@ def load_graph_from_pickle(pickle_path):
 
     return G
 
-def shortest_path(G, start, end, G_multidigraph, index, global_gdf):
+def shortest_path(G, start, end, G_multidigraph, index, global_gdf, min_dist=200):
     origin_node = ox.nearest_nodes(G, X=start[0], Y=start[1])
     destination_node = ox.nearest_nodes(G, X=end[0], Y=end[1])
 
@@ -65,7 +65,7 @@ def shortest_path(G, start, end, G_multidigraph, index, global_gdf):
 
     sum_distance = gdf_route_edges_len["length"].sum()
 
-    if(sum_distance >= 200):
+    if(sum_distance >= min_dist):
         global_gdf = pd.concat([global_gdf, gdf_route_edges_if])
         global_gdf = pd.concat([global_gdf, gdf_route_edges_len])
 
@@ -94,7 +94,7 @@ def clipp_graph_nodes_from_zone(zone_path, zone_id, graph_path, clipped_nodes_pa
     print("ALL DONE")
 
 
-def create_random_itineraries(nodes_path, graph_path, multidigraph_path, n_itineraries, itineraries_path):
+def create_random_itineraries(nodes_path, graph_path, multidigraph_path, n_itineraries, itineraries_path, min_dist=200):
     ## SELECT RANDOM POINTS
     nodes = gpd.read_file(nodes_path, layer="nodes").set_index(["osmid"])
 
@@ -115,25 +115,53 @@ def create_random_itineraries(nodes_path, graph_path, multidigraph_path, n_itine
         start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
         end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
         print(start, end)
-        global_gdf = shortest_path(G, start, end, MG, count, global_gdf)
+        global_gdf = shortest_path(G, start, end, MG, count, global_gdf, min_dist=min_dist)
         count+=1
 
     print("saving file")
     global_gdf.to_file(itineraries_path, driver="GPKG", layer="itineraries")
     print("ALL DONE")
 
+def extract_frequency_scores(sample_itineraries_path, output_folder_path, zone_name):
+    itineraries = gpd.read_file(sample_itineraries_path, layer="itineraries")
+    itineraries_if = itineraries[itineraries["type"] == "IF"]
+    itineraries_len = itineraries[itineraries["type"] == "LEN"]
+
+    freq_edges_if = gpd.GeoDataFrame({
+        "count": itineraries_if.groupby(["u", "v", "key"])["total_score"].count(),
+        "score": itineraries_if.groupby(["u", "v", "key"])["total_score"].apply(lambda x: round(x.unique()[0])),
+        "geometry": itineraries_if.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
+    })
+
+    freq_edges_if.to_file(f"{output_folder_path}{zone_name}/count_freq_if_{zone_name}.gpkg", driver="GPKG", layer="edges")
+
+    freq_edges_len = gpd.GeoDataFrame({
+        "count": itineraries_len.groupby(["u", "v", "key"])["total_score"].count(),
+        "score": itineraries_len.groupby(["u", "v", "key"])["total_score"].apply(lambda x: round(x.unique()[0])),
+        "geometry": itineraries_len.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
+    })
+
+    freq_edges_len.to_file(f"{output_folder_path}{zone_name}/count_freq_len_{zone_name}.gpkg", driver="GPKG", layer="edges")
 
 ## GLOBAL VARIABLES
 zones_path = "./input_data/studies_zones/studies_sectors.gpkg"
 graph_path = "./output_data/network/graph/final_network_bounding_scaled_no_na.gpkg"
 clipped_nodes_tetedor_path = "./output_data/studies_zones/tetedor_nodes.gpkg"
 clipped_nodes_partdieu_path = "./output_data/studies_zones/partdieu/partdieu_nodes.gpkg"
+clipped_nodes_rillieux_path = "./output_data/studies_zones/rillieux/rillieux_nodes.gpkg"
+clipped_nodes_confluence_path = "./output_data/studies_zones/confluence/confluence_nodes.gpkg"
+clipped_nodes_metropole_path = "./output_data/studies_zones/metropole/metropole_nodes.gpkg"
 
 graph_pickle = "./output_data/network/graph/final_network_bounding_scaled_no_na.pickle"
 multidigraph_pickle = "./output_data/network/graph/final_network_bounding_scaled_no_na_multidigraph.pickle"
 
 tetedor_itineraries_path = "./output_data/studies_zones/tetedor/100_it.gpkg"
 partdieu_itineraries_path = "./output_data/studies_zones/partdieu/partdieu_100_it.gpkg"
+rillieux_itineraries_path = "./output_data/studies_zones/rillieux/rillieux_100_it.gpkg"
+confluence_itineraries_path = "./output_data/studies_zones/confluence/confluence_100_it.gpkg"
+metropole_itineraries_path = "./output_data/studies_zones/metropole/metropole_5000_it.gpkg"
+
+output_folder_path = "./output_data/studies_zones/"
 
 ## SCRIPT
 
@@ -143,5 +171,22 @@ partdieu_itineraries_path = "./output_data/studies_zones/partdieu/partdieu_100_i
 # create_random_itineraries(clipped_nodes_tetedor_path, graph_pickle, multidigraph_pickle, 200, tetedor_itineraries_path)
 
 ## PART DIEU
-clipp_graph_nodes_from_zone(zones_path, "partdieu", graph_path, clipped_nodes_partdieu_path)
-create_random_itineraries(clipped_nodes_partdieu_path, graph_pickle, multidigraph_pickle, 200, partdieu_itineraries_path)
+# clipp_graph_nodes_from_zone(zones_path, "partdieu", graph_path, clipped_nodes_partdieu_path)
+# create_random_itineraries(clipped_nodes_partdieu_path, graph_pickle, multidigraph_pickle, 200, partdieu_itineraries_path)
+
+## RILLIEUX LA PAPE
+
+# clipp_graph_nodes_from_zone(zones_path, "rillieux", graph_path, clipped_nodes_rillieux_path)
+# create_random_itineraries(clipped_nodes_rillieux_path, graph_pickle, multidigraph_pickle, 200, rillieux_itineraries_path)
+
+## CONFLUENCE
+
+# clipp_graph_nodes_from_zone(zones_path, "confluence", graph_path, clipped_nodes_confluence_path)
+# create_random_itineraries(clipped_nodes_confluence_path, graph_pickle, multidigraph_pickle, 200, confluence_itineraries_path)
+# extract_frequency_scores(confluence_itineraries_path, output_folder_path, "confluence")
+
+## METROP 
+
+# clipp_graph_nodes_from_zone(zones_path, "metropole", graph_path, clipped_nodes_metropole_path)
+create_random_itineraries(clipped_nodes_metropole_path, graph_pickle, multidigraph_pickle, 1000, metropole_itineraries_path, min_dist=500)
+extract_frequency_scores(metropole_itineraries_path, output_folder_path, "metropole")

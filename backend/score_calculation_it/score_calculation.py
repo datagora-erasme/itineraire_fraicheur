@@ -49,32 +49,32 @@ params = {
     "prairies_prop" : {
         "edges_path": edges_buffer_prairies_prop_path,
         "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
-        "fn_cont": lambda x: -0.06*x+0.06
+        "fn_cont": lambda x: 1*(1-x)
         },
     "arbustes_prop": {
         "edges_path": edges_buffer_arbustes_prop_path,
         "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
-        "fn_cont": lambda x: -0.1*x+0.1
+        "fn_cont": lambda x: 1*(1-x)
         },
     "arbres_prop": {
         "edges_path": edges_buffer_arbres_prop_path,
         "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
-        "fn_cont": lambda x: -0.4*x+0.4
+        "fn_cont": lambda x: 1*(1-x)
         },
     "C_wavg_scaled": {
         "edges_path": edges_buffer_temp_wavg_path,
         "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
-        "fn_cont": lambda x: -0.2*x+0.2
+        "fn_cont": lambda x: 1*(1-x)
         },
     "eaux_prop": {
         "edges_path": edges_buffer_eaux_prop_path,
         "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
-        "fn_cont": lambda x: -0.14*x+0.14
+        "fn_cont": lambda x: 1*(1-x)
         },
     "canop": {
         "edges_path": edges_buffer_parcs_prop_path,
         "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
-        "fn_cont": lambda x: -0.1*x+0.1
+        "fn_cont": lambda x: 1*(1-x)
         },
     # "toilettes" :{
     #     "edges_path": edges_buffer_toilettes_path,
@@ -98,24 +98,12 @@ params = {
 }
 
 ### FUNCTIONS ###
-
-def merge_networks(network1_path, network2_path, columns, output_path):
-    """merge two networks with the list of columns of the second network to merge into the first"""
-    network1 = gpd.read_file(network1_path)
-    network2 = gpd.read_file(network2_path)
-
-    network1 = network1.set_index(["u", "v", "key"])
-    network2 = network2.set_index(["u", "v", "key"])
-
-    network1.update(network2[columns])
-
-    network1.to_file(output_path, driver="GPKG")
     
 def total_score(input_path, output_path, score_columns):
     edges = gpd.read_file(input_path)
     edges["total_score"] = edges[score_columns].sum(axis=1)
     min_score = edges["total_score"].min()
-    edges["total_score"] = edges.apply(lambda x: min_score if(x["score_canop"] < 0.05) else x["total_score"], axis=1)
+    # edges["total_score"] = edges.apply(lambda x: min_score if(x["score_canop"] < 0.05) else x["total_score"], axis=1)
     
     min_score = edges["total_score"].min()
     max_score = edges["total_score"].max()

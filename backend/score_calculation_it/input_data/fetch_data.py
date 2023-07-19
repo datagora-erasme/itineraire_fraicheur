@@ -11,6 +11,7 @@ def create_folder(folder_path):
         print(f"{folder_path} created")
 
 ### CREATE WORKING DIRECTORIES ###
+create_folder("input_data/batiments/")
 create_folder("input_data/parcs/")
 create_folder("./input_data/fontaines/")
 create_folder("./input_data/vegetation/")
@@ -20,6 +21,10 @@ create_folder("./input_data/eaux/")
 
 ### GLOBAL VARIABLE ###
 geojsonOutputFormat = "application/json; subtype=geojson"
+
+# BÂTIMENTS #
+batiments_wfs_key = "ms:fpc_fond_plan_communaut.fpctoit_2018"
+batiments_path = "./input_data/batiments/batiments"
 
 # PARCS #
 parcs_wfs_key = "ms:com_donnees_communales.comparcjardin_1_0_0"
@@ -97,13 +102,16 @@ data_grandlyon_wfs = connection_wfs(data_grandlyon_wfs_url, "datagrandlyon", "2.
 ## DATA DOWNLOAD ##
 print("Data Download")
 
+print("Bâtiments")
+download_data(data_grandlyon_wfs, batiments_wfs_key, geojsonOutputFormat, batiments_path, "batiments")
+
 print("Parcs")
 # download_data(data_grandlyon_wfs, parcs_canop_wfs_key, geojsonOutputFormat, parcs_canop_path, "parcs")
 # download_data(data_grandlyon_wfs, parcs_wfs_key, geojsonOutputFormat, parcs_path, "parcs")
 
 print("Fontaines")  
-download_data(data_grandlyon_wfs, fontaines_potables_wfs_key, geojsonOutputFormat, fontaines_pot_path, "fontaines_potables")
-download_data(data_grandlyon_wfs, fontaines_ornementales_wfs_key, geojsonOutputFormat, fontaines_orn_path, "fontaines_ornementales")
+# download_data(data_grandlyon_wfs, fontaines_potables_wfs_key, geojsonOutputFormat, fontaines_pot_path, "fontaines_potables")
+# download_data(data_grandlyon_wfs, fontaines_ornementales_wfs_key, geojsonOutputFormat, fontaines_orn_path, "fontaines_ornementales")
 
 print("Toilettes")
 # download_data(data_grandlyon_wfs, toilettes_wfs_key, geojsonOutputFormat, toilettes_path, "toilettes")

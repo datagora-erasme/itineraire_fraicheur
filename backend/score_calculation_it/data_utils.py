@@ -25,12 +25,14 @@ def clip_data(edges_path, data_path, output_path, nbre_cpu, layer):
     data = data.to_crs(3946)
 
     data_chunks = np.array_split(data, nbre_cpu)
-
+    print("start clipping")
     with mp.Pool(processes=nbre_cpu) as pool:
         clipped_chunks = pool.starmap(clip_wrapper, [(chunk, edges) for chunk in data_chunks])
 
+    print("start concat")
     clipped_data = pd.concat(clipped_chunks)
 
+    print("saving file")
     clipped_data.to_file(output_path, driver="GPKG", layer=layer)
 
 def classification(input_path, output_folder, fn, data_name):
@@ -84,10 +86,7 @@ def area_prop(x):
 
     first_non_one = next((val for val in x_class if val != 1), "low")
 
-    # print("canop : ", canop)
-    
-    # print("columns : ")
-    # print(x.columns)
+    print(class_area)
 
     return pd.Series({
         "prop": round(class_area/tot_area, 2),
@@ -105,6 +104,8 @@ def calculate_area_proportion(edges_path, data_path, name, output_path, layer="s
     data.geometry =  [loads(dumps(geom, rounding_precision=3)) for geom in data.geometry]
 
     overlay_edges = gpd.overlay(edges, data, how="identity", keep_geom_type=True)
+
+    print(overlay_edges)
 
     overlay_serie = gpd.GeoSeries(overlay_edges["geometry"])
 

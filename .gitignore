@@ -21,10 +21,13 @@ backend/score_calculation_it/input_data/vegetation/
 backend/score_calculation_it/input_data/parcs/
 backend/score_calculation_it/input_data/temperature/
 backend/score_calculation_it/input_data/network/
+backend/score_calculation_it/input_data/batiments/
 
 backend/score_calculation_it/input_data/studies_zones/
 backend/score_calculation_it/output_data/studies_zones/
 backend/score_calculation_it/output_data/network/*
+
+backend/score_calculation_it/output_data/
 
 !backend/score_calculation_it/output_data/network/graph/final_network_bounding_no_poi_15.gpkg
 

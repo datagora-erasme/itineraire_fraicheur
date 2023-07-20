@@ -41,40 +41,46 @@ edges_buffer_total_score_distance_freshness_path = "./output_data/network/edges/
 
 metrop_network_path = "./input_data/network/metrop_network_bounding.gpkg"
 # metrop_network_bounding_path = "./output_data/network/graph/metrop_network_bounding.gpkg"
-final_network_path = "./output_data/network/graph/final_network_bounding_scaled_01.gpkg"
+final_network_path = "./output_data/network/graph/final_network_all_1.gpkg"
 
 # bouding_mask_path = "./input_data/bounding_metrop.gpkg"
 
 params = {
     "prairies_prop" : {
         "edges_path": edges_buffer_prairies_prop_path,
-        "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
-        "fn_cont": lambda x: 1*(1-x)
+        # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
         },
     "arbustes_prop": {
         "edges_path": edges_buffer_arbustes_prop_path,
-        "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
-        "fn_cont": lambda x: 1*(1-x)
+        # "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
         },
     "arbres_prop": {
         "edges_path": edges_buffer_arbres_prop_path,
-        "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
-        "fn_cont": lambda x: 1*(1-x)
+        # "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
         },
     "C_wavg_scaled": {
         "edges_path": edges_buffer_temp_wavg_path,
-        "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
-        "fn_cont": lambda x: 1*(1-x)
+        # "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
         },
     "eaux_prop": {
         "edges_path": edges_buffer_eaux_prop_path,
-        "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
-        "fn_cont": lambda x: 1*(1-x)
+        # "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
         },
     "canop": {
         "edges_path": edges_buffer_parcs_prop_path,
-        "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
-        "fn_cont": lambda x: 1*(1-x)
+        # "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
         },
     # "toilettes" :{
     #     "edges_path": edges_buffer_toilettes_path,
@@ -195,13 +201,13 @@ def score_distance(input_path, output_path, dist_prop, fresh_prop):
     edges["score_distance_scaled"] = round(edges["total_score"] * edges["length_scaled"], 2)
     edges["score_distance"] = round(edges["total_score"] * edges["length"])
 
-    edges["score_distance_prop"] = round(edges["score_scaled"]*fresh_prop+edges["length_scaled"]*dist_prop, 2)
+    # edges["score_distance_prop"] = round(edges["score_scaled"]*fresh_prop+edges["length_scaled"]*dist_prop, 2)
 
-    edges["score_sqrt"] = round(edges["total_score"]*(edges["length"]**0.5), 2)
+    # edges["score_sqrt"] = round(edges["total_score"]*(edges["length"]**0.5), 2)
 
-    edges["score_sqrt_0604"] = round((edges["total_score"]**0.6)*(edges["length"]**0.4), 2)
+    # edges["score_sqrt_0604"] = round((edges["total_score"]**0.6)*(edges["length"]**0.4), 2)
 
-    edges["exp_distance"] = round(edges["exp_score"]*edges["length"], 2)
+    # edges["exp_distance"] = round(edges["exp_score"]*edges["length"], 2)
 
     edges.to_file(output_path, driver="GPKG")
 
@@ -215,14 +221,14 @@ def score_fraicheur(input_path, output_path):
 
     origin_ordinate = -slope*max_score
 
-    print("pente : ", slope)
-    print("origin_ordinate: ", origin_ordinate)
+    # print("pente : ", slope)
+    # print("origin_ordinate: ", origin_ordinate)
 
     edges["freshness_score"] = edges["total_score"].apply(lambda x: round(slope*x+origin_ordinate, 2))
 
-    edges["exp_fresh_score"] = edges["exp_score"].apply(lambda x: -10*x+10)
+    # edges["exp_fresh_score"] = edges["exp_score"].apply(lambda x: -10*x+10)
 
-    edges["exp_fresh_score_15"] = edges["exp_score_15"].apply(lambda x: -10*x+10)
+    # edges["exp_fresh_score_15"] = edges["exp_score_15"].apply(lambda x: -10*x+10)
 
     edges.to_file(output_path, driver="GPKG")
 
@@ -239,15 +245,15 @@ def create_graph(graph_path, edges_buffered_path, graph_output_path):
     graph_e["score_distance"] = edges_buffered["score_distance"]
     graph_e["score_distance_scaled"] = edges_buffered["score_distance_scaled"]
     graph_e["freshness_score"] = edges_buffered["freshness_score"]
-    graph_e["score_distance_prop"] = edges_buffered["score_distance_prop"]
-    graph_e["score_sqrt"] = edges_buffered["score_sqrt"]
-    graph_e["score_sqrt_0604"] = edges_buffered["score_sqrt_0604"]
+    # graph_e["score_distance_prop"] = edges_buffered["score_distance_prop"]
+    # graph_e["score_sqrt"] = edges_buffered["score_sqrt"]
+    # graph_e["score_sqrt_0604"] = edges_buffered["score_sqrt_0604"]
 
-    graph_e["exp_distance"] = edges_buffered["exp_distance"]
-    graph_e["exp_score"] = edges_buffered["exp_score"]
-    graph_e["exp_fresh_score"] = edges_buffered["exp_fresh_score"]
+    # graph_e["exp_distance"] = edges_buffered["exp_distance"]
+    # graph_e["exp_score"] = edges_buffered["exp_score"]
+    # graph_e["exp_fresh_score"] = edges_buffered["exp_fresh_score"]
 
-    graph_e["exp_fresh_score_15"] = edges_buffered["exp_fresh_score_15"]
+    # graph_e["exp_fresh_score_15"] = edges_buffered["exp_fresh_score_15"]
 
     G = ox.graph_from_gdfs(graph_n, graph_e)
 
@@ -261,15 +267,37 @@ score_columns = ["score_prairies_prop", "score_arbustes_prop", "score_arbres_pro
 
 # clip_bouding_data(edges_buffer_scored_path, bouding_mask_path, edges_buffer_scored_bounding_path)
 
-total_score(edges_buffer_scored_path, edges_buffer_total_score_path, score_columns)
-score_distance(edges_buffer_total_score_path, edges_buffer_total_score_distance_path,0.5,0.5)
-score_fraicheur(edges_buffer_total_score_distance_path, edges_buffer_total_score_distance_freshness_path)
+# total_score(edges_buffer_scored_path, edges_buffer_total_score_path, score_columns)
+# score_distance(edges_buffer_total_score_path, edges_buffer_total_score_distance_path,0.5,0.5)
+# score_fraicheur(edges_buffer_total_score_distance_path, edges_buffer_total_score_distance_freshness_path)
 
 # clip_bouding_graph(metrop_network_path, bouding_mask_path, metrop_network_bounding_path)
 
-create_graph(metrop_network_path, edges_buffer_total_score_distance_freshness_path, final_network_path)
+# create_graph(metrop_network_path, edges_buffer_total_score_distance_freshness_path, final_network_path)
 
-# create_csv_dataset(final_network_path, "./output_data/csv/final_score_distance_edges_veget_temp.csv", "edges")
+weights_path = "./weights_score.csv"
+
+# Check if the weights file is empty
+try:
+    weights = pd.read_csv(weights_path)
+except pd.errors.EmptyDataError:
+    # If the file is empty, create a new DataFrame with columns
+    weights = pd.DataFrame(columns=["graph_file", "arbres", "arbustes", "prairies", "temp", "canop", "eaux"])
+
+currents_weights = pd.DataFrame({
+    "graph_file": final_network_path,
+    "arbres": params["arbres_prop"]["alpha"],
+    "arbustes": params["arbustes_prop"]["alpha"],
+    "prairies": params["prairies_prop"]["alpha"],
+    "temp": params["C_wavg_scaled"]["alpha"],
+    "canop": params["canop"]["alpha"],
+    "eaux": params["eaux_prop"]["alpha"]
+}, index=[0])
+
+concat_weights = pd.concat([weights, currents_weights])
+
+concat_weights.to_csv(weights_path, index=False)
+
 
 e = time.time()
 duration = (e-s)/60

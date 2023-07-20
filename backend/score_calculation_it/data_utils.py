@@ -6,6 +6,7 @@ import pandas as pd
 import multiprocessing as mp
 import numpy as np
 from shapely.wkt import loads, dumps
+from shapely.geometry import Polygon
 import os
 import time
 
@@ -74,6 +75,12 @@ def bufferize_with_column(input_path, output_path, layer, buffer_size_column, de
 
     layer_buffer.to_file(output_path, driver="GPKG", layer=layer)
 
+def explode_polygon(data_path, output_path):
+    data = gpd.read_file(data_path)
+    polygons = data.explode()
+    polygons = polygons.to_crs(3946)
+    polygons.to_file(output_path)
+
 def area_prop(x):
     tot_area = x["area"].sum()
     class_area = x[x["class"] != 1]["area"].sum()
@@ -86,7 +93,7 @@ def area_prop(x):
 
     first_non_one = next((val for val in x_class if val != 1), "low")
 
-    print(class_area)
+    # print(class_area)
 
     return pd.Series({
         "prop": round(class_area/tot_area, 2),
@@ -117,6 +124,7 @@ def calculate_area_proportion(edges_path, data_path, name, output_path, layer="s
 
     overlay_edges["class"] = overlay_edges["class"].fillna(1)
 
+    print("calculating prop area")
     grouped = overlay_edges.groupby(["u", "v", "key"], group_keys=True).apply(area_prop)
 
     edges = edges.set_index(["u", "v", "key"])
@@ -127,6 +135,7 @@ def calculate_area_proportion(edges_path, data_path, name, output_path, layer="s
         edges["parcs_class"] = grouped["class"]
         edges["canop"] = grouped["canop"]
 
+    print("to file")
     edges.to_file(output_path, driver="GPKG", layer=layer)
 
 def calculate_many_prop(data_folder_path, edges_path, layer):

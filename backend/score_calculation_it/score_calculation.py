@@ -1,3 +1,4 @@
+#%%
 import os
 os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
@@ -14,6 +15,7 @@ import math
 
 from data_utils import *
 
+#%%
 ###### NETWORK SCORE CALCULATION #######
 create_folder("./output_data/network/graph/")
 
@@ -22,6 +24,10 @@ edges_buffer_path = "./input_data/network/edges_buffered_12_bounding.gpkg"
 edges_buffer_arbres_prop_path = "./output_data/network/edges/edges_buffered_arbres_prop_bounding.gpkg"
 edges_buffer_arbustes_prop_path = "./output_data/network/edges/edges_buffered_arbustes_prop_bounding.gpkg"
 edges_buffer_prairies_prop_path = "./output_data/network/edges/edges_buffered_prairies_prop_bounding.gpkg"
+
+edges_buffer_ombres_08_prop_path = "./output_data/network/edges/edges_buffered_ombres_08_prop_bounding.gpkg"
+edges_buffer_ombres_13_prop_path = "./output_data/network/edges/edges_buffered_ombres_13_prop_bounding.gpkg"
+edges_buffer_ombres_18_prop_path = "./output_data/network/edges/edges_buffered_ombres_18_prop_bounding.gpkg"
 
 edges_buffer_parcs_prop_path = "./output_data/network/edges/edges_buffered_parcs_prop_canop_bounding.gpkg"
 edges_buffer_temp_wavg_path = "./output_data/network/edges/edges_buffered_temp_wavg_bounding_no_na.gpkg"
@@ -45,9 +51,29 @@ final_network_path = "./output_data/network/graph/final_network_all_1.gpkg"
 
 # bouding_mask_path = "./input_data/bounding_metrop.gpkg"
 
+score_columns = ["score_prairies_prop", "score_arbustes_prop", "score_arbres_prop", "score_C_wavg_scaled", "score_eaux_prop", "score_canop"]
+
 params = {
     "prairies_prop" : {
         "edges_path": edges_buffer_prairies_prop_path,
+        # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
+        },
+    "ombres_08_prop" : {
+        "edges_path": edges_buffer_ombres_08_prop_path,
+        # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
+        },
+    "ombres_13_prop" : {
+        "edges_path": edges_buffer_ombres_13_prop_path,
+        # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+        "fn_cont": lambda x: 1*(1-x),
+        "alpha": 1
+        },
+    "ombres_18_prop" : {
+        "edges_path": edges_buffer_ombres_18_prop_path,
         # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
         "fn_cont": lambda x: 1*(1-x),
         "alpha": 1
@@ -106,48 +132,57 @@ params = {
 ### FUNCTIONS ###
     
 def total_score(input_path, output_path, score_columns):
-    edges = gpd.read_file(input_path)
+    edges = gpd.read_file(input_path, layer="edges")
+    print(edges.columns)
     edges["total_score"] = edges[score_columns].sum(axis=1)
-    min_score = edges["total_score"].min()
-    # edges["total_score"] = edges.apply(lambda x: min_score if(x["score_canop"] < 0.05) else x["total_score"], axis=1)
+    edges["total_score_08"] = edges["total_score"] + edges["score_ombres_08_prop"]
+    edges["total_score_13"] = edges["total_score"] + edges["score_ombres_13_prop"]
+    edges["total_score_18"] = edges["total_score"] + edges["score_ombres_18_prop"]
+
+    # min_score = edges["total_score"].min()
+    # # edges["total_score"] = edges.apply(lambda x: min_score if(x["score_canop"] < 0.05) else x["total_score"], axis=1)
     
-    min_score = edges["total_score"].min()
-    max_score = edges["total_score"].max()
+    # min_score = edges["total_score"].min()
+    # max_score = edges["total_score"].max()
 
-    print("min_score: ", min_score)
-    print("max_score: ", max_score)
+    # print("min_score: ", min_score)
+    # print("max_score: ", max_score)
 
-    normalize_score = edges["total_score"].apply(lambda x: (x-min_score)/(max_score-min_score))
+    # normalize_score = edges["total_score"].apply(lambda x: (x-min_score)/(max_score-min_score))
 
-    edges["exp_score_15"] = normalize_score.apply(lambda x: (np.exp(x**1.5)-math.exp(0))/(math.exp(1)-math.exp(0)))
-    edges["exp_score"] = normalize_score.apply(lambda x: (np.exp(x**3)-math.exp(0))/(math.exp(1)-math.exp(0)))
+    # edges["exp_score_15"] = normalize_score.apply(lambda x: (np.exp(x**1.5)-math.exp(0))/(math.exp(1)-math.exp(0)))
+    # edges["exp_score"] = normalize_score.apply(lambda x: (np.exp(x**3)-math.exp(0))/(math.exp(1)-math.exp(0)))
 
     edges.to_file(output_path, driver="GPKG")
 
-def score_edges(input_path, output_path, params):
+def all_score_edges(input_path, output_path, params):
     """
     params : {
         columns1 : {
             edges_path: "path",
-            fn: function()
+            fn_cont: function(),
+            alpha: 1
             },
         },
         ...
     }
     """
     default_edges = gpd.read_file(input_path, layer="edges")
-
-    score_columns = []
     
     for data_name, data_param in params.items():
         print(f"Score {data_name}")
         data = gpd.read_file(data_param["edges_path"])
         default_edges[f"score_{data_name}"] = data[data_name].apply(data_param["fn_cont"])
-        score_columns.append(f"score_{data_name}")
+
+    default_edges.to_file(output_path, driver="GPKG", layer="edges")
+
+def one_score_edges(input_path, output_path, params, key):
+    """(Re)-calculate score for one data"""
+    default_edges = gpd.read_file(input_path, layer="edges")
+    data = gpd.read_file(params[key]["edges_path"])
+    default_edges[f"score_{key}"] = data[key].apply(params[key]["fn_cont"])
 
     default_edges.to_file(output_path, driver="GPKG")
-
-    return score_columns
 
 def clip_bouding_data(data_path, mask_path, output_path):
     data = gpd.read_file(data_path)
@@ -192,14 +227,17 @@ def score_distance(input_path, output_path, dist_prop, fresh_prop):
     # edges["length_standardized"] = scaler.fit_transform(edges[["length"]])
 
     # Scale the standardized length between 0 and 1
-    min_max_scaler_dist = MinMaxScaler(feature_range=(0, 1))
-    edges["length_scaled"] = min_max_scaler_dist.fit_transform(edges[["length"]])
+    # min_max_scaler_dist = MinMaxScaler(feature_range=(0, 1))
+    # edges["length_scaled"] = min_max_scaler_dist.fit_transform(edges[["length"]])
 
-    min_max_scaler_fresh = MinMaxScaler(feature_range=(0,1))
-    edges["score_scaled"] = min_max_scaler_fresh.fit_transform(edges[["total_score"]])
+    # min_max_scaler_fresh = MinMaxScaler(feature_range=(0,1))
+    # edges["score_scaled"] = min_max_scaler_fresh.fit_transform(edges[["total_score"]])
 
-    edges["score_distance_scaled"] = round(edges["total_score"] * edges["length_scaled"], 2)
-    edges["score_distance"] = round(edges["total_score"] * edges["length"])
+    # edges["score_distance_scaled"] = round(edges["total_score"] * edges["length_scaled"], 2)
+
+    edges["score_distance_08"] = round(edges["total_score_08"] * edges["length"])
+    edges["score_distance_13"] = round(edges["total_score_13"] * edges["length"])
+    edges["score_distance_18"] = round(edges["total_score_18"] * edges["length"])
 
     # edges["score_distance_prop"] = round(edges["score_scaled"]*fresh_prop+edges["length_scaled"]*dist_prop, 2)
 
@@ -241,9 +279,13 @@ def create_graph(graph_path, edges_buffered_path, graph_output_path):
     edges_buffered = edges_buffered.set_index(["u", "v", "key"])
     graph_n = graph_n.set_index(["osmid"])
 
-    graph_e["total_score"] = edges_buffered["total_score"]
-    graph_e["score_distance"] = edges_buffered["score_distance"]
-    graph_e["score_distance_scaled"] = edges_buffered["score_distance_scaled"]
+    graph_e["total_score_08"] = edges_buffered["total_score_08"]
+    graph_e["total_score_13"] = edges_buffered["total_score_13"]
+    graph_e["total_score_18"] = edges_buffered["total_score_18"]
+    graph_e["score_distance_08"] = edges_buffered["score_distance_08"]
+    graph_e["score_distance_13"] = edges_buffered["score_distance_13"]
+    graph_e["score_distance_18"] = edges_buffered["score_distance_18"]
+    # graph_e["score_distance_scaled"] = edges_buffered["score_distance_scaled"]
     graph_e["freshness_score"] = edges_buffered["freshness_score"]
     # graph_e["score_distance_prop"] = edges_buffered["score_distance_prop"]
     # graph_e["score_sqrt"] = edges_buffered["score_sqrt"]
@@ -260,21 +302,28 @@ def create_graph(graph_path, edges_buffered_path, graph_output_path):
     ox.save_graph_geopackage(G, graph_output_path)
 
 
-s = time.time()
+#%%
+# all_score_edges(edges_buffer_path, edges_buffer_scored_path, params)
 
-#score_columns = score_edges(edges_buffer_path, edges_buffer_scored_path, params)
-score_columns = ["score_prairies_prop", "score_arbustes_prop", "score_arbres_prop", "score_C_wavg_scaled", "score_eaux_prop", "score_canop"]
+#%%
+# one_score_edges(edges_buffer_scored_path, edges_buffer_scored_path, params, key="ombres_08_prop")
+# one_score_edges(edges_buffer_scored_path, edges_buffer_scored_path, params, key="ombres_13_prop")
+# one_score_edges(edges_buffer_scored_path, edges_buffer_scored_path, params, key="ombres_18_prop")
 
 # clip_bouding_data(edges_buffer_scored_path, bouding_mask_path, edges_buffer_scored_bounding_path)
 
+#%%
 # total_score(edges_buffer_scored_path, edges_buffer_total_score_path, score_columns)
 # score_distance(edges_buffer_total_score_path, edges_buffer_total_score_distance_path,0.5,0.5)
 # score_fraicheur(edges_buffer_total_score_distance_path, edges_buffer_total_score_distance_freshness_path)
 
 # clip_bouding_graph(metrop_network_path, bouding_mask_path, metrop_network_bounding_path)
 
-# create_graph(metrop_network_path, edges_buffer_total_score_distance_freshness_path, final_network_path)
+#%%
+create_graph(metrop_network_path, edges_buffer_total_score_distance_freshness_path, final_network_path)
 
+
+#%%
 weights_path = "./weights_score.csv"
 
 # Check if the weights file is empty
@@ -282,11 +331,12 @@ try:
     weights = pd.read_csv(weights_path)
 except pd.errors.EmptyDataError:
     # If the file is empty, create a new DataFrame with columns
-    weights = pd.DataFrame(columns=["graph_file", "arbres", "arbustes", "prairies", "temp", "canop", "eaux"])
+    weights = pd.DataFrame(columns=["graph_file", "arbres", "ombres" "arbustes", "prairies", "temp", "canop", "eaux"])
 
 currents_weights = pd.DataFrame({
     "graph_file": final_network_path,
     "arbres": params["arbres_prop"]["alpha"],
+    "ombres": params["ombres_08_prop"]["alpha"],
     "arbustes": params["arbustes_prop"]["alpha"],
     "prairies": params["prairies_prop"]["alpha"],
     "temp": params["C_wavg_scaled"]["alpha"],
@@ -297,8 +347,3 @@ currents_weights = pd.DataFrame({
 concat_weights = pd.concat([weights, currents_weights])
 
 concat_weights.to_csv(weights_path, index=False)
-
-
-e = time.time()
-duration = (e-s)/60
-print("duration : ", duration)

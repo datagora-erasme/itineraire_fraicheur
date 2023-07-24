@@ -1,3 +1,4 @@
+#%%
 import os
 os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
@@ -11,6 +12,7 @@ from datetime import datetime, timedelta
 from t4gpd.commons.DatetimeLib import DatetimeLib
 from data_utils import *
 
+#%%
 ###### CREATE WORKING DIRECTORY FOR PARCS ET JARDINS ######
 create_folder("./output_data/ombres/")
 
@@ -44,7 +46,7 @@ def overlay_intersect_multiprocessing(ombre_chunks, edges_chunks, output_path, n
     merged_data.to_file(output_path, layer="edges", driver="GPKG")
 
 ##### SCRIPT #####
-
+#%%
 ### GLOBAL VARIABLE ###
 edges_buffer_path = "./input_data/network/edges_buffered_12_bounding.gpkg"
 edges_buffer_ombres_08_prop_path = "./output_data/network/edges/edges_buffered_ombres_08_prop_bounding.gpkg"
@@ -68,6 +70,8 @@ shadows_path = "./output_data/ombres/ombres_metrop.gpkg"
 shadows_08_path = "./output_data/ombres/ombres_08_metrop.gpkg"
 shadows_13_path = "./output_data/ombres/ombres_13_metrop.gpkg"
 shadows_18_path = "./output_data/ombres/ombres_18_metrop.gpkg"
+
+#%%
 
 ### CALCULATE BUILDINGS SHADOWS OF LYON METROPOLE ###
 # bat = gpd.read_file(bat_path)
@@ -144,3 +148,12 @@ print("Calculate shadows proportion")
 print("13h")
 calculate_area_proportion(edges_buffer_path, shadows_18_intersect_path, "ombres", edges_buffer_ombres_18_prop_path, "edges")
 
+#%%
+ombre_13 = gpd.read_file(edges_buffer_ombres_13_prop_path)
+ombre_13 = ombre_13.rename(columns={"ombres_prop": "ombres_13_prop"})
+ombre_13.to_file(edges_buffer_ombres_13_prop_path, driver="GPKG", layer="edges")
+
+ombre_18 = gpd.read_file(edges_buffer_ombres_18_prop_path)
+ombre_18 = ombre_18.rename(columns={"ombres_prop": "ombres_18_prop"})
+ombre_18.to_file(edges_buffer_ombres_18_prop_path, driver="GPKG", layer="edges")
+# %%

@@ -132,7 +132,6 @@ def clipp_graph_nodes_from_zone(zone, graph_n):
     clipped_nodes = graph_n.overlay(zone, how="intersection")
     return clipped_nodes
 
-
 def create_random_itineraries_old(nodes_path, graph_path, multidigraph_path, n_itineraries, itineraries_path, min_dist=200):
     ## SELECT RANDOM POINTS
     nodes = gpd.read_file(nodes_path, layer="nodes").set_index(["osmid"])
@@ -215,36 +214,36 @@ def extract_frequency_scores(itineraries):
 
     freq_edges_if = gpd.GeoDataFrame({
         "count": itineraries_if.groupby(["u", "v", "key"])["total_score_08"].count(),
-        "score_08": itineraries_if.groupby(["u", "v", "key"])["total_score_08"].apply(lambda x: round(x.unique()[0])),
-        "score_13": itineraries_if.groupby(["u", "v", "key"])["total_score_13"].apply(lambda x: round(x.unique()[0])),
-        "score_18": itineraries_if.groupby(["u", "v", "key"])["total_score_18"].apply(lambda x: round(x.unique()[0])),
+        "score_08": itineraries_if.groupby(["u", "v", "key"])["total_score_08"].apply(lambda x: round(x.unique()[0],3)),
+        "score_13": itineraries_if.groupby(["u", "v", "key"])["total_score_13"].apply(lambda x: round(x.unique()[0],3)),
+        "score_18": itineraries_if.groupby(["u", "v", "key"])["total_score_18"].apply(lambda x: round(x.unique()[0],3)),
         "geometry": itineraries_if.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
     })
 
     freq_edges_len = gpd.GeoDataFrame({
         "count": itineraries_len.groupby(["u", "v", "key"])["total_score_08"].count(),
-        "score_08": itineraries_if.groupby(["u", "v", "key"])["total_score_08"].apply(lambda x: round(x.unique()[0])),
-        "score_13": itineraries_if.groupby(["u", "v", "key"])["total_score_13"].apply(lambda x: round(x.unique()[0])),
-        "score_18": itineraries_if.groupby(["u", "v", "key"])["total_score_18"].apply(lambda x: round(x.unique()[0])),
+        "score_08": itineraries_if.groupby(["u", "v", "key"])["total_score_08"].apply(lambda x: round(x.unique()[0],3)),
+        "score_13": itineraries_if.groupby(["u", "v", "key"])["total_score_13"].apply(lambda x: round(x.unique()[0],3)),
+        "score_18": itineraries_if.groupby(["u", "v", "key"])["total_score_18"].apply(lambda x: round(x.unique()[0],3)),
         "geometry": itineraries_len.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
     })
 
     return freq_edges_if, freq_edges_len
 
-def calculate_mean_score(it):
+def calculate_mean_score(it, score_column):
     """Calculate the mean score for a given itinerary"""
-    return round(sum(it["score_distance"])/sum(it["length"]), 2)
+    return round(sum(it[score_column])/sum(it["length"]), 2)
 
-def create_df_mean_score(itineraries_path):
+def create_df_mean_score(itineraries_path, output_path, score_column):
     "calculate mean score for every itineraries of a file"
     itineraries = gpd.read_file(itineraries_path)
     
-    it_score = itineraries[["id_it", "type", "score_distance", "length"]].groupby(["id_it", "type"], axis=0).apply(calculate_mean_score).reset_index(name="score")
-    it_length = itineraries[["id_it", "type", "score_distance", "length"]].groupby(["id_it", "type"], axis=0).apply(lambda x: round(sum(x["length"]),2)).reset_index(name="total_length")
+    it_score = itineraries[["id_it", "type", score_column, "length", "zone_id"]].groupby(["id_it", "type", "zone_id"], axis=0).apply(lambda x: calculate_mean_score(x, score_column)).reset_index(name="score")
+    it_length = itineraries[["id_it", "type", score_column, "length", "zone_id"]].groupby(["id_it", "type", "zone_id"], axis=0).apply(lambda x: round(sum(x["length"]),2)).reset_index(name="total_length")
     it_score["total_length"] = it_length["total_length"]
 
     print("it_score: ", it_score)
-    it_score.to_csv("./output_data/analyse/results.csv")
+    it_score.to_csv(output_path)
 
 def test_students(group1, group2):
     """In order to compare the mean between the distribution of group 1 and group 2"""
@@ -303,7 +302,6 @@ def create_grid(input_path, cell_size, output_path):
     print("save grid")
     grid_clipped.to_file(output_path, layer="grid", driver="GPKG")
 
-
 def pipeline_generate_dataset(input_graph_path, zones_path, frequency_if_path, frequency_len_path, graph_pickle_path, multidigraph_path, dataset_output_path, total_score_column):
     """This function generate dataset for one given graph"""
     G = load_graph_from_pickle(graph_pickle_path)
@@ -329,10 +327,6 @@ def pipeline_generate_dataset(input_graph_path, zones_path, frequency_if_path, f
     frequency_if.to_file(frequency_if_path, driver="GPKG", layer="frequency")
     frequency_len.to_file(frequency_len_path, driver="GPKG", layer="frequency")
     
-    
-
-
-
 
 ## GLOBAL VARIABLES
 bounding_metrop = "./input_data/bounding_metrop.gpkg"
@@ -359,16 +353,21 @@ output_folder_path = "./output_data/studies_zones/"
 dataset_output_path = "./output_data/analyse/dataset_all_1.gpkg"
 frequency_if_path = "./output_data/analyse/frequency_if_all_1.gpkg"
 frequency_len_path = "./output_data/analyse/frequency_len_all_1.gpkg"
+csv_output_path = "./output_data/analyse/mean_score_all_1.csv"
+
+ #%%
+## SCRIPT
 
 #%%
-## SCRIPT
-# create_grid(bounding_metrop, 4000, grid_path)
+create_grid(bounding_metrop, 4000, grid_path)
 
-# load_network(graph_path, graph_pickle, multidigraph_pickle)
+load_network(graph_path, graph_pickle, multidigraph_pickle)
 
+#%%
 pipeline_generate_dataset(graph_path, grid_path, frequency_if_path, frequency_len_path, graph_pickle, multidigraph_pickle, dataset_output_path, "score_distance_13")
 
-
+#%%
+create_df_mean_score(dataset_output_path, csv_output_path, "score_distance_08")
 ### TETE D'OR
 
 # clipp_graph_nodes_from_zone(zones_path, "tetedor", graph_path, clipped_nodes_tetedor_path)

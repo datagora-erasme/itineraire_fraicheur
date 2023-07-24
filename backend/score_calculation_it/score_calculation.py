@@ -130,6 +130,14 @@ params = {
 }
 
 ### FUNCTIONS ###
+
+def all_prop(input_path, params, output_path):
+    """create one file with all props"""
+    edges = gpd.read_file(input_path, layer="edges")
+    for dataname, dataprops in params.items():
+        data = gpd.read_file(dataprops["edges_path"])
+        edges[dataname] = data[dataname]
+    edges.to_file(output_path, layer="edges", driver="GPKG")
     
 def total_score(input_path, output_path, score_columns):
     edges = gpd.read_file(input_path, layer="edges")
@@ -347,3 +355,8 @@ currents_weights = pd.DataFrame({
 concat_weights = pd.concat([weights, currents_weights])
 
 concat_weights.to_csv(weights_path, index=False)
+
+#%%
+
+all_prop(edges_buffer_path, params, "output_data/analyse/edges_all_prop.gpkg")
+# %%

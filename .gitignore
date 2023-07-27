@@ -1,5 +1,5 @@
 #Project files to ignore
-
+new_wms_layers
 data/
 cache/
 optimization_files/

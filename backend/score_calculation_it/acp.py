@@ -29,7 +29,7 @@ def pca_pipeline(data, features, n, scale=True):
 def eigein_values(pca, plot=False):
     eig = pd.DataFrame(
         {
-            "Dimension" : ["Dim" + str(x + 1) for x in range(6)], 
+            "Dimension" : ["Dim" + str(x + 1) for x in range(len(pca.explained_variance_))], 
             "Variance expliquée" : pca.explained_variance_,
             "% variance expliquée" : np.round(pca.explained_variance_ratio_ * 100),
             "% cum. var. expliquée" : np.round(np.cumsum(pca.explained_variance_ratio_) * 100)

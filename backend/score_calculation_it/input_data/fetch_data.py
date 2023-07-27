@@ -27,7 +27,8 @@ batiments_wfs_key = "ms:fpc_fond_plan_communaut.fpctoit_2018"
 batiments_path = "./input_data/batiments/batiments"
 
 # PARCS #
-parcs_wfs_key = "ms:com_donnees_communales.comparcjardin_1_0_0"
+# parcs_wfs_key = "ms:com_donnees_communales.comparcjardin_1_0_0"
+parcs_wfs_key = "metropole-de-lyon:com_donnees_communales.comparcjardinpct"
 parcs_canop_wfs_key = "ms:evg_esp_veg.evgparcindiccanope_latest"
 
 parcs_canop_path = "./input_data/parcs/parcs_canop"
@@ -70,6 +71,7 @@ def connection_wfs(url, service_name, version):
     return wfs
 
 def download_data(wfs, data_key, outputFormat, output_path, layername):
+    # print(wfs.contents)
     bbox = wfs.contents[data_key].boundingBoxWGS84
     try:
         data = wfs.getfeature(typename=data_key, bbox=bbox, outputFormat=outputFormat)
@@ -103,11 +105,11 @@ data_grandlyon_wfs = connection_wfs(data_grandlyon_wfs_url, "datagrandlyon", "2.
 print("Data Download")
 
 print("Bâtiments")
-download_data(data_grandlyon_wfs, batiments_wfs_key, geojsonOutputFormat, batiments_path, "batiments")
+# download_data(data_grandlyon_wfs, batiments_wfs_key, geojsonOutputFormat, batiments_path, "batiments")
 
 print("Parcs")
 # download_data(data_grandlyon_wfs, parcs_canop_wfs_key, geojsonOutputFormat, parcs_canop_path, "parcs")
-# download_data(data_grandlyon_wfs, parcs_wfs_key, geojsonOutputFormat, parcs_path, "parcs")
+download_data(data_grandlyon_wfs, parcs_wfs_key, geojsonOutputFormat, parcs_path, "parcs")
 
 print("Fontaines")  
 # download_data(data_grandlyon_wfs, fontaines_potables_wfs_key, geojsonOutputFormat, fontaines_pot_path, "fontaines_potables")

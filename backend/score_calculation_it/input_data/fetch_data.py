@@ -20,7 +20,8 @@ create_folder("./input_data/bancs/")
 create_folder("./input_data/eaux/")
 
 ### GLOBAL VARIABLE ###
-geojsonOutputFormat = "application/json; subtype=geojson"
+# geojsonOutputFormat = "application/json; subtype=geojson"
+geojsonOutputFormat = "application/json"
 
 # BÂTIMENTS #
 batiments_wfs_key = "ms:fpc_fond_plan_communaut.fpctoit_2018"
@@ -28,7 +29,7 @@ batiments_path = "./input_data/batiments/batiments"
 
 # PARCS #
 # parcs_wfs_key = "ms:com_donnees_communales.comparcjardin_1_0_0"
-parcs_wfs_key = "metropole-de-lyon:com_donnees_communales.comparcjardinpct"
+parcs_wfs_key = "metropole-de-lyon:com_donnees_communales.comparcjardin_1_0_0"
 parcs_canop_wfs_key = "ms:evg_esp_veg.evgparcindiccanope_latest"
 
 parcs_canop_path = "./input_data/parcs/parcs_canop"
@@ -74,7 +75,7 @@ def download_data(wfs, data_key, outputFormat, output_path, layername):
     # print(wfs.contents)
     bbox = wfs.contents[data_key].boundingBoxWGS84
     try:
-        data = wfs.getfeature(typename=data_key, bbox=bbox, outputFormat=outputFormat)
+        data = wfs.getfeature(typename=data_key, bbox=bbox, outputFormat=outputFormat, filter="sortBy=gid")
         print(f"{data_key} fetched with sucess")
     except NameError:
         print(f"Error fetching {data_key}")
@@ -98,7 +99,8 @@ def download_data(wfs, data_key, outputFormat, output_path, layername):
 
 ## WFS CONNECTION ##
 print("WFS CONNECTION")
-data_grandlyon_wfs_url = "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0"
+# data_grandlyon_wfs_url = "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0"
+data_grandlyon_wfs_url = "https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0"
 data_grandlyon_wfs = connection_wfs(data_grandlyon_wfs_url, "datagrandlyon", "2.0.0")
 
 ## DATA DOWNLOAD ##

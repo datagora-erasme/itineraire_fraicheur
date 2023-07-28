@@ -378,34 +378,34 @@ def pipeline_generate_dataset_new(params, nodes_start_path, end_nodes_path, tota
 
     for data_name, data_params in params.items():
         create_folder(f"output_data/analyse/{data_name}")
-        g_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}.pickle"
-        g_multi_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}_multi.pickle"
-        load_network(f"{data_params['graph_path']}", g_pickle_path, g_multi_pickle_path)
-        G = load_graph_from_pickle(g_pickle_path)
-        MG = load_graph_from_pickle(g_multi_pickle_path)
-        global_gdf = gpd.GeoDataFrame()
-        count=0
+        # g_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}.pickle"
+        # g_multi_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}_multi.pickle"
+        # load_network(f"{data_params['graph_path']}", g_pickle_path, g_multi_pickle_path)
+        # G = load_graph_from_pickle(g_pickle_path)
+        # MG = load_graph_from_pickle(g_multi_pickle_path)
+        # global_gdf = gpd.GeoDataFrame()
+        # count=0
 
-        for i in range(0,round(n_itineraries/2)):
-            print(f"It {i} .. ")
-            start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
-            end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
-            global_gdf = shortest_path(G, start, end, MG, count, global_gdf, total_score_column=total_score_column, min_dist=min_dist, max_dist=max_dist)
-            count+=1
+        # for i in range(0,round(n_itineraries/2)):
+        #     print(f"It {i} .. ")
+        #     start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
+        #     end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
+        #     global_gdf = shortest_path(G, start, end, MG, count, global_gdf, total_score_column=total_score_column, min_dist=min_dist, max_dist=max_dist)
+        #     count+=1
         
-        global_gdf.to_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
-        global_gdf = gpd.read_file(dataset_output_path)
+        # global_gdf.to_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
+        global_gdf = gpd.read_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
 
         frequency_if, frequency_len = extract_frequency_scores(global_gdf)
 
         frequency_if.to_file(f"output_data/analyse/{data_name}/frequency_if_{data_name}.gpkg", driver="GPKG", layer="frequency")
         frequency_len.to_file(f"output_data/analyse/{data_name}/frequency_len_{data_name}.gpkg", driver="GPKG", layer="frequency")
 
-        create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns)
-        create_df_mean_score(dataset_output_path, f"output_data/analyse/{data_name}/mean_score{data_name}.csv", total_score_column)
+        # create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
+        create_df_mean_score(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg", f"output_data/analyse/{data_name}/mean_score{data_name}.csv", total_score_column)
 
-        os.remove(g_pickle_path)
-        os.remove(g_multi_pickle_path)
+        # os.remove(g_pickle_path)
+        # os.remove(g_multi_pickle_path)
 
 
 def pipeline_generate_dataset(input_graph_path, zones_path, frequency_if_path, frequency_len_path, graph_pickle_path, multidigraph_path, dataset_output_path, total_score_column):
@@ -490,7 +490,7 @@ edges_prop_path = "output_data/analyse/edges_all_prop.gpkg"
 test_path = "./output_data/analyse/P1O1At1Ar10C1E1Ca1/dataset_P1O1At1Ar10C1E1Ca1.gpkg"
 test_csv_path = "./output_data/analyse/P1O1At1Ar10C1E1Ca1/mean_value_by_it_P1O1At1Ar10C1E1Ca1.csv"
 columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "eaux_prop", "canop", "ombres_08_prop", "ombres_13_prop", "ombres_18_prop"]
-create_df_mean_value_by_columns(test_path, edges_prop_path, test_csv_path, columns, "score_distance_13", 16) 
+# create_df_mean_value_by_columns(test_path, edges_prop_path, test_csv_path, columns, "score_distance_13", 16)
 
 #%%
 # create_grid(bounding_metrop, 4000, grid_path)
@@ -501,9 +501,12 @@ create_df_mean_value_by_columns(test_path, edges_prop_path, test_csv_path, colum
 
 #%%
 # pipeline_generate_dataset(graph_path, grid_path, frequency_if_path, frequency_len_path, graph_pickle, multidigraph_pickle, dataset_output_path, "score_distance_13")
-# score_calculation_pipeline(meta_params)
 
-# pipeline_generate_dataset_new(params_generate_dataset, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000)
+# score_calculation_pipeline(meta_params_2807)
+
+pipeline_generate_dataset_new(meta_params, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000)
+
+# create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
 
 #%%
 # create_df_mean_score(dataset_output_path, csv_output_path, "score_distance_13")

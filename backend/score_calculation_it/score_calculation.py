@@ -717,8 +717,306 @@ meta_params_2807 = {
     
 }
 
+meta_params_0708 = {
+    "P0_01O9At0_01Ar10C0_01E0_01Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O9At0_01Ar10C0_01E0_01Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 9*(1-x),
+            "alpha": 9
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 9*(1-x),
+            "alpha": 9
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 9*(1-x),
+            "alpha": 9
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            # "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            # "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            # "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            # "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O7At0_01Ar10C0_01E0_01Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O7At0_01Ar10C0_01E0_01Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 7*(1-x),
+            "alpha": 7
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 7*(1-x),
+            "alpha": 7
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 7*(1-x),
+            "alpha": 7
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            # "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            # "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            # "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            # "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O5At0_01Ar10C0_01E0_01Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E0_01Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            # "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            # "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            # "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            # "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O3At0_01Ar10C0_01E0_01Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O3At0_01Ar10C0_01E0_01Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 3*(1-x),
+            "alpha": 3
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 3*(1-x),
+            "alpha": 3
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 3*(1-x),
+            "alpha": 3
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            # "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            # "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            # "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            # "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O1At0_01Ar10C0_01E0_01Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O1At0_01Ar10C0_01E0_01Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 1*(1-x),
+            "alpha": 1
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 1*(1-x),
+            "alpha": 1
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(2 if x>=0.2 and x<0.6 else 3),
+            "fn_cont": lambda x: 1*(1-x),
+            "alpha": 1
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            # "fn": lambda x: 1 if x>=0.4 else(3 if x>=0.2 and x<0.4 else 5),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            # "fn": lambda x: 1 if x>=0.6 else(5 if x>=0.2 and x<0.6 else 20),
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            # "fn": lambda x: 1 if x<33 else(5 if x>=33 and x<37 else 10),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            # "fn": lambda x: 1 if x > 0.7 else(3 if x >= 0.3 and x <=0.7 else 7),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            # "fn": lambda x: 1 if x=="high" else(8 if x =="medium" else 15),
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },  
+}
+
 #%%
-# score_calculation_pipeline(meta_params)
+# score_calculation_pipeline(meta_params_0708)
 
 #%%
 #all_score_edges(edges_buffer_path, edges_buffer_scored_path, params)

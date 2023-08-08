@@ -62,7 +62,7 @@ def shortest_path(G, start, end, G_multidigraph, index, global_gdf, zone_id="Non
 
     print("Finding shortest path IF ...")
 
-    shortest_path_if = nx.shortest_path(G, source=origin_node, target=destination_node, weight=total_score_column) #IF_LENGTH_7030
+    shortest_path_if = nx.shortest_path(G, source=origin_node, target=destination_node, weight=total_score_column)
 
     # print("shortest_path_if:", shortest_path_if)
 
@@ -370,30 +370,30 @@ def create_random_nodes(zones_path, input_graph_path, n_itineraries, output_node
     end_nodes.to_file(output_nodes_end_path, driver="GPKG", layer="nodes")
 
 def pipeline_generate_dataset_new(params, nodes_start_path, end_nodes_path, total_score_column, min_dist, max_dist):
-    start_nodes = gpd.read_file(nodes_start_path)
-    end_nodes = gpd.read_file(end_nodes_path)
-    n_itineraries = len(start_nodes)
+    # start_nodes = gpd.read_file(nodes_start_path)
+    # end_nodes = gpd.read_file(end_nodes_path)
+    # n_itineraries = len(start_nodes)
 
-    columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "eaux_prop", "canop", total_score_column]
+    columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "eaux_prop", "canop", "ombres_08_prop", "ombres_13_prop", "ombres_18_prop"]
 
     for data_name, data_params in params.items():
-        create_folder(f"output_data/analyse/{data_name}")
-        # g_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}.pickle"
-        # g_multi_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}_multi.pickle"
-        # load_network(f"{data_params['graph_path']}", g_pickle_path, g_multi_pickle_path)
-        # G = load_graph_from_pickle(g_pickle_path)
-        # MG = load_graph_from_pickle(g_multi_pickle_path)
-        # global_gdf = gpd.GeoDataFrame()
-        # count=0
+    #     create_folder(f"output_data/analyse/{data_name}")
+        g_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}.pickle"
+        g_multi_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}_multi.pickle"
+    #     load_network(f"{data_params['graph_path']}", g_pickle_path, g_multi_pickle_path)
+    #     G = load_graph_from_pickle(g_pickle_path)
+    #     MG = load_graph_from_pickle(g_multi_pickle_path)
+    #     global_gdf = gpd.GeoDataFrame()
+    #     count=0
 
-        # for i in range(0,round(n_itineraries/2)):
-        #     print(f"It {i} .. ")
-        #     start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
-        #     end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
-        #     global_gdf = shortest_path(G, start, end, MG, count, global_gdf, total_score_column=total_score_column, min_dist=min_dist, max_dist=max_dist)
-        #     count+=1
+    #     for i in range(0,round(n_itineraries/2)):
+    #         print(f"It {i} .. ")
+    #         start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
+    #         end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
+    #         global_gdf = shortest_path(G, start, end, MG, count, global_gdf, total_score_column=total_score_column, min_dist=min_dist, max_dist=max_dist)
+    #         count+=1
         
-        # global_gdf.to_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
+    #     global_gdf.to_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
         global_gdf = gpd.read_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
 
         frequency_if, frequency_len = extract_frequency_scores(global_gdf)
@@ -401,11 +401,17 @@ def pipeline_generate_dataset_new(params, nodes_start_path, end_nodes_path, tota
         frequency_if.to_file(f"output_data/analyse/{data_name}/frequency_if_{data_name}.gpkg", driver="GPKG", layer="frequency")
         frequency_len.to_file(f"output_data/analyse/{data_name}/frequency_len_{data_name}.gpkg", driver="GPKG", layer="frequency")
 
-        # create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
+        max_score = np.max(global_gdf[total_score_column])
+
+        print("max_score: ", max_score)
+
+        create_df_mean_value_by_columns(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg", "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, max_score)
         create_df_mean_score(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg", f"output_data/analyse/{data_name}/mean_score{data_name}.csv", total_score_column)
 
-        # os.remove(g_pickle_path)
-        # os.remove(g_multi_pickle_path)
+        if(os.path.exists(g_pickle_path)):
+            os.remove(g_pickle_path)
+        if(os.path.exists(g_multi_pickle_path)):
+            os.remove(g_multi_pickle_path)
 
 
 def pipeline_generate_dataset(input_graph_path, zones_path, frequency_if_path, frequency_len_path, graph_pickle_path, multidigraph_path, dataset_output_path, total_score_column):
@@ -504,7 +510,7 @@ columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "ea
 
 # score_calculation_pipeline(meta_params_2807)
 
-pipeline_generate_dataset_new(meta_params, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000)
+pipeline_generate_dataset_new(meta_params_2807, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000)
 
 # create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
 

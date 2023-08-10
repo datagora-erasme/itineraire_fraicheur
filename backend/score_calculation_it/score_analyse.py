@@ -232,8 +232,8 @@ def extract_frequency_scores(itineraries):
         "geometry": itineraries_len.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
     })
 
-    print("freq_edges_if: ", freq_edges_if)
-    print("freq_edges_len: ", freq_edges_len)
+    # print("freq_edges_if: ", np.max(freq_edges_if["score_13"]))
+    # print("freq_edges_len: ", freq_edges_len)
 
     return freq_edges_if, freq_edges_len
 
@@ -369,44 +369,48 @@ def create_random_nodes(zones_path, input_graph_path, n_itineraries, output_node
     start_nodes.to_file(output_nodes_start_path, driver="GPKG", layer="nodes")
     end_nodes.to_file(output_nodes_end_path, driver="GPKG", layer="nodes")
 
-def pipeline_generate_dataset_new(params, nodes_start_path, end_nodes_path, total_score_column, min_dist, max_dist):
-    # start_nodes = gpd.read_file(nodes_start_path)
-    # end_nodes = gpd.read_file(end_nodes_path)
-    # n_itineraries = len(start_nodes)
+def pipeline_generate_dataset_new(params, nodes_start_path, end_nodes_path, total_score_column, min_dist, max_dist, hour):
+    start_nodes = gpd.read_file(nodes_start_path)
+    end_nodes = gpd.read_file(end_nodes_path)
+    n_itineraries = len(start_nodes)
 
     columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "eaux_prop", "canop", "ombres_08_prop", "ombres_13_prop", "ombres_18_prop"]
 
     for data_name, data_params in params.items():
-    #     create_folder(f"output_data/analyse/{data_name}")
-        g_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}.pickle"
-        g_multi_pickle_path = f"output_data/analyse/{data_name}/graph_{data_name}_multi.pickle"
-    #     load_network(f"{data_params['graph_path']}", g_pickle_path, g_multi_pickle_path)
-    #     G = load_graph_from_pickle(g_pickle_path)
-    #     MG = load_graph_from_pickle(g_multi_pickle_path)
-    #     global_gdf = gpd.GeoDataFrame()
-    #     count=0
+        create_folder(f"output_data/analyse/{data_name}/{hour}")
+        g_pickle_path = f"output_data/analyse/{data_name}/{hour}/graph_{data_name}.pickle"
+        g_multi_pickle_path = f"output_data/analyse/{data_name}/{hour}/graph_{data_name}_multi.pickle"
+        load_network(f"{data_params['graph_path']}", g_pickle_path, g_multi_pickle_path)
+        G = load_graph_from_pickle(g_pickle_path)
+        MG = load_graph_from_pickle(g_multi_pickle_path)
+        global_gdf = gpd.GeoDataFrame()
+        count=0
 
-    #     for i in range(0,round(n_itineraries/2)):
-    #         print(f"It {i} .. ")
-    #         start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
-    #         end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
-    #         global_gdf = shortest_path(G, start, end, MG, count, global_gdf, total_score_column=total_score_column, min_dist=min_dist, max_dist=max_dist)
-    #         count+=1
+        for i in range(0,round(n_itineraries/2)):
+            print(f"It {i} .. ")
+            start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
+            end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
+            global_gdf = shortest_path(G, start, end, MG, count, global_gdf, total_score_column=total_score_column, min_dist=min_dist, max_dist=max_dist)
+            count+=1
         
-    #     global_gdf.to_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
-        global_gdf = gpd.read_file(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg")
+        global_gdf.to_file(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg")
+        global_gdf = gpd.read_file(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg")
+
+        # print(np.max(global_gdf["total_score_13"]))
 
         frequency_if, frequency_len = extract_frequency_scores(global_gdf)
 
-        frequency_if.to_file(f"output_data/analyse/{data_name}/frequency_if_{data_name}.gpkg", driver="GPKG", layer="frequency")
-        frequency_len.to_file(f"output_data/analyse/{data_name}/frequency_len_{data_name}.gpkg", driver="GPKG", layer="frequency")
+        # print("ultime bafouille : ", np.max(frequency_if["score_13"]))
+
+        frequency_if.to_file(f"output_data/analyse/{data_name}/{hour}/frequency_if_{data_name}.gpkg", driver="GPKG", layer="frequency")
+        frequency_len.to_file(f"output_data/analyse/{data_name}/{hour}/frequency_len_{data_name}.gpkg", driver="GPKG", layer="frequency")
 
         max_score = np.max(global_gdf[total_score_column])
 
-        print("max_score: ", max_score)
+        # print("max_score: ", max_score)
 
-        create_df_mean_value_by_columns(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg", "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, max_score)
-        create_df_mean_score(f"output_data/analyse/{data_name}/dataset_{data_name}.gpkg", f"output_data/analyse/{data_name}/mean_score{data_name}.csv", total_score_column)
+        create_df_mean_value_by_columns(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg", "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/{hour}/mean_value_by_it{data_name}.csv", columns, total_score_column, max_score)
+        create_df_mean_score(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg", f"output_data/analyse/{data_name}/{hour}/mean_score{data_name}.csv", total_score_column)
 
         if(os.path.exists(g_pickle_path)):
             os.remove(g_pickle_path)
@@ -510,7 +514,7 @@ columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "ea
 
 # score_calculation_pipeline(meta_params_2807)
 
-pipeline_generate_dataset_new(meta_params_2807, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000)
+pipeline_generate_dataset_new(meta_params_1008, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000, "13h")
 
 # create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
 

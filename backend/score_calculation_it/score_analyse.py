@@ -238,7 +238,7 @@ def extract_frequency_scores(itineraries):
     return freq_edges_if, freq_edges_len
 
 def calculate_mean_prop(it, score_column):
-    """Calculate the mean score for a given itinerary"""
+    """Calculate the mean proportion of one column for a given itinerary"""
     # print(score_column)
     # print(it[score_column])
     return round(sum(it[score_column]*it["length"])/sum(it["length"]), 2)
@@ -514,7 +514,7 @@ columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "ea
 
 # score_calculation_pipeline(meta_params_2807)
 
-pipeline_generate_dataset_new(meta_params_1008, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000, "13h")
+pipeline_generate_dataset_new(meta_params_1308, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000, "13h")
 
 # create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
 

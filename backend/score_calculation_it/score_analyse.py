@@ -61,6 +61,7 @@ def shortest_path(G, start, end, G_multidigraph, index, global_gdf, zone_id="Non
     destination_node = ox.nearest_nodes(G, X=end[0], Y=end[1])
 
     print("Finding shortest path IF ...")
+    print("total score column : ", total_score_column)
 
     shortest_path_if = nx.shortest_path(G, source=origin_node, target=destination_node, weight=total_score_column)
 
@@ -514,8 +515,8 @@ columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "ea
 
 # score_calculation_pipeline(meta_params_2807)
 
-pipeline_generate_dataset_new(meta_params_1308, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000, "13h")
-
+# pipeline_generate_dataset_new(meta_params_0708, output_nodes_start_path, output_nodes_end_path, "score_distance_18", 500, 4000, "18h")
+pipeline_generate_dataset_new(meta_params_1408, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000, "13h")
 # create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
 
 #%%

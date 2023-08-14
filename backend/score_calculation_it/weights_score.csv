@@ -41,3 +41,9 @@ graph_file,arbres,arbustes,prairies,temp,canop,eaux,ombres
 ./output_data/network/graph/final_network_P0_01O5At0_01Ar10C5E0_01Ca0_01.gpkg,10.0,0.01,0.01,5.0,0.01,0.01,5.0
 ./output_data/network/graph/final_network_P0_01O5At0_01Ar10C3E0_01Ca0_01.gpkg,10.0,0.01,0.01,3.0,0.01,0.01,5.0
 ./output_data/network/graph/final_network_P0_01O5At0_01Ar10C1E0_01Ca0_01.gpkg,10.0,0.01,0.01,1.0,0.01,0.01,5.0
+./output_data/network/graph/final_network_P0_01O0_01At0_01Ar0_01C0_01E10Ca0_01.gpkg,0.01,0.01,0.01,0.01,0.01,10.0,0.01
+./output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E9Ca0_01.gpkg,10.0,0.01,0.01,0.01,0.01,9.0,5.0
+./output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E7Ca0_01.gpkg,10.0,0.01,0.01,0.01,0.01,7.0,5.0
+./output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca0_01.gpkg,10.0,0.01,0.01,0.01,0.01,5.0,5.0
+./output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E3Ca0_01.gpkg,10.0,0.01,0.01,0.01,0.01,3.0,5.0
+./output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E1Ca0_01.gpkg,10.0,0.01,0.01,0.01,1.0,7.0,5.0

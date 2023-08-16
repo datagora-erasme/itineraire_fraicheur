@@ -2458,8 +2458,614 @@ meta_params_1408 = {
     },
 }
 
+meta_params_1408_arbustes = {
+    "P0_01O0_01At0_01Ar0_01C0_01E0_01Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O0_01At0_01Ar10C0_01E0_01Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O5At9Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O5At9Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 9*(1-x),
+            "alpha": 9
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O5At7Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O5At7Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 7*(1-x),
+            "alpha": 7
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O5At5Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O5At5Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O5At3Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O5At3Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 3*(1-x),
+            "alpha": 3
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P0_01O5At1Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O5At1Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 1*(1-x),
+            "alpha": 1
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+}
+
+meta_params_1508_prairies = {
+    "P10O0_01At0_01Ar0_01C0_01E0_01Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P10O0_01At0_01Ar0_01C0_01E0_01Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P9O5At0_01Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P9O5At0_01Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 9*(1-x),
+            "alpha": 9
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P7O5At0_01Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P7O5At0_01Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 7*(1-x),
+            "alpha": 7
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P5O5At0_01Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P5O5At0_01Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P3O5At0_01Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P3O5At0_01Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 9*(1-x),
+            "alpha": 3
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+    "P1O5At0_01Ar10C0_01E5Ca0_01" : {
+        "graph_path": "./output_data/network/graph/final_network_P1O5At0_01Ar10C0_01E5Ca0_01.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 1*(1-x),
+            "alpha": 1
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        },
+    },
+}
+
 #%%
-score_calculation_pipeline(meta_params_1408)
+score_calculation_pipeline(meta_params_1508_prairies)
 
 #%%
 #all_score_edges(edges_buffer_path, edges_buffer_scored_path, params)

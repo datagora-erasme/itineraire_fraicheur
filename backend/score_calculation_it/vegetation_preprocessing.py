@@ -9,20 +9,15 @@ from shapely.wkt import loads, dumps
 import os
 import time
 from data_utils import *
+import sys
+sys.path.append("../")
+from global_variable import *
 
 s = time.time()
 ###### CREATE WORKING DIRECTORY FOR VEGETATION #######
 create_folder("./output_data/vegetation/")
 create_folder("./output_data/vegetation/veget_strat/")
 create_folder("./output_data/vegetation/arbres_align/")
-
-###### EDGES ######
-
-### GLOBAL VARIABLE ###
-edges_buffer_path = "./input_data/network/edges_buffered_12_bounding.gpkg"
-edges_buffer_arbres_prop_path = "./output_data/network/edges/edges_buffered_arbres_prop_bounding.gpkg"
-edges_buffer_arbustes_prop_path = "./output_data/network/edges/edges_buffered_arbustes_prop_bounding.gpkg"
-edges_buffer_prairies_prop_path = "./output_data/network/edges/edges_buffered_prairies_prop_bounding.gpkg"
 
 ###### VEGETATION STRATIFIEE PREPROCESSING ######
 
@@ -35,15 +30,12 @@ def veget_classification(row):
     if(row["vegetation_class"] == 3):
         return "arbre"
     
-### GLOBAL VARIABLES ###
-veget_strat_path = "./input_data/vegetation/clipped_veget_12.gpkg"
-veget_strat_class_folder = "./output_data/vegetation/veget_strat/"
-clipped_arbres_veget_strat_path = "./output_data/vegetation/veget_strat/veget_strat_arbre.gpkg"
-clipped_arbustes_veget_strat_path = "./output_data/vegetation/veget_strat/veget_strat_arbuste.gpkg"
-clipped_prairie_veget_strat_path = "./output_data/vegetation/veget_strat/veget_strat_prairie.gpkg"
 
 ### SCRIPT ###
-#Mettre script de clip de végétation stratifée
+
+dissolving(edges_buffer_path, edges_buffer_disolved_path, "edges")
+
+clip_data(edges_buffer_disolved_path, raw_veget_strat_path, veget_strat_path, 4, "edges")
 
 print("###### VEGETATION STRATIFIEE ###### ")
 print("Classification Vegetation stratifiee")
@@ -58,8 +50,7 @@ def arbres_align_classification(row):
     return "arbuste"
 
 ### GLOBAL VARIABLES ###
-arbres_align_shp_path = "./input_data/vegetation/arbres_align.shp"
-arbres_align_gpkg_path = "./input_data/vegetation/arbres_align.gpkg"
+arbres_align_gpkg_path = "./input_data/arbres/arbres.gpkg"
 arbres_align_class_folder = "./output_data/vegetation/arbres_align/"
 class_arbres_align_path = "./output_data/vegetation/arbres_align/arbres_align_arbre.gpkg"
 class_arbustes_align_path = "./output_data/vegetation/arbres_align/arbres_align_arbuste.gpkg"
@@ -71,9 +62,6 @@ clipped_arbres_align_path = "./output_data/vegetation/arbres_align/clipped_arbre
 clipped_arbustes_align_path = "./output_data/vegetation/arbres_align/clipped_arbustes_align.gpkg"
 
 print("###### ARBRES D'ALIGNEMENT ###### ")
-# arbres_align = gpd.read_file(arbres_align_shp_path)
-# arbres_align = arbres_align.to_crs(3946)
-# arbres_align.to_file(arbres_align_gpkg_path, driver="GPKG", layer="arbres_align")
 
 print("Classification arbres alignement")
 # classification(arbres_align_gpkg_path, arbres_align_class_folder, arbres_align_classification, "arbres_align")

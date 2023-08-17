@@ -15,6 +15,7 @@ def shortest_path(G, start, end, G_multidigraph):
 
     print("Finding shortest path IF ...")
 
+    #TODO change the weight according to the hour (8h, 13h, 18h)
     shortest_path_if = nx.shortest_path(G, source=origin_node, target=destination_node, weight="score_distance_13")
 
     route_edges_if = ox.utils_graph.get_route_edge_attributes(G_multidigraph, shortest_path_if)

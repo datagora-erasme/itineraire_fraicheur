@@ -18,6 +18,13 @@ def create_folder(folder_path):
 
 def clip_wrapper(chunk, overlay):
     return gpd.clip(chunk, overlay)
+
+def dissolving(input_path, output_path, layer):
+    data = gpd.read_file(input_path, layer=layer)
+
+    disolved_data = data.dissolve()
+
+    disolved_data.to_file(output_path, layer=layer, driver="GPKG")
     
 def clip_data(edges_path, data_path, output_path, nbre_cpu, layer):
     edges = gpd.read_file(edges_path)

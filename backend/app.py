@@ -12,7 +12,6 @@ CORS(app)
 # network_pickle_path = "./score_calculation_it/output_data/network/graph/final_network_bounding_scaled_no_na.pickle"
 # network_multidigraph_pickle_path ="./score_calculation_it/output_data/network/graph/final_network_bounding_scaled_no_na_multidigraph.pickle"
 
-
 """
 The final graph is loaded into a pickle file in order to keep it in RAM. 
 It allows to reduce the time between request and response (the files took several seconds to open).

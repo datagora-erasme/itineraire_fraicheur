@@ -7,26 +7,17 @@ sys.path.append("../../")
 from global_variable import *
 
 ###### FETCH DATA FROM DATAGRANDLYON ######
-def create_folder(folder_path):
-    exist = os.path.exists(folder_path)
-    if not exist:
-        os.makedirs(folder_path)
-        print(f"{folder_path} created")
-
-### CREATE WORKING DIRECTORIES ###
-create_folder("./batiments/")
-create_folder("./parcs/")
-create_folder("./fontaines/")
-create_folder("./vegetation/")
-create_folder("./toilettes/")
-create_folder("./bancs/")
-create_folder("./eaux/")
 
 ### GLOBAL VARIABLE ###
 # geojsonOutputFormat = "application/json; subtype=geojson"
 geojsonOutputFormat = "application/json"
 
 ### FUNCTION ###
+def create_folder(folder_path):
+    exist = os.path.exists(folder_path)
+    if not exist:
+        os.makedirs(folder_path)
+        print(f"{folder_path} created")
 
 def connection_wfs(url, service_name, version):
     """ Return a wfs object after connecting to a service thanks the url provided """
@@ -41,6 +32,7 @@ def connection_wfs(url, service_name, version):
     return wfs
 
 def download_data(params, data_name, wfs, outputFormat):
+    create_folder(f"./{data_name}/")
     print(f"Downloading {data_name}")
     data_key = params[data_name]["wfs_key"]
     gpkg_output_path = params[data_name]["gpkg_path"]
@@ -49,9 +41,9 @@ def download_data(params, data_name, wfs, outputFormat):
     bbox = wfs.contents[data_key].boundingBoxWGS84
     try:
         data = wfs.getfeature(typename=data_key, bbox=bbox, outputFormat=outputFormat, filter="sortBy=gid")
-        print(f"{data_key} fetched with sucess")
+        print(f"{data_name} fetched with sucess")
     except NameError:
-        print(f"Error fetching {data_key}")
+        print(f"Error fetching {data_name}")
 
     file = open(geojson_output_path, "wb")
     file.write(data.read())
@@ -69,12 +61,11 @@ def download_data(params, data_name, wfs, outputFormat):
     
 
 def download_all_data(params, wfs, outputFormat):
+    print("FETCHING ALL DATA")
     for data_name in params.keys():
         download_data(params, data_name, wfs, outputFormat)
 
 ### SCRIPT ###
-
-
 
 ## WFS CONNECTION ##
 print("WFS CONNECTION")
@@ -83,10 +74,23 @@ data_grandlyon_wfs_url = "https://data.grandlyon.com/geoserver/metropole-de-lyon
 data_grandlyon_wfs = connection_wfs(data_grandlyon_wfs_url, "datagrandlyon", "2.0.0")
 
 ## DATA DOWNLOAD ##
+
+fetching_choice = input("\n Voulez-vous télécharger toutes (ALL) les données ou une seule (ONE) ? \n Veuillez entrer ALL ou ONE selon votre choix : ")
 print("Data Download")
 
-###  download a specific data ### 
-download_data(data_params, "fontaines_ornementales", data_grandlyon_wfs, geojsonOutputFormat)
-
+if(fetching_choice == "ALL"):
 ### Download all data ###
-download_all_data(data_params, data_grandlyon_wfs, geojsonOutputFormat)
+    download_all_data(data_params, data_grandlyon_wfs, geojsonOutputFormat)
+elif(fetching_choice == "ONE"):
+###  download a specific data ###
+    available_data = [data_name for data_name in data_params.keys()]
+    data_choice = input(f"Veuilez choisir un identifiant de données parmi la liste suivante : {available_data} : \n")
+
+    if(data_choice in available_data):
+        download_data(data_params, data_choice, data_grandlyon_wfs, geojsonOutputFormat)
+    else:
+        print("Veuillez entrer un identifiant présent dans la liste")
+else:
+    print("VEUILLEZ entrer un choix valide (ALL ou ONE)")
+
+

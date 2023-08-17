@@ -19,6 +19,21 @@ final_network_multidigraph_pickle_path = globpath("./score_calculation_it/output
 
 ### EDGES PATH ###
 edges_buffer_path = globpath("./score_calculation_it/input_data/network/edges_buffered_12_bounding.gpkg")
+edges_buffer_disolved_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_dissolved_path.gpkg")
+
+edges_buffer_arbres_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_arbres_prop_bounding.gpkg")
+edges_buffer_arbustes_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_arbustes_prop_bounding.gpkg")
+edges_buffer_prairies_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_prairies_prop_bounding.gpkg")
+
+
+### DATA PATH ###
+#### VEGETATION ####
+raw_veget_strat_path = globpath("./score_calculation_it/input_data/vegetation/raw_veget_strat.gpkg")
+veget_strat_path = globpath("./score_calculation_it/input_data/vegetation/clipped_veget_12.gpkg")
+veget_strat_class_folder = globpath("./score_calculation_it/output_data/vegetation/veget_strat/")
+clipped_arbres_veget_strat_path = globpath("./score_calculation_it/output_data/vegetation/veget_strat/veget_strat_arbre.gpkg")
+clipped_arbustes_veget_strat_path = globpath("./score_calculation_it/output_data/vegetation/veget_strat/veget_strat_arbuste.gpkg")
+clipped_prairie_veget_strat_path = globpath("./score_calculation_it/output_data/vegetation/veget_strat/veget_strat_prairie.gpkg")
 
 ### DATA PARAMS ###
 data_params = {
@@ -135,5 +150,12 @@ data_params = {
             ],
             "clusterCountStyle": "position:absolute;top:40px;left:0px;color:white;background-color:#d6eff8;font-weight:bold;"
         },
+    },
+    "arbres" : {
+        "name": "Arbres d'alignement",
+        "wfs_key": "metropole-de-lyon:abr_arbres_alignement.abrarbre",
+        "gpkg_path": globpath("./score_calculation_it/input_data/arbres/arbres.gpkg"),
+        "geojson_path": globpath("./score_calculation_it/input_data/arbres/arbres.json"),
+        "onMap": False
     }
 }

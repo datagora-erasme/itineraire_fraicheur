@@ -101,13 +101,43 @@ Afin de lancer le frontend, exécuter la commande suivante :
 
 ## Backend
 
-Toutes les variables globales (les chemins des fichiers, les paramètres spécifiques etc.) sont stockées dans le fichier **global_variable.py** à la racine du dossier backend.
 
-Le backend est structuré en deux parties principales, l'API développée avec le framework **Flask** et l'analyse statistique (détaillée [ici](#analyse-statistique--pondération-du-réseau-piéton)).
+Toutes les variables globales (les chemins des fichiers, les paramètres spécifiques etc.) sont stockées dans le fichier **global_variable.py** à la racine du dossier backend. Il n'y a pas de base de données pour ce projet car il n'y en avait pas le besoin. Les quelques informations nécessaires au bon fonctionnement du frontend (chemin des layers, chemin des icons etc.) sont également stockés directement dans un dictionnaire python dans le fichier **global_variable.py**.
 
-Le script python principal du backend est le fichier **app.py** qui constitue le endpoint du backend permettant d'exécuter les différentes utilisateur. Avant le lancement de l'application, vérifier que le chemin du graph est celui souhaité dans le fichier **global_variable.py**.
+Le backend est structuré en deux parties principales, l'API développée avec le framework **Flask** et les données avec l'analyse statistique (détaillée [ici](#analyse-statistique--pondération-du-réseau-piéton)).
+
+### LES DONNÉES 
+L'ensemble des données utiles pour l'application web (et pour le calcul de score) sont stockées dans le dossier *score_calculation_it/input_data*
+
+On peut distinguer deux types de données : 
+
+- Les [données](#requête-wfs) directement issues d'une requête WFS à l'api de datagrandlyon
+- Les données de plus grosse taille et nécessitant des calculs spécifiques
+
+#### Requête WFS
+
+Les données issues d'une requête WFS à datagrandlyon peuvent être téléchargées directement en exécutant le script **fetch_data.py** situé dans le dossier *score_calculation_it/input_data/*. Il est possible de télécharger une donnée en particulier ou toutes les données d'un coup.  Afin de lancer le téléchargement, exécuter le script dans un terminal **en se plaçant au niveau du script** puis lancer la commande suivante : 
+
+```bash
+    python fetch_data.py
+```
+Puis se laisser guider par les indications dans le terminal.
+
+#### Autre données
+Les autres données de taille trop importante et/ou nécessitant de trop gros calculs sont des données qui ne sont pas accessibles par l'utilisateur via l'application. 
+
+##### La végétation
 
 
+### L'API
+Le script python principal du backend est le fichier **app.py** qui constitue le *endpoint* du backend permettant d'exécuter les différentes requêtes utilisateur. Avant le lancement de l'application, vérifier que le chemin du graph est celui souhaité dans le fichier **global_variable.py**.
+
+Il y a seulement deux routes:
+- requête des layers
+- requête pour le calcul d'itinéraire
+
+Les endpoints se servent de fonction présentes dans le dossier *models* avec un fichier correspondant à chaque route.
+Les données distribuées pour l'application web sont celles stockées dans le dossier *score_calculation_it/input_data/* (cf [partie](#les-données))
 
 
 

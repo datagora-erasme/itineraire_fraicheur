@@ -1,34 +1,33 @@
 import os
 os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
-import random
-import pandas as pd
-import multiprocessing as mp
-import numpy as np
-from shapely.wkt import loads, dumps
-import os
-import time
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import osmnx as ox
+import sys
+sys.path.append("../../")
+from global_variable import *
 
-bounding_metrop_path = "./bounding_metrop.gpkg"
-network_path = "./network/metrop_network_bounding.gpkg"
 network_filters = "[\"highway\"][\"area\"!~\"yes\"][\"highway\"!~\"abandoned|bus_guideway|construction|cycleway|motorway|trunk|planned|platform|proposed|raceway|motorway_link|trunk_link|escape|busway\"][\"foot\"!~\"no\"][\"service\"!~\"private\"][\"sidewalk\"!~\"no\"]"
-edges_buffer_path = "./network/edges_buffered_12_bounding.gpkg"
 
-# bounding_metrop = gpd.read_file(bounding_metrop_path)
+"""
+    The bounding_metrop file contains the bounding of Lyon metropole. It is used to define graph query limit in the
+    ox.graph_from_polygon function.
+"""
 
-# bounding_metrop = bounding_metrop.to_crs("4326")
+bounding_metrop = gpd.read_file(bounding_metrop_path)
 
-# geometry = bounding_metrop["geometry"].iloc[0]
+bounding_metrop = bounding_metrop.to_crs("4326")
 
-# G = ox.graph_from_polygon(geometry, custom_filter=network_filters)
+geometry = bounding_metrop["geometry"].iloc[0]
 
-# G = ox.project_graph(G, to_crs="EPSG:3946")
+G = ox.graph_from_polygon(geometry, custom_filter=network_filters)
 
-# ox.save_graph_geopackage(G, network_path)
+#EPSG:3946 is the default projection system used by datagrandlyon.
+G = ox.project_graph(G, to_crs="EPSG:3946")
+
+ox.save_graph_geopackage(G, metrop_network_bouding_path)
 
 def bufferize(input_path, output_path, layer, buffer_size):
+    """Bufferize a layer according to a buffer_size and save the ouput file"""
     layer_gpd = gpd.read_file(input_path, layer=layer)
 
     layer_gpd = layer_gpd.to_crs(3946)
@@ -40,5 +39,5 @@ def bufferize(input_path, output_path, layer, buffer_size):
 
     layer_buffer.to_file(output_path, driver="GPKG", layer=layer)
 
-bufferize(network_path, edges_buffer_path, "edges", 6.25)
+bufferize(metrop_network_bouding_path, edges_buffer_path, "edges", 6.25)
 

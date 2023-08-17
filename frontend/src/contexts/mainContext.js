@@ -101,9 +101,7 @@ export const MainContextProvider = ({ children }) => {
       }
         fetchLayers()
     }, [])
-
-    // console.log("layers: ", layers)
-
+    
     useEffect(() => {
         // Get user's current position using geolocation API
         navigator.geolocation.getCurrentPosition(
@@ -121,10 +119,12 @@ export const MainContextProvider = ({ children }) => {
       async function fetchFreshnessLayers(){
         const fetchParcs = await axios.get(`${process.env.REACT_APP_URL_SERVER}/data/`, {
           params:{
-              id: "parcs_jardins_metropole"
+              id: "parcs"
           }
       })
-        const fetchFreshPlaces = await axios.get("https://download.data.grandlyon.com/ws/grandlyon/com_donnees_communales.equipementspublicsclimatises/all.json")
+        //https://download.data.grandlyon.com/files/rdata/pvo_patrimoine_voirie.pvocameracriter/equipements_frais.json
+        //https://download.data.grandlyon.com/ws/grandlyon/com_donnees_communales.equipementspublicsclimatises/all.json
+        const fetchFreshPlaces = await axios.get("https://download.data.grandlyon.com/files/rdata/pvo_patrimoine_voirie.pvocameracriter/equipements_frais.json")
         const freshplaces = {
           id: "batiments_frais",
           geojson: {

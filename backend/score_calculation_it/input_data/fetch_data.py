@@ -2,6 +2,9 @@ import os
 os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
 from owslib.wfs import WebFeatureService
+import sys
+sys.path.append("../../")
+from global_variable import *
 
 ###### FETCH DATA FROM DATAGRANDLYON ######
 def create_folder(folder_path):
@@ -11,51 +14,17 @@ def create_folder(folder_path):
         print(f"{folder_path} created")
 
 ### CREATE WORKING DIRECTORIES ###
-create_folder("input_data/batiments/")
-create_folder("input_data/parcs/")
-create_folder("./input_data/fontaines/")
-create_folder("./input_data/vegetation/")
-create_folder("./input_data/toilettes/")
-create_folder("./input_data/bancs/")
-create_folder("./input_data/eaux/")
+create_folder("./batiments/")
+create_folder("./parcs/")
+create_folder("./fontaines/")
+create_folder("./vegetation/")
+create_folder("./toilettes/")
+create_folder("./bancs/")
+create_folder("./eaux/")
 
 ### GLOBAL VARIABLE ###
 # geojsonOutputFormat = "application/json; subtype=geojson"
 geojsonOutputFormat = "application/json"
-
-# BÂTIMENTS #
-batiments_wfs_key = "ms:fpc_fond_plan_communaut.fpctoit_2018"
-batiments_path = "./input_data/batiments/batiments"
-
-# PARCS #
-# parcs_wfs_key = "ms:com_donnees_communales.comparcjardin_1_0_0"
-parcs_wfs_key = "metropole-de-lyon:com_donnees_communales.comparcjardin_1_0_0"
-parcs_canop_wfs_key = "ms:evg_esp_veg.evgparcindiccanope_latest"
-
-parcs_canop_path = "./input_data/parcs/parcs_canop"
-parcs_path = "./input_data/parcs/parcs"
-
-# FONTAINES #
-fontaines_potables_wfs_key = "ms:adr_voie_lieu.adrbornefontaine_latest"
-fontaines_ornementales_wfs_key = "ms:adr_voie_lieu.adrfontaineornem_latest"
-
-fontaines_pot_path = "./input_data/fontaines/fontaines_potables"
-fontaines_orn_path = "./input_data/fontaines/fontaines_ornementales"
-
-# TOILETTES #
-toilettes_wfs_key = "ms:adr_voie_lieu.adrtoilettepublique_latest"
-toilettes_path = "./input_data/toilettes/toilettes"
-
-# BANCS #
-bancs_wfs_key = "ms:adr_voie_lieu.adrbanc_latest"
-bancs_path = "./input_data/bancs/bancs"
-
-# COURS D'EAUX #
-eaux_details_wfs_key = "ms:fpc_fond_plan_communaut.fpcplandeaudetail"
-eaux_details_path = "./input_data/eaux/eaux_details"
-
-eaux_importants_wfs_key = "ms:fpc_fond_plan_communaut.fpcplandeau"
-eaux_importants_path = "./input_data/eaux/eaux_importants"
 
 ### FUNCTION ###
 
@@ -71,8 +40,12 @@ def connection_wfs(url, service_name, version):
 
     return wfs
 
-def download_data(wfs, data_key, outputFormat, output_path, layername):
-    # print(wfs.contents)
+def download_data(params, data_name, wfs, outputFormat):
+    print(f"Downloading {data_name}")
+    data_key = params[data_name]["wfs_key"]
+    gpkg_output_path = params[data_name]["gpkg_path"]
+    geojson_output_path = params[data_name]["geojson_path"]
+
     bbox = wfs.contents[data_key].boundingBoxWGS84
     try:
         data = wfs.getfeature(typename=data_key, bbox=bbox, outputFormat=outputFormat, filter="sortBy=gid")
@@ -80,22 +53,28 @@ def download_data(wfs, data_key, outputFormat, output_path, layername):
     except NameError:
         print(f"Error fetching {data_key}")
 
-    file = open(f"{output_path}.json", "wb")
+    file = open(geojson_output_path, "wb")
     file.write(data.read())
     file.close()
 
-    data_gpd = gpd.read_file(f"{output_path}.json")
+    data_gpd = gpd.read_file(geojson_output_path)
 
     #crs : 3946 more accurate crs for Lyon metropole
     data_gpkg = data_gpd.to_crs(3946)
-    data_gpkg.to_file(f"{output_path}.gpkg", driver="GPKG", layer=layername)
+    data_gpkg.to_file(gpkg_output_path, driver="GPKG", layer=data_name)
 
     #crs : 4326 for leaflet
     data_geojson = data_gpd.to_crs(4326)
-    data_geojson.to_file(f"{output_path}.json", driver="GeoJSON")
+    data_geojson.to_file(geojson_output_path, driver="GeoJSON")
     
 
+def download_all_data(params, wfs, outputFormat):
+    for data_name in params.keys():
+        download_data(params, data_name, wfs, outputFormat)
+
 ### SCRIPT ###
+
+
 
 ## WFS CONNECTION ##
 print("WFS CONNECTION")
@@ -106,23 +85,8 @@ data_grandlyon_wfs = connection_wfs(data_grandlyon_wfs_url, "datagrandlyon", "2.
 ## DATA DOWNLOAD ##
 print("Data Download")
 
-print("Bâtiments")
-# download_data(data_grandlyon_wfs, batiments_wfs_key, geojsonOutputFormat, batiments_path, "batiments")
+###  download a specific data ### 
+download_data(data_params, "fontaines_ornementales", data_grandlyon_wfs, geojsonOutputFormat)
 
-print("Parcs")
-# download_data(data_grandlyon_wfs, parcs_canop_wfs_key, geojsonOutputFormat, parcs_canop_path, "parcs")
-download_data(data_grandlyon_wfs, parcs_wfs_key, geojsonOutputFormat, parcs_path, "parcs")
-
-print("Fontaines")  
-# download_data(data_grandlyon_wfs, fontaines_potables_wfs_key, geojsonOutputFormat, fontaines_pot_path, "fontaines_potables")
-# download_data(data_grandlyon_wfs, fontaines_ornementales_wfs_key, geojsonOutputFormat, fontaines_orn_path, "fontaines_ornementales")
-
-print("Toilettes")
-# download_data(data_grandlyon_wfs, toilettes_wfs_key, geojsonOutputFormat, toilettes_path, "toilettes")
-
-print("Bancs")
-# download_data(data_grandlyon_wfs, bancs_wfs_key, geojsonOutputFormat, bancs_path, "bancs")
-
-print("Cours d'eau")
-# download_data(data_grandlyon_wfs, eaux_details_wfs_key, geojsonOutputFormat, eaux_details_path, "eaux")
-# download_data(data_grandlyon_wfs, eaux_importants_wfs_key, geojsonOutputFormat, eaux_importants_path, "eaux")
+### Download all data ###
+download_all_data(data_params, data_grandlyon_wfs, geojsonOutputFormat)

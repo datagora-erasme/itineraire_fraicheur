@@ -1,45 +1,29 @@
-import json
 import os
-
-with open('./data_informations.json') as f:
-    data_informations = json.load(f)
-
-def get_layer_list():
-    layers_list = []
-    raw_data = data_informations['data_raw']
-    wfs_data = data_informations['data_wfs']
-
-    # for data_id, data in raw_data.items():
-    #     layers_list.append({
-    #         'id': data_id,
-    #         **data
-    #     })
-
-    for data_id, data in wfs_data.items():
-        layers_list.append({
-            'id': data_id,
-            **data
-        })
-
-    return layers_list
+os.environ['USE_PYGEOS'] = '0'
+import geopandas as gpd
+import json
+import sys
+sys.path.append("../")
+from global_variable import *
 
 def findMany():
-    return get_layer_list()
+    all_data = [{
+        "id": data_name,
+        "marker_option": data_param["marker_option"]
+    } for data_name, data_param in data_params.items() if "marker_option" in data_param and data_param["onMap"]]
+    return all_data
 
 
 def findOne(id):
-    layer_list = get_layer_list()
-    print(f'fetching geojson: {id}')
-
-    for data in layer_list:
-        if data['id'] == id:
-            path = data['geojson_path']
+    for data_name, data_param in data_params.items():
+        if data_name == id:
+            path = data_param['geojson_path']
             print(path)
             with open(path) as f:
                 geojson = json.load(f)
 
-            if("marker_option" in data):
-                markerOption = data['marker_option']
+            if("marker_option" in data_param):
+                markerOption = data_param['marker_option']
                 return {
                     'geojson': geojson,
                     'markerOption': markerOption,
@@ -50,5 +34,4 @@ def findOne(id):
                     'geojson': geojson,
                     'id': id
                 }
-
     return None

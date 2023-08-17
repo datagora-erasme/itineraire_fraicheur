@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from models.data import *
-from load_network import *
+from load_graph import *
 from models.itinerary import *
+from global_variable import *
 
 app = Flask(__name__)
 CORS(app)
@@ -11,27 +12,29 @@ CORS(app)
 # network_pickle_path = "./score_calculation_it/output_data/network/graph/final_network_bounding_scaled_no_na.pickle"
 # network_multidigraph_pickle_path ="./score_calculation_it/output_data/network/graph/final_network_bounding_scaled_no_na_multidigraph.pickle"
 
-network_path = "./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca0_01.gpkg"
-network_pickle_path = "./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca0_01.pickle"
-network_multidigraph_pickle_path ="./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca0_01_multidigraph.pickle"
 
+"""
+The final graph is loaded into a pickle file in order to keep it in RAM. 
+It allows to reduce the time between request and response (the files took several seconds to open).
+"""
 
 G = None
 G_multidigraph = None
 
 print("Loading network ...")
-if(os.path.isfile(network_pickle_path) & os.path.isfile(network_multidigraph_pickle_path)):
+if(os.path.isfile(final_network_pickle_path) & os.path.isfile(final_network_multidigraph_pickle_path)):
     load_net = True
 else:
-    load_net = load_network(network_path, network_pickle_path, network_multidigraph_pickle_path)
+    load_net = create_pickles_from_graph(final_network_path, final_network_pickle_path, final_network_multidigraph_pickle_path)
 
 if(load_net):
     print("Network loaded")
-    G = load_graph_from_pickle(network_pickle_path)
-    G_multidigraph = load_graph_from_pickle(network_multidigraph_pickle_path)
+    G = load_graph_from_pickle(final_network_pickle_path)
+    G_multidigraph = load_graph_from_pickle(final_network_multidigraph_pickle_path)
 
 @app.route('/data/', methods=['GET'])
 def get_layers():
+    """Route for layers used in the "Consulter la carte fraîcheur" functionality"""
     layer_id = request.args.get('id')
     print("request", request)
     if layer_id:
@@ -65,6 +68,8 @@ def get_layers():
 
 @app.route('/itinerary/', methods=['GET'])
 def get_itinerary():
+    """Route for itinerary calculation"""
+
     start_lat = request.args.get("start[lat]")
     start_lon = request.args.get("start[lon]")
     end_lat = request.args.get("end[lat]")
@@ -99,4 +104,4 @@ def get_itinerary():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=3002)
+    app.run(debug=True, host="0.0.0.0", port=3002)

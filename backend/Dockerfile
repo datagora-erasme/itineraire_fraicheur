@@ -16,8 +16,9 @@ COPY ./score_calculation_it/output_data/network/graph/final_network_bounding_sca
 COPY ./data_informations.json /app/data_informations.json
 # COPY ./raw_data/ /app/raw_data
 
+COPY ./global_variable.py /app/
 COPY ./calculate_itinerary.py /app/
-COPY ./load_network.py /app/
+COPY ./load_graph.py /app/
 COPY ./app.py /app/
 
 

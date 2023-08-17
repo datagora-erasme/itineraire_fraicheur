@@ -4,18 +4,19 @@ import networkx as nx
 import geopandas as gpd
 import osmnx as ox
 import pickle
-import time
-import sys
 
-
-def load_network(network_path, pickle_path, network_multidigraph_pickle_path):
-    gdf_edges = gpd.read_file(network_path, layer='edges')
-    gdf_nodes = gpd.read_file(network_path, layer="nodes")
+def create_pickles_from_graph(graph_path, graph_pickle_path, graph_multidigraph_pickle_path):
+    """
+        Load a graph into pickles files. \n
+        Both simple graph and multidigraph are needed for the function shortest_path of the project.
+    """
+    gdf_edges = gpd.read_file(graph_path, layer='edges')
+    gdf_nodes = gpd.read_file(graph_path, layer="nodes")
 
     gdf_nodes["y"] = gdf_nodes["lat"]
     gdf_nodes["x"] = gdf_nodes["lon"]
 
-    #remove unecessary columns in order to lightened the network
+    #remove unecessary columns in order to lightened the graph
     new_edges = gdf_edges[["u", "v", "key", "osmid", "length", "from", "to", "score_distance_13", "total_score_13", "freshness_score", "geometry"]].set_geometry("geometry")
     new_edges.to_crs(gdf_edges.crs)
 
@@ -25,20 +26,19 @@ def load_network(network_path, pickle_path, network_multidigraph_pickle_path):
     G = ox.graph_from_gdfs(gdf_nodes, new_edges)
 
     G2 = nx.Graph(G)
-    # G2 = nx.MultiDiGraph(G)
 
     G_digraph = nx.MultiDiGraph(G2)
 
-    with open(pickle_path, "wb") as f:
+    with open(graph_pickle_path, "wb") as f:
         pickle.dump(G2, f)
 
-    with open(network_multidigraph_pickle_path, "wb") as f:
+    with open(graph_multidigraph_pickle_path, "wb") as f:
         pickle.dump(G_digraph, f)
     return True
 
-# network_path = sys.argv[1]
-# pickle_path = sys.argv[2]
-# # s = time.time()
-# load_graph(network_path, pickle_path)
-# e = time.time()
-# print(f"duration : {e-s}")
+def load_graph_from_pickle(pickle_path):
+    """Load a graph from a pickle file"""
+    with open(pickle_path, 'rb') as f:
+        G = pickle.load(f)
+
+    return G

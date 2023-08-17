@@ -101,9 +101,15 @@ Afin de lancer le frontend, exécuter la commande suivante :
 
 ## Backend
 
+Toutes les variables globales (les chemins des fichiers, les paramètres spécifiques etc.) sont stockées dans le fichier **global_variable.py** à la racine du dossier backend.
+
 Le backend est structuré en deux parties principales, l'API développée avec le framework **Flask** et l'analyse statistique (détaillée [ici](#analyse-statistique--pondération-du-réseau-piéton)).
 
-Le script python principal du backend le fichier **app.py**.
+Le script python principal du backend est le fichier **app.py** qui constitue le endpoint du backend permettant d'exécuter les différentes utilisateur. Avant le lancement de l'application, vérifier que le chemin du graph est celui souhaité dans le fichier **global_variable.py**.
+
+
+
+
 
 ## Frontend
 

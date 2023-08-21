@@ -123,11 +123,30 @@ Les données issues d'une requête WFS à datagrandlyon peuvent être téléchar
 ```
 Puis se laisser guider par les indications dans le terminal.
 
+À chaque fois qu'une donnée est téléchargée, un dossier se créé avec la donnée sous format geojson (pour l'affichage sur la web app) et sous format gpkg (pour l'ensemble des calculs). 
+
 #### Autre données
 Les autres données de taille trop importante et/ou nécessitant de trop gros calculs sont des données qui ne sont pas accessibles par l'utilisateur via l'application. 
 
 ##### La végétation
+La donnée de végétation stratifiée la donnée la plus volumineuse. Il est possible de la recalculer de A à Z en partant de la donnée brute présente à [cette addresse](https://data.grandlyon.com/portail/fr/jeux-de-donnees/vegetation-stratifiee-2018-metropole-lyon/telechargements). Afin de pouvoir l'utiliser dans le cadre de ce projet, des calculs ont été réalisés avec Qgis.
+- Réduire la résolution du raster (de 1m à 5m). 
+- Vectoriser le raster
+- réduire le nombre de classes (de 5 à 3). Les nouvelles classes sont : 
+    - arbres (>1.5m)
+    - arbustes (<1.5m)
+    - prairies (anciennement herbacées)
+Les temps de calculs sont relativement longs et demandent une RAM assez importante (> 16G).
+Sauvegarder le résultat sous format Geopackage (gpkg). 
 
+Sinon, la donnée déjà calculée est présente à [cette adresse](mettreadresse)
+Une fois téléchargée, la donné de végétation doit être sauvegardée ici : *"./score_calculation_it/input_data/vegetation/raw_veget_strat.gpkg"*
+Cette donnée étant encore trop volumineuse pour être manipulée aisément dans le cadre du projet, elle a été "clippé" avec la version bufferisée du réseau OSM. Le calcul étant long (24h !) avec une configuration standard, la version déjà calculée en date du 03.07.23 est présnte [ici](mettreaddresse).
+Pour mettre à jour cette donnée, exécuter le script **vegetation_preprocessing.py**. en se plaçant ici *./score_calculation_it/* et se laisser guider par les indications du terminal.
+
+```bash
+    python vegetation_preprocessing.py
+```
 
 ### L'API
 Le script python principal du backend est le fichier **app.py** qui constitue le *endpoint* du backend permettant d'exécuter les différentes requêtes utilisateur. Avant le lancement de l'application, vérifier que le chemin du graph est celui souhaité dans le fichier **global_variable.py**.

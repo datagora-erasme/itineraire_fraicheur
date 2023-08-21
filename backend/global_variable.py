@@ -35,6 +35,24 @@ clipped_arbres_veget_strat_path = globpath("./score_calculation_it/output_data/v
 clipped_arbustes_veget_strat_path = globpath("./score_calculation_it/output_data/vegetation/veget_strat/veget_strat_arbuste.gpkg")
 clipped_prairie_veget_strat_path = globpath("./score_calculation_it/output_data/vegetation/veget_strat/veget_strat_prairie.gpkg")
 
+arbres_align_gpkg_path = globpath("./score_calculation_it/input_data/arbres/arbres.gpkg")
+arbres_align_class_folder = globpath("./score_calculation_it/output_data/vegetation/arbres_align/")
+class_arbres_align_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/arbres_align_arbre.gpkg")
+class_arbustes_align_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/arbres_align_arbuste.gpkg")
+
+arbres_align_buffer_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/class_arbres_align_buffer_2.gpkg")
+arbustes_align_buffer_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/class_arbustes_align_buffer_2.gpkg")
+
+clipped_arbres_align_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/clipped_arbres_align.gpkg")
+clipped_arbustes_align_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/clipped_arbustes_align.gpkg")
+
+arbres_align_veget_diff_path = globpath("./output_data/vegetation/arbres_align/diff_arbres_align_veget_2.gpkg")
+arbustes_align_veget_diff_path = globpath("./output_data/vegetation/arbres_align/diff_arbustes_align_veget_2.gpkg")
+
+merged_veget_align_arbres_path = globpath("./output_data/vegetation/merged_veget_align_arbres_2.gpkg")
+merged_veget_align_arbustes_path = globpath("./output_data/vegetation/merged_veget_align_arbustes_2.gpkg")
+
+
 ### DATA PARAMS ###
 data_params = {
     "batiments" : {

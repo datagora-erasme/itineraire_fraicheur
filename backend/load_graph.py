@@ -17,7 +17,7 @@ def create_pickles_from_graph(graph_path, graph_pickle_path, graph_multidigraph_
     gdf_nodes["x"] = gdf_nodes["lon"]
 
     #remove unecessary columns in order to lightened the graph
-    new_edges = gdf_edges[["u", "v", "key", "osmid", "length", "from", "to", "score_distance_13", "total_score_13", "freshness_score", "geometry"]].set_geometry("geometry")
+    new_edges = gdf_edges[["u", "v", "key", "osmid", "length", "from", "to", "score_distance_13", "total_score_13", "freshness_score_13", "geometry"]].set_geometry("geometry")
     new_edges.to_crs(gdf_edges.crs)
 
     new_edges = new_edges.set_index(["u", "v", "key"])

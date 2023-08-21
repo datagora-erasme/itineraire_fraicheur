@@ -13,9 +13,9 @@ bounding_metrop_path = globpath("./score_calculation_it/input_data/bounding_metr
 metrop_network_bouding_path = globpath("./score_calculation_it/input_data/network/metrop_network_bounding.gpkg")
 
 ### GRAPH PATH ###
-final_network_path = globpath("./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca0_01.gpkg")
-final_network_pickle_path = globpath("./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca0_01.pickle")
-final_network_multidigraph_pickle_path = globpath("./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca0_01_multidigraph.pickle")
+final_network_path = globpath("./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg")
+final_network_pickle_path = globpath("./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca.pickle")
+final_network_multidigraph_pickle_path = globpath("./score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca_multidigraph.pickle")
 
 ### EDGES PATH ###
 edges_buffer_path = globpath("./score_calculation_it/input_data/network/edges_buffered_12_bounding.gpkg")
@@ -46,12 +46,16 @@ arbustes_align_buffer_path = globpath("./score_calculation_it/output_data/vegeta
 clipped_arbres_align_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/clipped_arbres_align.gpkg")
 clipped_arbustes_align_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/clipped_arbustes_align.gpkg")
 
-arbres_align_veget_diff_path = globpath("./output_data/vegetation/arbres_align/diff_arbres_align_veget_2.gpkg")
-arbustes_align_veget_diff_path = globpath("./output_data/vegetation/arbres_align/diff_arbustes_align_veget_2.gpkg")
+arbres_align_veget_diff_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/diff_arbres_align_veget_2.gpkg")
+arbustes_align_veget_diff_path = globpath("./score_calculation_it/output_data/vegetation/arbres_align/diff_arbustes_align_veget_2.gpkg")
 
-merged_veget_align_arbres_path = globpath("./output_data/vegetation/merged_veget_align_arbres_2.gpkg")
-merged_veget_align_arbustes_path = globpath("./output_data/vegetation/merged_veget_align_arbustes_2.gpkg")
+merged_veget_align_arbres_path = globpath("./score_calculation_it/output_data/vegetation/merged_veget_align_arbres_2.gpkg")
+merged_veget_align_arbustes_path = globpath("./score_calculation_it/output_data/vegetation/merged_veget_align_arbustes_2.gpkg")
 
+#### TEMPERATURE ####
+temperature_path = globpath("./score_calculation_it/input_data/temperature/temperature_surface.gpkg")
+edges_buffer_temp_wavg_path =globpath ("./score_calculation_it/output_data/network/edges/edges_buffered_temp_wavg_bounding.gpkg")
+edges_buffer_temp_wavg_path_no_na = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_temp_wavg_bounding_no_na.gpkg")
 
 ### DATA PARAMS ###
 data_params = {

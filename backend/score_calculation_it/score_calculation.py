@@ -154,19 +154,11 @@ def total_score(input_path, output_path, score_columns):
     edges["total_score_13"] = edges["total_score"] + edges["score_ombres_13_prop"]
     edges["total_score_18"] = edges["total_score"] + edges["score_ombres_18_prop"]
 
-    # min_score = edges["total_score"].min()
-    # # edges["total_score"] = edges.apply(lambda x: min_score if(x["score_canop"] < 0.05) else x["total_score"], axis=1)
+    # Force passage by parcs
+    edges["total_score_08"] = edges.apply(lambda x: x["score_canop"] if(x["score_canop"] > 0.5) else x["total_score_08"], axis=1)
+    edges["total_score_13"] = edges.apply(lambda x: x["score_canop"] if(x["score_canop"] > 0.5) else x["total_score_13"], axis=1)
+    edges["total_score_18"] = edges.apply(lambda x: x["score_canop"] if(x["score_canop"] > 0.5) else x["total_score_18"], axis=1)
     
-    # min_score = edges["total_score"].min()
-    # max_score = edges["total_score"].max()
-
-    # print("min_score: ", min_score)
-    # print("max_score: ", max_score)
-
-    # normalize_score = edges["total_score"].apply(lambda x: (x-min_score)/(max_score-min_score))
-
-    # edges["exp_score_15"] = normalize_score.apply(lambda x: (np.exp(x**1.5)-math.exp(0))/(math.exp(1)-math.exp(0)))
-    # edges["exp_score"] = normalize_score.apply(lambda x: (np.exp(x**3)-math.exp(0))/(math.exp(1)-math.exp(0)))
 
     edges.to_file(output_path, driver="GPKG")
 
@@ -237,51 +229,34 @@ def clip_bouding_graph(graph_path, mask_path, output_path):
 def score_distance(input_path, output_path, dist_prop, fresh_prop):
     """"""
     edges = gpd.read_file(input_path)
-    # Standardize the length column
-    # scaler = StandardScaler()
-    # edges["length_standardized"] = scaler.fit_transform(edges[["length"]])
-
-    # Scale the standardized length between 0 and 1
-    # min_max_scaler_dist = MinMaxScaler(feature_range=(0, 1))
-    # edges["length_scaled"] = min_max_scaler_dist.fit_transform(edges[["length"]])
-
-    # min_max_scaler_fresh = MinMaxScaler(feature_range=(0,1))
-    # edges["score_scaled"] = min_max_scaler_fresh.fit_transform(edges[["total_score"]])
-
-    # edges["score_distance_scaled"] = round(edges["total_score"] * edges["length_scaled"], 2)
 
     edges["score_distance_08"] = round(edges["total_score_08"] * edges["length"])
     edges["score_distance_13"] = round(edges["total_score_13"] * edges["length"])
     edges["score_distance_18"] = round(edges["total_score_18"] * edges["length"])
-
-    # edges["score_distance_prop"] = round(edges["score_scaled"]*fresh_prop+edges["length_scaled"]*dist_prop, 2)
-
-    # edges["score_sqrt"] = round(edges["total_score"]*(edges["length"]**0.5), 2)
-
-    # edges["score_sqrt_0604"] = round((edges["total_score"]**0.6)*(edges["length"]**0.4), 2)
-
-    # edges["exp_distance"] = round(edges["exp_score"]*edges["length"], 2)
 
     edges.to_file(output_path, driver="GPKG")
 
 def score_fraicheur(input_path, output_path):
     """Score from 0 to 10 in term of freshness instead of heat"""
     edges = gpd.read_file(input_path)
-    min_score = edges["total_score"].min()
-    max_score = edges["total_score"].max()
 
-    slope = (0-10)/(max_score-min_score)
+    min_score_08 = edges["total_score_08"].min()
+    max_score_08 = edges["total_score_08"].max()
+    slope_08 = (0-10)/(max_score_08-min_score_08)
+    origin_ordinate_08 = -slope_08*max_score_08
+    edges["freshness_score_08"] = edges["total_score_08"].apply(lambda x: round(slope_08*x+origin_ordinate_08, 2))
 
-    origin_ordinate = -slope*max_score
+    min_score_13 = edges["total_score_13"].min()
+    max_score_13 = edges["total_score_13"].max()
+    slope_13 = (0-10)/(max_score_13-min_score_13)
+    origin_ordinate_13 = -slope_13*max_score_13
+    edges["freshness_score_13"] = edges["total_score_13"].apply(lambda x: round(slope_13*x+origin_ordinate_13, 2))
 
-    # print("pente : ", slope)
-    # print("origin_ordinate: ", origin_ordinate)
-
-    edges["freshness_score"] = edges["total_score"].apply(lambda x: round(slope*x+origin_ordinate, 2))
-
-    # edges["exp_fresh_score"] = edges["exp_score"].apply(lambda x: -10*x+10)
-
-    # edges["exp_fresh_score_15"] = edges["exp_score_15"].apply(lambda x: -10*x+10)
+    min_score_18 = edges["total_score_18"].min()
+    max_score_18 = edges["total_score_18"].max()
+    slope_18 = (0-10)/(max_score_18-min_score_18)
+    origin_ordinate_18 = -slope_18*max_score_18
+    edges["freshness_score_18"] = edges["total_score_18"].apply(lambda x: round(slope_18*x+origin_ordinate_18, 2))
 
     edges.to_file(output_path, driver="GPKG")
 
@@ -296,27 +271,16 @@ def create_graph(graph_path, edges_buffered_path, graph_output_path):
     edges_buffered = edges_buffered.set_index(["u", "v", "key"])
     graph_n = graph_n.set_index(["osmid"])
 
-    print(graph_e["uniqId"])
-
-    print("ok")
-
     graph_e["total_score_08"] = edges_buffered["total_score_08"]
     graph_e["total_score_13"] = edges_buffered["total_score_13"]
     graph_e["total_score_18"] = edges_buffered["total_score_18"]
     graph_e["score_distance_08"] = edges_buffered["score_distance_08"]
     graph_e["score_distance_13"] = edges_buffered["score_distance_13"]
     graph_e["score_distance_18"] = edges_buffered["score_distance_18"]
-    # graph_e["score_distance_scaled"] = edges_buffered["score_distance_scaled"]
-    graph_e["freshness_score"] = edges_buffered["freshness_score"]
-    # graph_e["score_distance_prop"] = edges_buffered["score_distance_prop"]
-    # graph_e["score_sqrt"] = edges_buffered["score_sqrt"]
-    # graph_e["score_sqrt_0604"] = edges_buffered["score_sqrt_0604"]
 
-    # graph_e["exp_distance"] = edges_buffered["exp_distance"]
-    # graph_e["exp_score"] = edges_buffered["exp_score"]
-    # graph_e["exp_fresh_score"] = edges_buffered["exp_fresh_score"]
-
-    # graph_e["exp_fresh_score_15"] = edges_buffered["exp_fresh_score_15"]
+    graph_e["freshness_score_08"] = edges_buffered["freshness_score_08"]
+    graph_e["freshness_score_13"] = edges_buffered["freshness_score_13"]
+    graph_e["freshness_score_18"] = edges_buffered["freshness_score_18"]
 
     G = ox.graph_from_gdfs(graph_n, graph_e)
 
@@ -3064,8 +3028,60 @@ meta_params_1508_prairies = {
     },
 }
 
+final_params = {
+    "P0_01O5At0_01Ar10C0_01E5Ca" : {
+        "graph_path": "./output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg",
+        "params": {
+            "prairies_prop" : {
+            "edges_path": edges_buffer_prairies_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "ombres_08_prop" : {
+            "edges_path": edges_buffer_ombres_08_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_13_prop" : {
+            "edges_path": edges_buffer_ombres_13_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "ombres_18_prop" : {
+            "edges_path": edges_buffer_ombres_18_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "arbustes_prop": {
+            "edges_path": edges_buffer_arbustes_prop_path,
+            "fn_cont": lambda x: 0.01*(1-x),
+            "alpha": 0.01
+            },
+        "arbres_prop": {
+            "edges_path": edges_buffer_arbres_prop_path,
+            "fn_cont": lambda x: 10*(1-x),
+            "alpha": 10
+            },
+        "C_wavg_scaled": {
+            "edges_path": edges_buffer_temp_wavg_path,
+            "fn_cont": lambda x: 0.01*x,
+            "alpha": 0.01
+            },
+        "eaux_prop": {
+            "edges_path": edges_buffer_eaux_prop_path,
+            "fn_cont": lambda x: 5*(1-x),
+            "alpha": 5
+            },
+        "canop": {
+            "edges_path": edges_buffer_parcs_prop_path,
+            "fn_cont": lambda x: x,
+            "alpha": ""
+            },
+        },
+    },
+}
 #%%
-score_calculation_pipeline(meta_params_1508_prairies)
+score_calculation_pipeline(final_params)
 
 #%%
 #all_score_edges(edges_buffer_path, edges_buffer_scored_path, params)

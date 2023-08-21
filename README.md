@@ -141,11 +141,21 @@ Sauvegarder le résultat sous format Geopackage (gpkg).
 
 Sinon, la donnée déjà calculée est présente à [cette adresse](mettreadresse)
 Une fois téléchargée, la donné de végétation doit être sauvegardée ici : *"./score_calculation_it/input_data/vegetation/raw_veget_strat.gpkg"*
-Cette donnée étant encore trop volumineuse pour être manipulée aisément dans le cadre du projet, elle a été "clippé" avec la version bufferisée du réseau OSM. Le calcul étant long (24h !) avec une configuration standard, la version déjà calculée en date du 03.07.23 est présnte [ici](mettreaddresse).
+Cette donnée étant encore trop volumineuse pour être manipulée aisément dans le cadre du projet, elle a été "clippé" avec la version bufferisée du réseau OSM. Le calcul étant long (24h !) avec une configuration standard, la version déjà calculée en date du 03.07.23 est présente [ici](mettreaddresse).
 Pour mettre à jour cette donnée, exécuter le script **vegetation_preprocessing.py**. en se plaçant ici *./score_calculation_it/* et se laisser guider par les indications du terminal.
 
 ```bash
     python vegetation_preprocessing.py
+```
+
+##### La température
+
+La donnée de température est également une donnée demandant des pré-calculs spécifiques. Le tutoriel pour recalculer cette donnée est disponible [ici](mettreaddresse).
+La donnée déjà calculée est disponible à [cette adresse](mettreaddresse). Une fois téléchargée, elle doit être sauvegardée ici : *"./score_calculation_it/input_data/temperature/temperature_surface.gpkg"*.
+Pour relancer le calcul de la température moyenne par segment, exécuter le script **temperature_preprocessing.py**en se plaçant ici *./score_calculation_it/* et suivre les indications du terminal.
+
+```bash
+    python temperature_preprocessing.py
 ```
 
 ### L'API

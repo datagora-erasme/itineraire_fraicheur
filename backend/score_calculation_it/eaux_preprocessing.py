@@ -1,14 +1,11 @@
 import os
 os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
-import random
 import pandas as pd
-import multiprocessing as mp
-import numpy as np
-from shapely.wkt import loads, dumps
-import os
-import time
 from data_utils import *
+import sys
+sys.path.append("../")
+from global_variable import *
 
 ###### EAUX PREPROCESSING ######
 """Les données proviennent de deux sources : plan d'eau importants et plan d'eaux détails de datagranlyon"""
@@ -16,38 +13,30 @@ from data_utils import *
 ### CREATE WORKING DIRECTORY ###
 create_folder("./output_data/eaux/")
 
-### FUNCTION ###
-
-### GLOBAL VARIABLES ###
-
-eaux_details_path = "./input_data/eaux/eaux_details.gpkg"
-eaux_importants_path = "./input_data/eaux/eaux_importants.gpkg"
-
-eaux_path = "./output_data/eaux/eaux.gpkg"
-eaux_buffer_path = "./output_data/eaux/eaux_buffered.gpkg"
-
-edges_buffer_path = "./input_data/network/edges_buffered_12_bounding.gpkg"
-edges_buffer_eaux_prop_path = "./output_data/network/edges/edges_buffered_eaux_prop_bounding.gpkg"
-
 ### SCRIPT ###
 
-# eaux_details = gpd.read_file(eaux_details_path)
-# eaux_importants = gpd.read_file(eaux_importants_path)
+choice = input("""
+    Souhaitez-vous mettre à jour le réseau pondéré par l'eau ? OUI ou NON
+""")
 
-# eaux_details = eaux_details.to_crs(3946)
-# eaux_importants = eaux_importants.to_crs(3946)
+if (choice =="OUI"):
+    eaux_details = gpd.read_file(data_params["eaux_details"]["gpkg_path"])
+    eaux_importants = gpd.read_file(data_params["eaux_importants"]["gpkg_path"])
 
-# eaux_details["class"] = "detail"
-# eaux_importants["class"] = "important"
+    eaux_details = eaux_details.to_crs(3946)
+    eaux_importants = eaux_importants.to_crs(3946)
 
-# # Données à retravailler pour un choix non arbitraire
-# eaux_details["buffer_size"] = 10
-# eaux_importants["buffer_size"] = 50
+    eaux_details["class"] = "detail"
+    eaux_importants["class"] = "important"
 
-# eaux = pd.concat([eaux_details, eaux_importants])
+    # TODO à retravailler pour un choix non arbitraire
+    eaux_details["buffer_size"] = 10
+    eaux_importants["buffer_size"] = 50
 
-# eaux.to_file(eaux_path, driver="GPKG", layer="eaux")
+    eaux = pd.concat([eaux_details, eaux_importants])
 
-bufferize_with_column(eaux_path, eaux_buffer_path, "eaux", "buffer_size", 5)
+    eaux.to_file(eaux_path, driver="GPKG", layer="eaux")
 
-calculate_area_proportion(edges_buffer_path, eaux_buffer_path, "eaux", edges_buffer_eaux_prop_path, "edges")
+    bufferize_with_column(eaux_path, eaux_buffer_path, "eaux", "buffer_size", 5)
+
+    calculate_area_proportion(edges_buffer_path, eaux_buffer_path, "eaux", edges_buffer_eaux_prop_path, "edges")

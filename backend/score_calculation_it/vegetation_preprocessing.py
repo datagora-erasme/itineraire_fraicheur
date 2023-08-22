@@ -1,13 +1,8 @@
 import os
 os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
-import random
 import pandas as pd
-import multiprocessing as mp
-import numpy as np
-from shapely.wkt import loads, dumps
 import os
-import time
 from data_utils import *
 import sys
 sys.path.append("../")

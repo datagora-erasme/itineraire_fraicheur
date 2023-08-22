@@ -114,7 +114,7 @@ On peut distinguer deux types de données :
 - Les [données](#requête-wfs) directement issues d'une requête WFS à l'api de datagrandlyon
 - Les données de plus grosse taille et nécessitant des calculs spécifiques
 
-#### Requête WFS
+#### Données utilisables via l'application Web
 
 Les données issues d'une requête WFS à datagrandlyon peuvent être téléchargées directement en exécutant le script **fetch_data.py** situé dans le dossier *score_calculation_it/input_data/*. Il est possible de télécharger une donnée en particulier ou toutes les données d'un coup.  Afin de lancer le téléchargement, exécuter le script dans un terminal **en se plaçant au niveau du script** puis lancer la commande suivante : 
 
@@ -125,10 +125,55 @@ Puis se laisser guider par les indications dans le terminal.
 
 À chaque fois qu'une donnée est téléchargée, un dossier se créé avec la donnée sous format geojson (pour l'affichage sur la web app) et sous format gpkg (pour l'ensemble des calculs). 
 
-#### Autre données
-Les autres données de taille trop importante et/ou nécessitant de trop gros calculs sont des données qui ne sont pas accessibles par l'utilisateur via l'application. 
+### L'API
+Le script python principal du backend est le fichier **app.py** qui constitue le *endpoint* du backend permettant d'exécuter les différentes requêtes utilisateur. Avant le lancement de l'application, vérifier que le chemin du graph est celui souhaité dans le fichier **global_variable.py**.
 
-##### La végétation
+Il y a seulement deux routes:
+- requête des layers
+- requête pour le calcul d'itinéraire
+
+Les endpoints se servent de fonction présentes dans le dossier *models* avec un fichier correspondant à chaque route.
+Les données distribuées pour l'application web sont celles stockées dans le dossier *score_calculation_it/input_data/* (cf [partie](#les-données))
+
+
+## Frontend
+
+# Pondération du réseau piéton et analyse statistique
+
+## Pre-processing
+Afin de pouvoir réaliser le calcul de la pondération, il est nécessaire de faire un pre-processing. Si les données sont amenées à être mise à jour, chaque script peut être exécutable pour relancer les calculs spécifiques à chaque donnée. En sortie de chaque script on obtient un sous-réseau enregistré dans un fichier **edges_nom_données.gpkg** qui nous permet d'avoir le taux de recouvrement ou la présence d'une donnée sur chaque segments. Ce sont tous ces fichiers qui sont ensuite utilisés pour les calculs de score. 
+
+### Le réseau de la métropole
+Cette donnée est indispensable pour la suite (à télécharger en premier lieu donc). Afin de la mettre à jour, exécuter le fichier 
+**fetch_network.py** à partir de *./score_calculation_it/input_data/* et se laisser guider par les instructions du terminal.
+
+```bash
+    python fetch_network.py
+```
+
+### Les POIs
+Actuellement les points d'interêts (POI) ne sont pas pris en compte dans la pondération du graphe, cependant, il existe un fichier **poi_preprocessing.py** permettant de calculer la présence de POI sur les segments. Les résultats pourraient être utilisés dans le cadre d'une amélioration du calculateur d'itinéraire. 
+Afin de lancer les calculs, se placer ici : *./score_calculation_it/* puis exécuter le fichier et se laisser guider par les instructions du temrinal. 
+
+```bash
+    python poi_preprocessing.py
+```
+### Parcs et Jardins
+Les parcs ont un traitement un peu différents des autres POI, par conséquent, les calculs nécessaire pour le calculateur d'itinéraire peuvent être exécuté via le fichier **parcs_jardins_preprocessing.py** et en se laissant guider par les instructions du terminal.
+
+```bash
+    python parcs_jardins_preprocessing.py
+```
+
+### Eaux
+
+Les cours d'eau ont un traitement un peu différents des autres POI, par conséquent, les calculs nécessaire pour le calculateur d'itinéraire peuvent être exécuté via le fichier **eaux_preprocessing.py** et en se laissant guider par les instructions du terminal.
+
+```bash
+    python eaux_preprocessing.py
+```
+
+### La végétation
 La donnée de végétation stratifiée la donnée la plus volumineuse. Il est possible de la recalculer de A à Z en partant de la donnée brute présente à [cette addresse](https://data.grandlyon.com/portail/fr/jeux-de-donnees/vegetation-stratifiee-2018-metropole-lyon/telechargements). Afin de pouvoir l'utiliser dans le cadre de ce projet, des calculs ont été réalisés avec Qgis.
 - Réduire la résolution du raster (de 1m à 5m). 
 - Vectoriser le raster
@@ -148,7 +193,7 @@ Pour mettre à jour cette donnée, exécuter le script **vegetation_preprocessin
     python vegetation_preprocessing.py
 ```
 
-##### La température
+### La température
 
 La donnée de température est également une donnée demandant des pré-calculs spécifiques. Le tutoriel pour recalculer cette donnée est disponible [ici](mettreaddresse).
 La donnée déjà calculée est disponible à [cette adresse](mettreaddresse). Une fois téléchargée, elle doit être sauvegardée ici : *"./score_calculation_it/input_data/temperature/temperature_surface.gpkg"*.
@@ -157,19 +202,18 @@ Pour relancer le calcul de la température moyenne par segment, exécuter le scr
 ```bash
     python temperature_preprocessing.py
 ```
+### L'ombre des bâtiments
+La donnée bâtiments est une donnée requêtable en WFS en suivant les instructions de la partie [requete WFS](#requête-wfs). Cependant, c'est la donnée d'ombre calculée à partir de la hauteur des bâtiments qui est utilisée dans le calculateur d'itinéraires. 
+Le calcul est exécutable en se plaçant ici : *./score_calculation_it/* et en exécutant le fichier **ombre_preprocessing.py** et en se laissant guider par le terminal. 
 
-### L'API
-Le script python principal du backend est le fichier **app.py** qui constitue le *endpoint* du backend permettant d'exécuter les différentes requêtes utilisateur. Avant le lancement de l'application, vérifier que le chemin du graph est celui souhaité dans le fichier **global_variable.py**.
+```bash
+    python ombre_preprocessing.py
+```
+Tel que le script est conçu aujourd'hui, il n'est utile de mettre à jour la donnée que si la donnée des bâtiments ou le réseau piéton est mise à jour. Le script n'est pas conçu pour choisir l'horaire et la date à laquelle faire le calcul. Cependant, ce script peut être assez facilement généralisé. 
 
-Il y a seulement deux routes:
-- requête des layers
-- requête pour le calcul d'itinéraire
+## Pondération du graph (calcul du score)
+La pondération du graph ne peut se faire que si l'ensemble des sous-réseaux existent (et ont été mis à jour au besoin). La pondération du graph est à renseigner directement dans le fichier **score_calculation.py** en suivant l'exemple *final_params* puis peut être exécuté via la commande suivante : 
 
-Les endpoints se servent de fonction présentes dans le dossier *models* avec un fichier correspondant à chaque route.
-Les données distribuées pour l'application web sont celles stockées dans le dossier *score_calculation_it/input_data/* (cf [partie](#les-données))
-
-
-
-## Frontend
-
-# Analyse statistique : pondération du réseau piéton
+```bash
+    python score_calculation.py
+```

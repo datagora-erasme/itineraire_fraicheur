@@ -25,6 +25,23 @@ edges_buffer_arbres_prop_path = globpath("./score_calculation_it/output_data/net
 edges_buffer_arbustes_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_arbustes_prop_bounding.gpkg")
 edges_buffer_prairies_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_prairies_prop_bounding.gpkg")
 
+edges_buffer_temp_wavg_path =globpath("./score_calculation_it/output_data/network/edges/edges_buffered_temp_wavg_bounding.gpkg")
+edges_buffer_temp_wavg_path_no_na = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_temp_wavg_bounding_no_na.gpkg")
+
+edges_buffer_ombres_08_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_ombres_08_prop_bounding.gpkg")
+edges_buffer_ombres_13_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_ombres_13_prop_bounding.gpkg")
+edges_buffer_ombres_18_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_ombres_18_prop_bounding.gpkg")
+
+edges_buffer_parcs_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_parcs_prop_canop_bounding.gpkg")
+
+edges_buffer_eaux_prop_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_eaux_prop_bounding.gpkg")
+
+edges_buffer_scored_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_scored_bounding.gpkg")
+
+edges_buffer_total_score_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_total_score_bounding.gpkg")
+edges_buffer_total_score_distance_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_total_score_distance_bounding.gpkg")
+edges_buffer_total_score_distance_freshness_path = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_total_score_distance_freshness_bounding.gpkg")
+
 
 ### DATA PATH ###
 #### VEGETATION ####
@@ -54,8 +71,29 @@ merged_veget_align_arbustes_path = globpath("./score_calculation_it/output_data/
 
 #### TEMPERATURE ####
 temperature_path = globpath("./score_calculation_it/input_data/temperature/temperature_surface.gpkg")
-edges_buffer_temp_wavg_path =globpath ("./score_calculation_it/output_data/network/edges/edges_buffered_temp_wavg_bounding.gpkg")
-edges_buffer_temp_wavg_path_no_na = globpath("./score_calculation_it/output_data/network/edges/edges_buffered_temp_wavg_bounding_no_na.gpkg")
+
+#### SHADOWS ####
+shadows_08_clipped_path = globpath("./score_calculation_it/output_data/ombres/ombres_08_metrop_clipped.gpkg")
+shadows_13_clipped_path = globpath("./score_calculation_it/output_data/ombres/ombres_13_metrop_clipped.gpkg")
+shadows_18_clipped_path = globpath("./score_calculation_it/output_data/ombres/ombres_18_metrop_clipped.gpkg")
+
+shadows_08_explode_path = globpath("./score_calculation_it/output_data/ombres/ombres_08_metrop_explode.gpkg")
+shadows_13_explode_path = globpath("./score_calculation_it/output_data/ombres/ombres_13_metrop_explode.gpkg")
+shadows_18_explode_path = globpath("./score_calculation_it/output_data/ombres/ombres_18_metrop_explode.gpkg")
+
+shadows_08_intersect_path = globpath("./score_calculation_it/output_data/ombres/intersect_ombres_edges_08.gpkg")
+shadows_13_intersect_path = globpath("./score_calculation_it/output_data/ombres/intersect_ombres_edges_13.gpkg")
+shadows_18_intersect_path = globpath("./score_calculation_it/output_data/ombres/intersect_ombres_edges_18.gpkg")
+
+shadows_path = globpath("./score_calculation_it/output_data/ombres/ombres_metrop.gpkg")
+shadows_08_path = globpath("./score_calculation_it/output_data/ombres/ombres_08_metrop.gpkg")
+shadows_13_path = globpath("./score_calculation_it/output_data/ombres/ombres_13_metrop.gpkg")
+shadows_18_path = globpath("./score_calculation_it/output_data/ombres/ombres_18_metrop.gpkg")
+
+#### EAUX ####
+eaux_path = globpath("./score_calculation_it/output_data/eaux/eaux.gpkg")
+eaux_buffer_path = globpath("./score_calculation_it/output_data/eaux/eaux_buffered.gpkg")
+
 
 ### DATA PARAMS ###
 data_params = {
@@ -86,6 +124,9 @@ data_params = {
         "wfs_key": "metropole-de-lyon:adr_voie_lieu.adrbornefontaine_latest",
         "gpkg_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_potables.gpkg"),
         "geojson_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_potables.json"),
+        "edges_path": globpath("./score_calculation_it/output_data/network/edges/edges_buffered_fontaines_potables.gpkg"),
+        "buffer_path": globpath("./score_calculation_it/output_data/fontaines/fontaines_potables_buffered.gpkg"),
+        "buffer_size": 30,
         "onMap": True,
         "marker_option": {
             "iconUrl": "droplet.svg",
@@ -106,6 +147,9 @@ data_params = {
         "wfs_key": "metropole-de-lyon:adr_voie_lieu.adrfontaineornem_latest",
         "gpkg_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_ornementales.gpkg"),
         "geojson_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_ornementales.json"),
+        "edges_path": globpath("./score_calculation_it/output_data/network/edges/edges_buffered_fontaines_ornementales.gpkg"),
+        "buffer_path": globpath("./score_calculation_it/output_data/fontaines/fontaines_ornementales_buffered.gpkg"),
+        "buffer_size": 25,
         "onMap": True,
         "marker_option": {
             "iconUrl": "fountain.svg",
@@ -126,6 +170,9 @@ data_params = {
         "wfs_key": "metropole-de-lyon:adr_voie_lieu.adrtoilettepublique_latest",
         "gpkg_path": globpath("./score_calculation_it/input_data/toilettes/toilettes.gpkg"),
         "geojson_path": globpath("./score_calculation_it/input_data/toilettes/toilettes.json"),
+        "edges_path": globpath("./score_calculation_it/output_data/network/edges/edges_buffered_toilette.gpkg"),
+        "buffer_path": globpath("./score_calculation_it/output_data/toilettes/toilettes_buffered.gpkg"),
+        "buffer_size": 20,
         "onMap": True,
         "marker_option": {
             "iconUrl": "toilet.svg",
@@ -158,6 +205,9 @@ data_params = {
         "wfs_key": "metropole-de-lyon:adr_voie_lieu.adrbanc_latest",
         "gpkg_path": globpath("./score_calculation_it/input_data/bancs/bancs.gpkg"),
         "geojson_path": globpath("./score_calculation_it/input_data/bancs/bancs.json"),
+        "edges_path": globpath("./score_calculation_it/output_data/network/edges/edges_buffered_bancs.gpkg"),
+        "buffer_path": globpath("./score_calculation_it/output_data/bancs/bancs_buffered.gpkg"),
+        "buffer_size": 10,
         "onMap": True,
         "marker_option": {
             "iconUrl": "bench.svg",

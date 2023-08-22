@@ -1,14 +1,11 @@
 import os
 os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
-import random
 import pandas as pd
 import multiprocessing as mp
 import numpy as np
 from shapely.wkt import loads, dumps
-from shapely.geometry import Polygon
 import os
-import time
 
 def create_folder(folder_path):
     exist = os.path.exists(folder_path)

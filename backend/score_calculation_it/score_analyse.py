@@ -7,18 +7,18 @@ import pandas as pd
 import multiprocessing as mp
 import numpy as np
 import osmnx as ox
-import json
 import networkx as nx
 import pickle
 from data_utils import *
 from shapely.geometry import Polygon
 
-import plotly.express as px
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 from scipy.stats import ttest_rel
 
 from score_calculation import *
+import sys
+sys.path.append("../")
+from global_variable import *
+
 #%%
 ## FUNCTION : 
 def load_network(network_path, pickle_path, network_multidigraph_pickle_path):
@@ -107,61 +107,12 @@ def shortest_path(G, start, end, G_multidigraph, index, global_gdf, zone_id="Non
 
     return global_gdf
 
-def clipp_graph_nodes_from_zone_old(zone_path, zone_id, graph_path, clipped_nodes_path):
-    ## CLIP GRAPH NODES
-    print("read zones file")
-    studies_zones = gpd.read_file(zone_path)
-
-    zone = studies_zones[studies_zones["zone_id"] == zone_id]
-    zone = zone.to_crs(3946)
-
-    print(zone)
-
-    print("read graph file")
-
-    graph_n = gpd.read_file(graph_path, layer="nodes")
-
-    graph_n = graph_n.to_crs(3946)
-
-    graph_n_zone = graph_n.overlay(zone, how="intersection")
-
-    print("saving file")
-    graph_n_zone.to_file(clipped_nodes_path, layer="nodes", driver="GPKG")
-    print("ALL DONE")
-
 def clipp_graph_nodes_from_zone(zone, graph_n):
     zone = zone.to_crs(3946)
     graph_n = graph_n.to_crs(3946)
     clipped_nodes = graph_n.overlay(zone, how="intersection")
     return clipped_nodes
 
-def create_random_itineraries_old(nodes_path, graph_path, multidigraph_path, n_itineraries, itineraries_path, min_dist=200):
-    ## SELECT RANDOM POINTS
-    nodes = gpd.read_file(nodes_path, layer="nodes").set_index(["osmid"])
-
-    random_nodes = nodes.sample(n=n_itineraries)
-    start_nodes = random_nodes[0:round((n_itineraries)/2)]
-    end_nodes = random_nodes[100:n_itineraries]
-
-    ## CREATE RANDOM ITINERARIES
-    G = load_graph_from_pickle(graph_path)
-    MG = load_graph_from_pickle(multidigraph_path)
-
-    count = 0
-
-    global_gdf = gpd.GeoDataFrame()
-
-    for i in range(0,round(n_itineraries/2)):
-        print(f"It {i} .. ")
-        start = (start_nodes.iloc[i]["lon"], start_nodes.iloc[i]["lat"])
-        end = (end_nodes.iloc[i]["lon"], end_nodes.iloc[i]["lat"])
-        print(start, end)
-        global_gdf = shortest_path(G, start, end, MG, count, global_gdf, min_dist=min_dist)
-        count+=1
-
-    print("saving file")
-    global_gdf.to_file(itineraries_path, driver="GPKG", layer="itineraries")
-    print("ALL DONE")
 
 def create_random_itineraries(nodes, graph, multidigraph, n_itineraries, global_gdf, zone_id, total_score_column, min_dist=200, max_dist=4000):
     ## SELECT RANDOM POINTS
@@ -185,29 +136,6 @@ def create_random_itineraries(nodes, graph, multidigraph, n_itineraries, global_
         count+=1
 
     return global_gdf
-
-def extract_frequency_scores_old(sample_itineraries_path, output_folder_path, zone_name):
-    itineraries = gpd.read_file(sample_itineraries_path, layer="dataset")
-    itineraries_if = itineraries[itineraries["type"] == "IF"]
-    itineraries_len = itineraries[itineraries["type"] == "LEN"]
-
-    freq_edges_if = gpd.GeoDataFrame({
-        "count": itineraries_if.groupby(["u", "v", "key"])["total_score"].count(),
-        "score": itineraries_if.groupby(["u", "v", "key"])["total_score"].apply(lambda x: round(x.unique()[0])),
-        "zone": zone_name,
-        "geometry": itineraries_if.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
-    })
-
-    freq_edges_if.to_file(f"{output_folder_path}{zone_name}/count_freq_if_{zone_name}.gpkg", driver="GPKG", layer="edges")
-
-    freq_edges_len = gpd.GeoDataFrame({
-        "count": itineraries_len.groupby(["u", "v", "key"])["total_score"].count(),
-        "score": itineraries_len.groupby(["u", "v", "key"])["total_score"].apply(lambda x: round(x.unique()[0])),
-        "zone": zone_name,
-        "geometry": itineraries_len.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
-    })
-
-    freq_edges_len.to_file(f"{output_folder_path}{zone_name}/count_freq_len_{zone_name}.gpkg", driver="GPKG", layer="edges")
 
 def extract_frequency_scores(itineraries):
     print(itineraries)
@@ -233,21 +161,14 @@ def extract_frequency_scores(itineraries):
         "geometry": itineraries_len.groupby(["u", "v", "key"])["geometry"].apply(lambda x: x.unique()[0])
     })
 
-    # print("freq_edges_if: ", np.max(freq_edges_if["score_13"]))
-    # print("freq_edges_len: ", freq_edges_len)
-
     return freq_edges_if, freq_edges_len
 
 def calculate_mean_prop(it, score_column):
     """Calculate the mean proportion of one column for a given itinerary"""
-    # print(score_column)
-    # print(it[score_column])
     return round(sum(it[score_column]*it["length"])/sum(it["length"]), 2)
 
 def calculate_mean_score(it, score_column):
     """Calculate the mean score for a given itinerary"""
-    # print(score_column)
-    # print(it[score_column])
     return round(sum(it[score_column])/sum(it["length"]), 2)
 
 def create_df_mean_score(itineraries_path, output_path, score_column):
@@ -397,18 +318,12 @@ def pipeline_generate_dataset_new(params, nodes_start_path, end_nodes_path, tota
         global_gdf.to_file(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg")
         global_gdf = gpd.read_file(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg")
 
-        # print(np.max(global_gdf["total_score_13"]))
-
         frequency_if, frequency_len = extract_frequency_scores(global_gdf)
-
-        # print("ultime bafouille : ", np.max(frequency_if["score_13"]))
 
         frequency_if.to_file(f"output_data/analyse/{data_name}/{hour}/frequency_if_{data_name}.gpkg", driver="GPKG", layer="frequency")
         frequency_len.to_file(f"output_data/analyse/{data_name}/{hour}/frequency_len_{data_name}.gpkg", driver="GPKG", layer="frequency")
 
         max_score = np.max(global_gdf[total_score_column])
-
-        # print("max_score: ", max_score)
 
         create_df_mean_value_by_columns(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg", "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/{hour}/mean_value_by_it{data_name}.csv", columns, total_score_column, max_score)
         create_df_mean_score(f"output_data/analyse/{data_name}/{hour}/dataset_{data_name}.gpkg", f"output_data/analyse/{data_name}/{hour}/mean_score{data_name}.csv", total_score_column)
@@ -419,195 +334,15 @@ def pipeline_generate_dataset_new(params, nodes_start_path, end_nodes_path, tota
             os.remove(g_multi_pickle_path)
 
 
-def pipeline_generate_dataset(input_graph_path, zones_path, frequency_if_path, frequency_len_path, graph_pickle_path, multidigraph_path, dataset_output_path, total_score_column):
-    """This function generate dataset for one given graph"""
-    G = load_graph_from_pickle(graph_pickle_path)
-    MG = load_graph_from_pickle(multidigraph_path)
-    graph_n = gpd.read_file(input_graph_path, layer="nodes")
-    zones = gpd.read_file(zones_path)
-    zones_index = [38,32,31,29,30,35,25,27,24,22]
-    # sample = [39]
-    # sample = random.sample(zones_index, 10)
-    # print(sample)
-    global_gdf = gpd.GeoDataFrame()
-    for i in zones_index:
-        # print(zones.iloc[i]["geometry"])
-        zone = gpd.GeoDataFrame(zones.iloc[i], geometry=zones.iloc[i], crs="EPSG:3946")
-        # print(zone)
-        clipped_nodes = clipp_graph_nodes_from_zone(zone, graph_n)
-        global_gdf = create_random_itineraries(clipped_nodes, G, MG, 400, global_gdf, f"zone_{i}", total_score_column, 500, 4000)
-
-    print("global gdf columns: ", global_gdf.columns)
-
-    global_gdf.to_file(dataset_output_path, layer="dataset", driver="GPKG")
-    global_gdf = gpd.read_file(dataset_output_path)
-
-    frequency_if, frequency_len = extract_frequency_scores(global_gdf)
-
-    frequency_if.to_file(frequency_if_path, driver="GPKG", layer="frequency")
-    frequency_len.to_file(frequency_len_path, driver="GPKG", layer="frequency")
-
-
 
 ## GLOBAL VARIABLES
-bounding_metrop = "./input_data/bounding_metrop.gpkg"
-zones_path = "./input_data/studies_zones/studies_sectors.gpkg"
-graph_path = "./output_data/network/graph/final_network_P1O8At2Ar10C6E7Ca8.gpkg"
 grid_path = "./output_data/analyse/grid.gpkg"
-clipped_nodes_tetedor_path = "./output_data/studies_zones/tetedor_nodes.gpkg"
-clipped_nodes_partdieu_path = "./output_data/studies_zones/partdieu/partdieu_nodes.gpkg"
-clipped_nodes_rillieux_path = "./output_data/studies_zones/rillieux/rillieux_nodes.gpkg"
-clipped_nodes_confluence_path = "./output_data/studies_zones/confluence/confluence_nodes.gpkg"
-clipped_nodes_metropole_path = "./output_data/studies_zones/metropole/metropole_nodes.gpkg"
-
-graph_pickle = "./output_data/analyse/P1O8At2Ar10C6E7Ca8/final_network_P1O8At2Ar10C6E7Ca8.pickle"
-multidigraph_pickle = "./output_data/analyse/P1O8At2Ar10C6E7Ca8/final_network_P1O8At2Ar10C6E7Ca8.pickle"
-
-tetedor_itineraries_path = "./output_data/studies_zones/tetedor/100_it.gpkg"
-partdieu_itineraries_path = "./output_data/studies_zones/partdieu/partdieu_100_it.gpkg"
-rillieux_itineraries_path = "./output_data/studies_zones/rillieux/rillieux_100_it.gpkg"
-confluence_itineraries_path = "./output_data/studies_zones/confluence/confluence_100_it.gpkg"
-metropole_itineraries_path = "./output_data/studies_zones/metropole/metropole_5000_it.gpkg"
-
-output_folder_path = "./output_data/studies_zones/"
-
 output_nodes_start_path = "./output_data/analyse/selected_start_nodes.gpkg"
 output_nodes_end_path = "./output_data/analyse/selected_end_nodes.gpkg"
 
-dataset_output_path = "./output_data/analyse/P1O8At2Ar10C6E7Ca8/dataset_P1O8At2Ar10C6E7Ca8.gpkg"
-frequency_if_path = "./output_data/analyse/P1O8At2Ar10C6E7Ca8/frequency_if_P1O8At2Ar10C6E7Ca8.gpkg"
-frequency_len_path = "./output_data/analyse/P1O8At2Ar10C6E7Ca8/frequency_len_P1O8At2Ar10C6E7Ca8.gpkg"
-csv_output_path = "./output_data/analyse/P1O8At2Ar10C6E7Ca8/mean_score_P1O8At2Ar10C6E7Ca8.csv"
-
-params_generate_dataset = {
-    "P1O8At2Ar10C6E7Ca8_test" : {
-        "graph_path": "./output_data/network/graph/final_network_P1O8At2Ar10C6E7Ca8.gpkg",
-    },
-    "P1O1At1Ar10C1E1Ca1" : {
-        "graph_path": "./output_data/network/graph/final_network_P1O1At1Ar10C1E1Ca1.gpkg",
-    },
-    "P1O1At1Ar100C1E1Ca1" : {
-        "graph_path": "./output_data/network/graph/final_network_P1O1At1Ar100C1E1Ca1.gpkg",
-    },
-    "P1O8At1Ar10C1E1Ca1" : {
-        "graph_path": "./output_data/network/graph/final_network_P1O8At1Ar10C1E1Ca1.gpkg",
-    }
-}
-
-
- #%%
-## SCRIPT
-edges_prop_path = "output_data/analyse/edges_all_prop.gpkg"
-test_path = "./output_data/analyse/P1O1At1Ar10C1E1Ca1/dataset_P1O1At1Ar10C1E1Ca1.gpkg"
-test_csv_path = "./output_data/analyse/P1O1At1Ar10C1E1Ca1/mean_value_by_it_P1O1At1Ar10C1E1Ca1.csv"
-columns = ["prairies_prop", "arbustes_prop", "arbres_prop", "C_wavg_scaled", "eaux_prop", "canop", "ombres_08_prop", "ombres_13_prop", "ombres_18_prop"]
-# create_df_mean_value_by_columns(test_path, edges_prop_path, test_csv_path, columns, "score_distance_13", 16)
-
 #%%
-# create_grid(bounding_metrop, 4000, grid_path)
+# create_grid(bounding_metrop_path, 4000, grid_path)
 
-# create_random_nodes(grid_path, graph_path, 400, output_nodes_start_path, output_nodes_end_path)
+# create_random_nodes(grid_path, final_network_path, 400, output_nodes_start_path, output_nodes_end_path)
 
-#load_network(graph_path, graph_pickle, multidigraph_pickle)
-
-#%%
-# pipeline_generate_dataset(graph_path, grid_path, frequency_if_path, frequency_len_path, graph_pickle, multidigraph_pickle, dataset_output_path, "score_distance_13")
-
-# score_calculation_pipeline(meta_params_2807)
-
-# pipeline_generate_dataset_new(meta_params_0708, output_nodes_start_path, output_nodes_end_path, "score_distance_18", 500, 4000, "18h")
-pipeline_generate_dataset_new(meta_params_1508_prairies, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 500, 4000, "13h")
-# create_df_mean_value_by_columns(dataset_output_path, "output_data/analyse/edges_all_prop.gpkg", f"output_data/analyse/{data_name}/mean_value_by_it{data_name}.csv", columns, total_score_column, )
-
-#%%
-# create_df_mean_score(dataset_output_path, csv_output_path, "score_distance_13")
-### TETE D'OR
-
-# clipp_graph_nodes_from_zone(zones_path, "tetedor", graph_path, clipped_nodes_tetedor_path)
-# create_random_itineraries(clipped_nodes_tetedor_path, graph_pickle, multidigraph_pickle, 200, tetedor_itineraries_path)
-
-## PART DIEU
-# clipp_graph_nodes_from_zone(zones_path, "partdieu", graph_path, clipped_nodes_partdieu_path)
-# create_random_itineraries(clipped_nodes_partdieu_path, graph_pickle, multidigraph_pickle, 200, partdieu_itineraries_path)
-
-## RILLIEUX LA PAPE
-
-# clipp_graph_nodes_from_zone(zones_path, "rillieux", graph_path, clipped_nodes_rillieux_path)
-# create_random_itineraries(clipped_nodes_rillieux_path, graph_pickle, multidigraph_pickle, 200, rillieux_itineraries_path)
-
-## CONFLUENCE
-
-# clipp_graph_nodes_from_zone(zones_path, "confluence", graph_path, clipped_nodes_confluence_path)
-# create_random_itineraries(clipped_nodes_confluence_path, graph_pickle, multidigraph_pickle, 200, confluence_itineraries_path)
-# extract_frequency_scores(confluence_itineraries_path, output_folder_path, "confluence")
-
-## METROP 
-
-# clipp_graph_nodes_from_zone(zones_path, "metropole", graph_path, clipped_nodes_metropole_path)
-# create_random_itineraries(clipped_nodes_metropole_path, graph_pickle, multidigraph_pickle, 1000, metropole_itineraries_path, min_dist=500)
-# extract_frequency_scores(metropole_itineraries_path, output_folder_path, "metropole")
-
-# create_df_mean_score(metropole_itineraries_path)
-
-# weights_score = pd.read_csv("./output_data/analyse/results.csv")
-
-# score_if = weights_score[weights_score["type"] == "IF"]["score"]
-# score_len = weights_score[weights_score["type"] == "LEN"]["score"]
-
-# len_if = weights_score[weights_score["type"] == "IF"]["total_length"]
-# len_len = weights_score[weights_score["type"] == "LEN"]["total_length"]
-
-# # Les deux groupes sont dépendants (ind stats = couple départ et arrivée) + la distance est prise en compte dans les deux cas
-# t_test_score = test_students(score_len, score_if)
-# d_score = d_cohen(score_len, score_if)
-
-# print("ttest : ", t_test_score) # TtestResult(statistic=41.14863591276434, pvalue=1.7158511760401674e-162, df=499)
-# print("d de cohen : ", d_score) # 1.8976097648251313 
-# # On peut rejetter H0, la différence entre les deux n'est pas due au hasard. 
-
-# t_test_len = test_students(len_len, len_if)
-# d_len = d_cohen(len_len, len_if)
-
-# print("ttest len :", t_test_len) #TtestResult(statistic=-27.57299161407194, pvalue=2.2809899288342848e-102, df=499)
-# print("d cohen len : ", d_len) #-0.18036484141490464
-
-# #On rejette H0 : les trajets sont en moyennes plus longs pour les itinéraires les plus frais (logique) mais la taille de l'effet est faible
-
-# d_cost = distance_cost(weights_score[weights_score["type"] == "LEN"], weights_score[weights_score["type"] == "IF"])
-
-# print(f"cost distance : {d_cost} %") # faire la distrib et regarder les quantiles plutôt que la moyenne du coût
-
-#%%
-
-# count_freq_if = gpd.read_file(output_folder_path + "metropole/count_freq_if_metropole.gpkg")
-# count_freq_len = gpd.read_file(output_folder_path + "metropole/count_freq_len_metropole.gpkg")
-
-# count_freq_if = count_freq_if.set_index(["u", "v", "key"])
-# count_freq_len = count_freq_len.set_index(["u", "v", "key"])
-
-# count_all_freq = count_freq_if.merge(count_freq_len, on=["u", "v", "key"], how="outer", suffixes=("_if", "_len"))
-
-# count_all_freq = count_all_freq.drop(["geometry_if", "geometry_len"], axis=1)
-
-# count_all_freq = count_all_freq.fillna(0) #si Nan => pas fréquenté
-
-#count_freq_if.to_file(output_folder_path + "metropole/count_all_freq.gpkg", driver="GPKG", layer="edges")
-# %%
-
-# freq_if = count_all_freq["count_if"].astype(float)
-# freq_len = count_all_freq["count_len"].astype(float)
-
-# ttest_freq = test_students(freq_len, freq_if)
-# d_freq = d_cohen(freq_len, freq_if)
-
-# print(ttest_freq)
-# print(d_freq) #pour l'ensemble metrop pas d'effet mais du à la nature des itinéraires à priori. 
-
-# # %%
-
-# print(count_freq_len.isna().sum())
-# print(len(count_freq_len))
-# print(len(count_freq_if))
-# %%
-
-# %%
+pipeline_generate_dataset_new(final_params, output_nodes_start_path, output_nodes_end_path, "score_distance_13", 300, 4000, "13h")

@@ -34,8 +34,6 @@ const PoiDetails = ({showMenu}) => {
             const bounds = layer.getBounds()
             const centroid = bounds.getCenter()
 
-            console.log(centroid)
-
             coordinates = [centroid.lat, centroid.lng]
         } else if(poiDetails.geometry.type === "Point"){
             coordinates = [poiDetails.geometry.coordinates[1], poiDetails.geometry.coordinates[0]]
@@ -70,8 +68,6 @@ const PoiDetails = ({showMenu}) => {
             console.error(error)
         })
     }
-
-    console.log("poiDetails: ", poiDetails)
 
     return(
         <div className={`${showMenu ? "": "hidden"} md:block mt-4 md:mt-0 card md:card-details-desktop`}>

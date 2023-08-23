@@ -2,9 +2,9 @@ import React, { useContext } from 'react'
 import { FaChevronDown } from "react-icons/fa";
 import MainContext from '../contexts/mainContext';
 
-function ListLayers({ showLayers, setShowLayers }){
+function ListLayers(){
 
-    const { listLayers, selectedLayers, setSelectedLayers, isLayerLoading, history, setHistory } = useContext(MainContext)  
+    const { listLayers, selectedLayers, setSelectedLayers, isLayerLoading } = useContext(MainContext)  
 
     function handleCheckBoxList(event){
         const {value, checked} = event.target;
@@ -20,10 +20,6 @@ function ListLayers({ showLayers, setShowLayers }){
         <div className="card md:card-desktop">
         <button
           className="md:hidden card-title"
-          // onClick={() => {
-          //   setShowLayers(!showLayers)
-          //   setHistory(history.slice(0,-1))
-          // }}
         >
         {isLayerLoading && <div class="w-6 h-6 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin mr-3"></div>}
           <FaChevronDown className="text-gray-500 mt-1 hidden md:block" />
@@ -55,7 +51,6 @@ function ListLayers({ showLayers, setShowLayers }){
                               checkbox.checked = !checkbox.checked;
                               const img = document.getElementById(`img_${layer.id}`)
                               if(checkbox.checked){
-                                // console.log(img.class)
                                 img.className = 'bg-gray-300 border-solid border-2 rounded-full p-4 cursor-pointer'
                               } else {
                                 img.className = 'border-solid border-2 rounded-full p-4 hover:bg-gray-100 cursor-pointer'

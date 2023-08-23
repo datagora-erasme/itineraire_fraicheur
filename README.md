@@ -137,6 +137,10 @@ Les données distribuées pour l'application web sont celles stockées dans le d
 
 
 ## Frontend
+Le frontend est conçu en React et react-leaflet pour ce qui est de la cartographie. Il est conçu pour être une unique page intégrable dans un site web. 
+Le dossier src contient l'ensemble des scripts avec des composants et un context (permettant la circulation des variables entre les différents composants).
+
+NB : le fetch des données *Lieux frais ouverts au public* se fait via une URL temporaire suite à changement de conception côté datagrandlyon. Si modification d'URL il y a, ce changement s'effectue dans le fichier **mainContext.js** Ligne 127.
 
 # Pondération du réseau piéton et analyse statistique
 
@@ -217,3 +221,20 @@ La pondération du graph ne peut se faire que si l'ensemble des sous-réseaux ex
 ```bash
     python score_calculation.py
 ```
+
+## Analyse de la pondération
+Afin de trouver la meilleure pondération, la méthodologie suivie est celle du rapport de M2 disponible [ici](mettrerapport). Les calculs sont effectués à l'aide des fichiers **score_calculation** et **score_analyse.py**. Puis l'analyse est réalisée dans le fichier **analyse_pipeline_new.ipynb**. 
+
+Afin de tester plusieurs pondérations, il suffit de compléter l'objet *final_params* ou bien créer un nouvel objet paramètre et lancer de nouveau le script **score_calculation.py**. 
+
+Une fois les calculs de score réalisés, remplacer l'argument de la fonction *pipeline_generate_dataset_new* du fichier **score_analyse.py** afin de générer des datasets de 1000 itinéraires.
+ATTENTION, pour faire une analyse cohérente, il est nécessaire de pouvoir comparer les itinéraires deux à deux donc en conservant les mêmes noeuds. Les fichiers déjà générés sont disponibles [ici](mettreliens). IL est toutefois possible de regénérer des noeuds aléatoires avec la fonctions *create_random_nodes*.
+Une fois téléchargés les noeuds sont à mettre dans le dossier *./score_calculation_it/output_data/analyse* sous les noms : 
+- selected_end_nodes.gpkg
+- selected_start_nodes.gpkg
+
+Il faut compter environ 1h20 de calcul pour obtenir le graphe pondéré et les 1000 itinéraires pour une pondération donnée à une heure donnée. Lors de l'exécution du script **score_analyse.py**, un dossier se créé avec tous les fichiers nécessaires à l'analyse du score.
+
+L'analyse a ensuite été réalisée à partir du fichier **analyse_pipeline_new.py**. Les fichiers suivants sont des test / brouillons conservés pour la trace de la réflexion : 
+- **acp.py** et **acp.ipynb**
+- **score_analyse_pipeline.ipynb**

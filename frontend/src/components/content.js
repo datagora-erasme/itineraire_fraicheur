@@ -24,7 +24,6 @@ function Content({showMenu, setShowMenu}){
             <div style={{zIndex:1000}} className="absolute md:top-8 bottom-0 flex flex-col gap-4 w-full p-8 md:pd-0 md:w-[400px] rounded-t-3xl md:gap-0 md:rounded-full bg-bgWhite md:bg-transparent">
                 <div className="hidden md:block bg-bgWhite w-[300px] ml-[20px] p-4 absolute top-0 rounded-full font-bold text-xl drop-shadow-lg">Sortons au frais !</div>
                 <div className="hidden md:block h-8 bg-bgWhite rounded-t-3xl"></div>
-                {/* <div style={{zIndex:1000}} className="md:hidden absolute h-16 bg-transparent -mt-16 w-[100vw] -ml-8 rounded-bl-full">EO</div> */}
                 <div className=" md:hidden flex flex-row justify-center">
                     <BackButton showMenu={showMenu}/>
                     <div className="h-[12px] w-[100px] bg-ligneModale rounded-3xl -mt-2 mb-2" onClick={() => setShowMenu(!showMenu)}></div>
@@ -50,7 +49,6 @@ function Content({showMenu, setShowMenu}){
                     <FaChevronDown className="hidden md:block text-gray-500 mt-1" />
                     )}
                     <span>Calculer un itinéraire piéton</span>
-                    {/* <span className="hidden md:block">Je calcule mon itinéraire fraîcheur</span> */}
                 </button>
                 {showItineraryCalculation && <CalculateItinerary showItineraryCalculation={showItineraryCalculation} setShowItineraryCalculation={setShowItineraryCalculation}/>}
 
@@ -78,7 +76,7 @@ function Content({showMenu, setShowMenu}){
                     )}
                     <span>Trouver un lieu frais</span>
                 </button>
-                {showFindFreshness && <FreshnessAroundUser showFindFreshness={showFindFreshness} setShowFindFreshness={setShowFindFreshness}/>}
+                {showFindFreshness && <FreshnessAroundUser/>}
 
                 <button 
                     onClick={() => {
@@ -102,7 +100,7 @@ function Content({showMenu, setShowMenu}){
                     )}
                     <span>Consulter la carte fraîcheur</span>
                 </button>
-                {showLayers && <ListLayers showLayers={showLayers} setShowLayers={setShowLayers}/>}
+                {showLayers && <ListLayers/>}
                 
                 <div className='cursor-pointer secondary-btn secondary-btn-mobile md:overflow-y-hidden md:main-btn-desktop md:rounded-t-none md:rounded-b-none md:rounded-b-3xl'>
                     <a 

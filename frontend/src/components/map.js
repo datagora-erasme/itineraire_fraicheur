@@ -1,20 +1,13 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap, Polygon } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, ZoomControl, useMap } from 'react-leaflet'
 import axios from "axios"
 import L from 'leaflet'
-import { lineString, buffer, featureCollection, dissolve, booleanPointInPolygon, difference, polygon, circle} from "@turf/turf"
+import { lineString, buffer, featureCollection, dissolve, booleanPointInPolygon, difference, circle} from "@turf/turf"
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import MainContext from '../contexts/mainContext';
 import chroma from "chroma-js"
 
-
-// All of the following const should be send by the backend 
-
-// const sp = require("../data/sp_IF_3946.json");
-// const if_joined = require("../data/joined_if_3946.json");
-
-// const network= require("../data/final_network.json")
 
 const colors = {
     "1":" #d6e4d7 ",
@@ -37,7 +30,7 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, select
               map.removeLayer(layer);
             }
           });
-
+        /*eslint-disable*/
         const littleCircle = circle([coordinates[1], coordinates[0]], radius=radius)
         const bigCircle = circle([coordinates[1], coordinates[0]], radius=1000)
 
@@ -61,9 +54,6 @@ function MapFreshness({setZoomToUserPosition, zoomToUserPosition, radius, select
         let marker = L.marker(coordinates, {
             id:"userPosition"
         }).addTo(map)
-
-        // const userPosition = L.Marker(position)
-        // userPosition.addTo(map)
       
         // zoom to circle
         if(zoomToUserPosition){
@@ -163,8 +153,6 @@ function Map(){
 
     const createClusterCustomIcon = function (cluster, markerOption) {
 
-        //<span style=${markerOption.clusterCountStyle}>${cluster.getChildCount()}</span>
-
         return L.divIcon({
             html: `<span class="flex flex-col items-center justify-center">
                         <img src=${markerOption.iconUrl} style="display: block, width: 40px; height:40px;" />
@@ -217,7 +205,6 @@ function Map(){
     }
 
     const handleShowDetailsPopupMarker = (informations) => {
-        // console.log(informations)
         setPoiDetails(informations)
         setShowFindFreshness(false)
         setShowPoiDetails(true)
@@ -232,13 +219,10 @@ function Map(){
             const coordinates = [selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]
             
             const newfilteredLayers = freshnessLayers.map((layer) => {
-                // console.log("layer : ", layer)
                 const filteredlayer = layer.geojson.features.filter((feature) => {
-                    // console.log("feature into filter : ", feature)
                     let lat;
                     let lng;
                     if(feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon"){
-                        // console.log("ok")
                         const layer = L.geoJSON(feature)
                         const bounds = layer.getBounds()
                         const centroid = bounds.getCenter()
@@ -257,9 +241,6 @@ function Map(){
                     }
                     return false
                 })
-                // console.log("filteredlayer: ", filteredlayer)
-
-                // console.log("filteredLayer : ", filteredlayer)
 
                 return filteredlayer
             })
@@ -300,21 +281,16 @@ function Map(){
                 })
                 
                 const dissolvedFeature = {...dissolve(featureCollection(bufferedFeaturesRounded)), id: it.id}
-                // console.log(geojsonLayer)
-                // console.log("bufferedFeatures: ", bufferedFeatures)
-                
+
                 setBufferedItineraries((prevBufferedItineraries) => [...prevBufferedItineraries, dissolvedFeature])
             }
         }
     }, [currentItinerary])
 
-    // console.log("current : ", currentItinerary)
-
     useEffect(() => {
         setFilteredItinerariesFeatures([])
         if(bufferedItineraries.length !== 0 && layers.length !== 0){
             const newFiltereditinerariesFeatures = layers.map((layer,i) => {
-                // console.log("layer : ", layer)
                 const filteredLayer = layer.geojson.features.filter((feat) => {
                     let point;
                     if(feat.geometry.type === "Point"){
@@ -325,7 +301,7 @@ function Map(){
                         const centroid = bounds.getCenter()
                         point = [centroid.lat, centroid.lng]
                     }
-                    // console.log("bufferd : ", bufferedItineraries)
+
                     for(let bufferedIt of bufferedItineraries){
                         if(bufferedIt.id === "IF" && booleanPointInPolygon(point, bufferedIt.features[0])){
                             return true
@@ -352,8 +328,6 @@ function Map(){
                     // url="http://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png"
                     // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                     url="https://openmaptiles.data.grandlyon.com/styles/klokantech-basic/{z}/{x}/{y}.png"
-
-                    // url="https://openmaptiles.data.grandlyon.com/data/v3/{z}/{x}/{y}.pbf"
                 />
                 <ZoomControl position='topright' />
                 <MapFreshness 
@@ -401,25 +375,10 @@ function Map(){
                                     <GeoJSON data={data.geojson} style={getColor} key={Math.random()} />
                                 )
                             } 
-                            // else if (dataType === "Polygon"){
-                            //     return(
-                            //         <>
-                            //             {data.geojson.features.map((polygon, index) => {
-                            //                 return(
-                            //                     <Polygon key={index} positions={polygon.geometry.coordinates} color='green'>
-
-                            //                     </Polygon>
-                            //                 )
-                            //             })}
-                            //         </>
-                            //     )
-                            // }
                         }
                         return null
                     })
                 }
-
-                {/* <GeoJSON data={network} key={Math.random()}/> */}
 
                 {currentItinerary && 
                     currentItinerary.map((it, index) => {
@@ -438,21 +397,6 @@ function Map(){
                         )
                     })
                 }
-{/* 
-                {bufferedItineraries.length !== 0 &&
-                    bufferedItineraries.map((it, index) => {
-                        // console.log(it)
-                        if(it.id ==="IF"){
-                            return(
-                                <GeoJSON data={it} key={Math.random()} style={{
-                                    color: "rgba(128, 128, 128, 0.2)",
-                                    fillColor: "rgba(128, 128, 128, 1)",
-                                    // fillOpacity: 0.2
-                                }}/>
-                            )
-                        }
-                    })
-                } */}
 
                 { selectedStartAddress &&
                     <Marker position={[selectedStartAddress.geometry.coordinates[1], selectedStartAddress.geometry.coordinates[0]]}></Marker>
@@ -465,7 +409,6 @@ function Map(){
 
                 {filteredFreshnessFeatures.length !== 0 && filteredFreshnessFeatures.map((data) => {
                     if(data.length !== 0){
-                        // console.log("ddddddata: ", data)
                         const dataType = data[0].geometry.type
                         if(dataType === "MultiPolygon" || dataType === "Polygon"){
                             return(
@@ -481,12 +424,8 @@ function Map(){
                                     opacity: 0
                                 }}
                                 iconCreateFunction={(cluster) => createClusterCustomIcon(cluster, markerOption)}
-                                // eventHandlers={{
-                                //     click: (cluster) => handleShowDetailsPopupMarker(cluster.sourceTarget)
-                                // }}
                                 >
                                 {data.map((dta,i) => {
-                                    // console.log(dta)
                                     const coordinates = [dta.geometry.coordinates[1], dta.geometry.coordinates[0]]
                                     return (
                                         <Marker key={Math.random()} position={coordinates} icon={new L.icon(markerOption)} eventHandlers={{
@@ -503,7 +442,6 @@ function Map(){
                 })}
                 {filteredItinerariesFeatures.length !== 0 && filteredItinerariesFeatures.map((data) => {
                     if(data.geojson.length !== 0){
-                        // console.log("ddddddata: ", data)
                         const dataType = data.geojson[0].geometry.type
                         if(dataType === "MultiPolygon" || dataType === "Polygon"){
                             return(
@@ -519,12 +457,8 @@ function Map(){
                                     opacity: 0
                                 }}
                                 iconCreateFunction={(cluster) => createClusterCustomIcon(cluster, markerOption)}
-                                // eventHandlers={{
-                                //     click: (cluster) => handleShowDetailsPopupMarker(cluster.sourceTarget)
-                                // }}
                                 >
                                 {data.geojson.map((dta,i) => {
-                                    // console.log(dta)
                                     const coordinates = [dta.geometry.coordinates[1], dta.geometry.coordinates[0]]
                                     return (
                                         <Marker key={Math.random()} position={coordinates} icon={new L.icon(markerOption)}>

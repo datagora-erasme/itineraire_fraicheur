@@ -5,18 +5,14 @@ import MainContext from "../contexts/mainContext";
 import axios from "axios";
 import _debounce from 'lodash/debounce'
 
-const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
+const FreshnessAroundUser = () => {
     const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
     const [showStartSuggestions, setShowStartSuggestions] = useState(false);
-    // const [startAddress, setStartAddress] = useState("")
     
-    const { setZoomToUserPosition, setUserPosition, history, setHistory, 
+    const { setZoomToUserPosition, setUserPosition,
         startAddress, setStartAddress, selectedStartAddress, setSelectedStartAddress, userAddress,
         radius, setRadius, showCircle, setShowCircle
     } = useContext(MainContext)
-    // const handleToggleShowFindFreshness = () => {
-    //     setShowFindFreshness(!showFindFreshness)
-    // }
 
     const handleStartAddressAPI = (query) => {
             axios
@@ -44,7 +40,6 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
         query = query.replace(/ /g, "+")
         setStartAddress(value);
         setSelectedStartAddress(null)
-        // clearTimeout(startTimeout)
         if(query.length > 3){
         debounceStartAddress(query)
         } else {
@@ -89,7 +84,6 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
                   console.log(err);
                 }
               );
-            // alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
         }
     }
 
@@ -105,10 +99,6 @@ const FreshnessAroundUser = ({ showFindFreshness, setShowFindFreshness}) => {
         <div className="card md:card-desktop">
             <button
                 className="md:hidden card-title"
-                // onClick={() => {
-                //     setShowFindFreshness(!showFindFreshness)
-                //     setHistory(history.slice(0,-1))
-                // }}
             >
                 <FaChevronDown className="text-gray-500 mt-1 hidden md:block" />
                 <span className="text-lg font-bold mr-2">Lieu le plus frais autour de moi</span>

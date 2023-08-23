@@ -122,8 +122,8 @@ export const MainContextProvider = ({ children }) => {
               id: "parcs"
           }
       })
-        //https://download.data.grandlyon.com/files/rdata/pvo_patrimoine_voirie.pvocameracriter/equipements_frais.json
-        //https://download.data.grandlyon.com/ws/grandlyon/com_donnees_communales.equipementspublicsclimatises/all.json
+        //https://download.data.grandlyon.com/files/rdata/pvo_patrimoine_voirie.pvocameracriter/equipements_frais.json --> solution temporaire
+        //https://download.data.grandlyon.com/ws/grandlyon/com_donnees_communales.equipementspublicsclimatises/all.json --> solution initiale
         const fetchFreshPlaces = await axios.get("https://download.data.grandlyon.com/files/rdata/pvo_patrimoine_voirie.pvocameracriter/equipements_frais.json")
         const freshplaces = {
           id: "batiments_frais",
@@ -157,8 +157,6 @@ export const MainContextProvider = ({ children }) => {
             type: "FeatureCollection"
         },
         }
-        // console.log("parcs : ", fetchParcs.data)
-        // console.log("fetchFreshPlaces.data : ", freshplaces)
         setFreshnessLayers([fetchParcs.data, freshplaces])
       }
       fetchFreshnessLayers()
@@ -182,8 +180,8 @@ export const MainContextProvider = ({ children }) => {
     useEffect(() => {
       if(currentItinerary){
         setZoomToItinerary(true)
+        /*eslint-disable*/
         const roundIt = roundItineraries(currentItinerary)
-        // console.log("roundIt: ", roundIt)
         setIfScore(() => calculateMeanScore(currentItinerary[1]))
         setLenScore(() => calculateMeanScore(currentItinerary[0]))
       }

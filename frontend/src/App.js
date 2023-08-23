@@ -8,7 +8,6 @@ function App() {
     <MainContextProvider>
       <div className="App">
         <Router>
-          {/* <NavBar/> */}
           <Routes>
             <Route exact path = "/" element={<Home/>}/>
           </Routes>

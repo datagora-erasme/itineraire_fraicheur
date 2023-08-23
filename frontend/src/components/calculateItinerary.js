@@ -20,17 +20,12 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
     startAddress, setStartAddress, endAddress, setEndAddress, setUserPosition, roundItineraries
    } = useContext(MainContext)
 
-  // const handleToggleItineraryCalculation = () => {
-  //   setShowItineraryCalculation(!showItineraryCalculation)
-  // }
-
   const handleStartAddressAPI = (query) => {
     axios
     .get(
       `https://download.data.grandlyon.com/geocoding/photon-bal/api?q=${query}`
     )
     .then((response) => {
-      // console.log(response.data.features)
       setStartAddressSuggestions(response.data.features);
     })
     .catch((error) => {
@@ -62,7 +57,6 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
     query = query.replace(/ /g, "+")
     setStartAddress(value);
     setSelectedStartAddress(null)
-    // clearTimeout(startTimeout)
     if(query.length > 3){
       debounceStartAddress(query)
     } else {
@@ -122,7 +116,6 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
           console.log(err);
         }
       );
-      // alert("Veuillez activez votre géolocalisation pour utiliser cette fonctionnalité")
     }
 
   }
@@ -144,7 +137,6 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
         }
     }).then((response) => {
         const end = performance.now()
-        // console.log("duration : ", (end-start)/1000)
         const roundIt = roundItineraries(response.data)
         setCurrentItinerary(roundIt)
         setIsLoading(false)
@@ -173,10 +165,6 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
   return (
       <div className="card md:card-desktop">
           <button 
-            // onClick={() => {
-            //   setShowItineraryCalculation(!showItineraryCalculation)
-            //   setHistory(history.slice(0,-1))
-            // }} 
             className="md:hidden card-title"
             >
               <FaChevronDown className="text-gray-500 mt-1 hidden md:block" />
@@ -233,7 +221,6 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
               id="endAddressSuggestions"
               className="absolute z-10 w-full max-h-[200px] bg-white border-gray-300 rounded-md shadow-lg mt-0 overflow-y-scroll"
               value={endAddress}
-              // onChange={handleSelectEndAddress}
             >
               {endAddressSuggestions.map((suggestion) => {
                 const name = addressName(suggestion.properties)
@@ -263,8 +250,6 @@ const CalculateItinerary = ({ showItineraryCalculation,  setShowItineraryCalcula
               )}
             </button>
           </div>
-        {/* </div>} */}
-
       </div>
 
   );

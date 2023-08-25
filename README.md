@@ -33,18 +33,32 @@ Le projet a été développé dans un environnement conda, si l'application n'es
 - **docker** :  23.0.2
 - **docker-compose** : 1.29.2
 
-## Exécution via Docker
-
-Les images docker du frontend et du backend sont disponibles à aux adresses suivantes : 
-- backend : https://hub.docker.com/repository/docker/yannisbarba/itineraires_fraicheur_backend/general
-- frontend : https://hub.docker.com/repository/docker/yannisbarba/itineraires_fraicheur_frontend/general
-
 Une fois le projet téléchargé via github, 
-- se placer à la racine du dossier frontend et créer un fichier **.env** avec les mêmes informations que le fichier **.env.sample**
+- se placer à la racine du projet et créer un fichier **.env** avec la variable d'environnement
+```txt
+REACT_APP_URL_SERVER=http://localhost:3002
+REACT_APP_PORT_SERVER=3002
+```
+- se placer à la racine du dossier backend et créer un fichier **.env** avec la variable d'environnement : 
+```txt
+PORT=3000
+```
+- se placer à la racine du dossier frontend et créer un fichier **.env** avec ces variables d'env : 
+```txt
+REACT_APP_URL_SERVER=http://172.17.0.2:3002
+REACT_APP_PORT_SERVER=3002
+```
 - télécharger le [réseau final](https://endpoint-minio.projets.erasme.org/fichiers-publics/data_sortons_au_frais/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg) et le placer à cet endroit : *backend/score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg* 
 - télécharger les données nécessaires au fonctionnement de l'application web en suivant les instructions de la partie [Données utilisables via l'application Web](#données-utilisables-via-lapplication-web) et en choisissant l'option "WEB_ONLY".
 
-puis exécuter le fichier **docker-compose.yml** pour build le backend avec la commande :
+## Exécution via Docker
+
+Si besoin,les images docker du frontend et du backend sont disponibles à aux adresses suivantes : 
+- backend : https://hub.docker.com/repository/docker/yannisbarba/itineraires_fraicheur_backend/general
+- frontend : https://hub.docker.com/repository/docker/yannisbarba/itineraires_fraicheur_frontend/general
+
+Celles-ci peuvent être build en exécutant le fichier **docker-compose.yml**. 
+Dans un premier temps, build le backend avec la commande :
 
 ```bash
 docker-compose build backend
@@ -56,8 +70,7 @@ Une fois le build réalisé, lancer le container backend avec la commande suivan
 docker run yannisbarba/itineraires_fraicheur_backend:latest
 ```
  
-Copier l'adresse sur laquelle le serveur s'exécute (*Running on <adresse-serveur> *), puis créer un fichier .env à la racine du frontend
-et mettre les variales d'environnement suivantes : 
+Vérifier l'adresse sur laquelle le serveur s'exécute (*Running on <adresse-serveur> *), puis modifier si besoin le fichier .env à la racine du frontend et mettre les variales d'environnement suivantes : 
 
 ```txt
 REACT_APP_URL_SERVER=<adresse-serveur>

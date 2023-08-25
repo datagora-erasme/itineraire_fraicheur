@@ -49,6 +49,7 @@ REACT_APP_URL_SERVER=http://172.17.0.2:3002
 REACT_APP_PORT_SERVER=3002
 ```
 - télécharger le [réseau final](https://endpoint-minio.projets.erasme.org/fichiers-publics/data_sortons_au_frais/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg) et le placer à cet endroit : *backend/score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg* 
+
 - télécharger les données nécessaires au fonctionnement de l'application web en suivant les instructions de la partie [Données utilisables via l'application Web](#données-utilisables-via-lapplication-web) et en choisissant l'option "WEB_ONLY".
 
 ## Exécution via Docker

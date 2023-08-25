@@ -13,15 +13,17 @@
 
 # À propos
 
-Le projet Sortons au frais est un projet mené par Erasme (laboratoire d'innovation de la Métropole de Lyon) et le service géomatique de la métropole de Lyon. Ce projet a été réalisé en partenariat avec les services géomatiques d'une quinzaine de communes de la métropole de Lyon dans le cadre du projet OpenData. 
-L'objectif est d'apporter une solution d'adaptation à la canicule en proposant une application ayant 3 fonctionnalitées principales. 
+Le projet Sortons au frais est un projet mené par Erasme (laboratoire d'innovation de la Métropole de Lyon), le service Données Métropolitaines et le service Géomatique de la Métropole de Lyon. Ce projet a été réalisé en partenariat avec les services Géomatiques d'une quinzaine de communes de la métropole de Lyon dans le cadre de la [DatAgora](https://datagora.erasme.org/). 
+L'objectif est d'apporter une solution d'adaptation à la canicule en proposant une application avec 3 fonctionnalitées principales : 
 
-- Proposer des itinéraires piétons permettant de se déplacer "au frais".
+- Proposer des itinéraires piétons permettant de se déplacer "au frais", en minimisant la chaleur le long du trajet
 - Trouver les lieux "frais" autour de chez soi
 - Afficher des éléments utiles en cas de canicule (fontaines, parcs, toilettes etc.)
 
-La totalité du code et de l'analyse statistique a été réalisé dans le cadre d'un stage de master 2 par Yannis BARBA et a donné lieu à un rapport de stage expliquant la démarche suivie pour déterminer la pondération du réseau piéton.
+La totalité du code et de l'analyse statistique a été réalisée dans le cadre d'un stage de master 2 par [Yannis BARBA](https://www.linkedin.com/in/yannis-barba-90b9391bb/) et a donné lieu à un rapport de stage expliquant la démarche suivie pour déterminer la pondération du réseau piéton.
 La partie statistique est présente dans le backend de l'application web mais le détail de l'arborescence des scripts est expliqué dans la partie [**Analyse statistique**](#analyse-statistique--pondération-du-réseau-piéton).
+
+Toutes les informations du projet se trouvent sur la page [https://datagora.erasme.org/projets/sortons-au-frais/](https://datagora.erasme.org/projets/sortons-au-frais/)
 
 # Pré-requis et Insallation
 

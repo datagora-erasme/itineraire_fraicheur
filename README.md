@@ -74,25 +74,25 @@ NB : Une fois l'installation réalisée, pour relancer le projet, la commande *d
 
 ### Création de l'environnement conda
 
-Une fois conda installé (via anaconda par exemple), créer un environnement conda pour le projet via la commande suivante : 
+Une fois conda installé (via anaconda par exemple), se placer à la racine du projet et créer un environnement conda pour le projet via la commande suivante : 
 
 ```bash
-    conda create --name <sortons-au-frais>
+    conda create --name <nom-env> --file environment.yml
 ```
 Suivre les indications de créations de l'environnement puis une fois à la racine du projet, activer l'environnement conda : 
 
 ```bash
-    conda activate <sortons-au-frais>
-```
-
-Une fois l'environnement activé et avant de pouvoir exécuter le projet, se placer à la racine du projet lancer l'installation des dépendances : 
-
-```bash
-    pip install requirements.txt
+    conda activate <nom-env>
 ```
 
 ## Exécution du backend
 **Se placer à la racine du dossier backend**
+
+Créer un fichier **.env** avec la variable suivante :
+
+```txt
+    PORT=3000
+```
 
 Avant de lancer le backend il est nécessaire de télécharger certaines données nécessaires au bon fonctionnement de l'application, suivre les indications de la partie [Données utilisables via l'application Web](#données-utilisables-via-lapplication-web).
 
@@ -105,6 +105,12 @@ Afin de lancer le backend, se positionner à la racine du dossier backend et ex�
 
 ## Exécution du frontend
 **Se placer à la racine du dossier frontend**
+Créer un fichier **.env** avec les variables suivantes: 
+
+```txt
+    REACT_APP_URL_SERVER=http://localhost:3002
+    REACT_APP_PORT_SERVER=3002
+```
 
 Avant de lancer l'exécution du frontend, il est nécessaire d'installer les dépendances npm via la commande : 
 

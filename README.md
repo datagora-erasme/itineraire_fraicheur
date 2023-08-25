@@ -77,12 +77,18 @@ NB : Une fois l'installation réalisée, pour relancer le projet, la commande *d
 Une fois conda installé (via anaconda par exemple), se placer à la racine du projet et créer un environnement conda pour le projet via la commande suivante : 
 
 ```bash
-    conda create --name <nom-env> --file environment.yml
+    conda create --name <nom-env>
 ```
 Suivre les indications de créations de l'environnement puis une fois à la racine du projet, activer l'environnement conda : 
 
 ```bash
     conda activate <nom-env>
+```
+
+Puis installer toutes les dépendances avec 
+
+```bash
+    pip install -r requirements.txt
 ```
 
 ## Exécution du backend

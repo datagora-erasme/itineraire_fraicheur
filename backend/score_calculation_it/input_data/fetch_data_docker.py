@@ -3,7 +3,8 @@ os.environ['USE_PYGEOS'] = '0'
 import geopandas as gpd
 from owslib.wfs import WebFeatureService
 import sys
-sys.path.append("../../")
+sys.path.append("/app")  # Adjust this path as needed
+
 from global_variable import *
 
 ###### FETCH DATA FROM DATAGRANDLYON ######

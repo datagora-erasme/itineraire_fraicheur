@@ -26,4 +26,5 @@ COPY ./app.py /app/
 #CMD ["Flask", "run", "-h", "0.0.0.0", "-p", "3002",]
 # RUN cd  /app/score_calculation_it/input_data/ && python3 ./app/score_calculation_it/input_data/fetch_data_docker.py
 
-CMD ["python", ./app/score_calculation_it/input_data/fetch_data_docker.py] & ["python", "app.py"]
+# CMD ["python", "./score_calculation_it/input_data/fetch_data_docker.py"]
+CMD ["sh", "-c", "python ./score_calculation_it/input_data/fetch_data_docker.py && python app.py"]

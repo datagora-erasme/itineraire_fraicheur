@@ -122,8 +122,8 @@ data_params = {
     "fontaines_potables": {
         "name": "Fontaines potables",
         "wfs_key": "metropole-de-lyon:adr_voie_lieu.adrbornefontaine_latest",
-        "gpkg_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_potables.gpkg"),
-        "geojson_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_potables.json"),
+        "gpkg_path": globpath("./score_calculation_it/input_data/fontaines_potables/fontaines_potables.gpkg"),
+        "geojson_path": globpath("./score_calculation_it/input_data/fontaines_potables/fontaines_potables.json"),
         "edges_path": globpath("./score_calculation_it/output_data/network/edges/edges_buffered_fontaines_potables.gpkg"),
         "buffer_path": globpath("./score_calculation_it/output_data/fontaines/fontaines_potables_buffered.gpkg"),
         "buffer_size": 30,
@@ -145,8 +145,8 @@ data_params = {
     "fontaines_ornementales": {
         "name": "Fontaines ornementales",
         "wfs_key": "metropole-de-lyon:adr_voie_lieu.adrfontaineornem_latest",
-        "gpkg_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_ornementales.gpkg"),
-        "geojson_path": globpath("./score_calculation_it/input_data/fontaines/fontaines_ornementales.json"),
+        "gpkg_path": globpath("./score_calculation_it/input_data/fontaines_ornementales/fontaines_ornementales.gpkg"),
+        "geojson_path": globpath("./score_calculation_it/input_data/fontaines_ornementales/fontaines_ornementales.json"),
         "edges_path": globpath("./score_calculation_it/output_data/network/edges/edges_buffered_fontaines_ornementales.gpkg"),
         "buffer_path": globpath("./score_calculation_it/output_data/fontaines/fontaines_ornementales_buffered.gpkg"),
         "buffer_size": 25,
@@ -190,14 +190,14 @@ data_params = {
     },
     "eaux_details": {
         "wfs_key" : "metropole-de-lyon:fpc_fond_plan_communaut.fpcplandeaudetail",
-        "gpkg_path": globpath("./score_calculation_it/input_data/eaux/eaux_details.gpkg"),
-        "geojson_path": globpath("./score_calculation_it/input_data/eaux/eaux_details.json"),
+        "gpkg_path": globpath("./score_calculation_it/input_data/eaux_details/eaux_details.gpkg"),
+        "geojson_path": globpath("./score_calculation_it/input_data/eaux_details/eaux_details.json"),
         "onMap": False
     },
     "eaux_importants": {
         "wfs_key": "metropole-de-lyon:fpc_fond_plan_communaut.fpcplandeau",
-        "gpkg_path": globpath("./score_calculation_it/input_data/eaux/eaux_importants.gpkg"),
-        "geojson_path": globpath("./score_calculation_it/input_data/eaux/eaux_importants.json"),
+        "gpkg_path": globpath("./score_calculation_it/input_data/eaux_importants/eaux_importants.gpkg"),
+        "geojson_path": globpath("./score_calculation_it/input_data/eaux_importants/eaux_importants.json"),
         "onMap": False
     },
     "bancs": {

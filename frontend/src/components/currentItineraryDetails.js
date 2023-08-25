@@ -5,7 +5,7 @@ import { GiPathDistance } from "react-icons/gi"
 import {BiX} from "react-icons/bi"
 
 const CurrentItineraryDetails = ({showMenu}) => {
-    const { currentItinerary, filteredItinerariesFeatures, setHistory, setShowCurrentItineraryDetails, ifScore, lenScore } = useContext(MainContext)
+    const { currentItinerary, filteredItinerariesFeatures, setShowCurrentItineraryDetails, ifScore, lenScore } = useContext(MainContext)
     const [details, setDetails] = useState([])
 
     useEffect(() => {

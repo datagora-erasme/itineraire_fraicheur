@@ -43,11 +43,32 @@ Une fois le projet téléchargé via github, se placer à la racine du projet et
     docker-compose build
 ```
 
-Une fois le build réalisé, exécuter les images : 
+Une fois le build réalisé, lancer le container backend avec la commande suivante : 
+
+```bash
+    docker run yannisbarba/itineraires_fraicheurs_backend:latest
+```
+ 
+Copier l'adresse sur laquelle le serveur s'exécute (*Running on <adresse-serveur> *), puis créer un fichier .env à la racine du frontend
+et mettre les variales d'environnement suivantes : 
+
+```txt
+REACT_APP_URL_SERVER=<adresse-serveur>
+REACT_APP_PORT_SERVER=3002
+```
+
+relancer alors le build via 
+```bash
+    docker-compose build
+```
+
+puis exécuter les images NB : 
 
 ```bash
     docker-compose up
 ```
+
+NB : Une fois l'installation réalisée, pour relancer le projet, la commande *docker-compose up* suffira.
 
 ## Exécution via conda (conseillé pour le développement)
 

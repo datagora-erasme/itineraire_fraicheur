@@ -24,6 +24,8 @@ backend/score_calculation_it/input_data/network/
 backend/score_calculation_it/input_data/batiments/
 backend/score_calculation_it/input_data/cache/
 backend/score_calculation_it/input_data/arbres/
+backend/score_calculation_it/input_data/fontaines_ornementales/
+backend/score_calculation_it/input_data/fontaines_potables/
 
 backend/score_calculation_it/input_data/studies_zones/
 backend/score_calculation_it/output_data/studies_zones/

@@ -39,16 +39,21 @@ Les images docker du frontend et du backend sont disponibles à aux adresses sui
 - backend : https://hub.docker.com/repository/docker/yannisbarba/itineraires_fraicheur_backend/general
 - frontend : https://hub.docker.com/repository/docker/yannisbarba/itineraires_fraicheur_frontend/general
 
-Une fois le projet téléchargé via github, se placer à la racine du projet et créer un fichier **.env** avec les mêmes informations que le fichier **.env.sample** puis télécharger le [réseau final](https://endpoint-minio.projets.erasme.org/fichiers-publics/data_sortons_au_frais/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg) et le placer à cet endroit : *backend/score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg* puis exécuter le fichier **docker-compose.yml** avec la commande :
+Une fois le projet téléchargé via github, 
+- se placer à la racine du dossier frontend et créer un fichier **.env** avec les mêmes informations que le fichier **.env.sample**
+- télécharger le [réseau final](https://endpoint-minio.projets.erasme.org/fichiers-publics/data_sortons_au_frais/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg) et le placer à cet endroit : *backend/score_calculation_it/output_data/network/graph/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg* 
+- télécharger les données nécessaires au fonctionnement de l'application web en suivant les instructions de la partie [Données utilisables via l'application Web](#données-utilisables-via-lapplication-web) et en choisissant l'option "WEB_ONLY".
+
+puis exécuter le fichier **docker-compose.yml** pour build le backend avec la commande :
 
 ```bash
-    docker-compose build
+docker-compose build backend
 ```
 
 Une fois le build réalisé, lancer le container backend avec la commande suivante : 
 
 ```bash
-    docker run yannisbarba/itineraires_fraicheurs_backend:latest
+docker run yannisbarba/itineraires_fraicheur_backend:latest
 ```
  
 Copier l'adresse sur laquelle le serveur s'exécute (*Running on <adresse-serveur> *), puis créer un fichier .env à la racine du frontend
@@ -59,18 +64,16 @@ REACT_APP_URL_SERVER=<adresse-serveur>
 REACT_APP_PORT_SERVER=3002
 ```
 
-relancer alors le build via 
+lancer alors le build du frontend via 
 ```bash
-    docker-compose build
+docker-compose build frontend
 ```
 
-puis exécuter les images NB : 
+puis exécuter le front end  : 
 
 ```bash
-    docker-compose up
+docker run yannisbarba/itineraires_fraicheur_frontend:latest
 ```
-
-NB : Une fois l'installation réalisée, pour relancer le projet, la commande *docker-compose up* suffira.
 
 ## Exécution via conda (conseillé pour le développement)
 
@@ -79,18 +82,18 @@ NB : Une fois l'installation réalisée, pour relancer le projet, la commande *d
 Une fois conda installé (via anaconda par exemple), se placer à la racine du projet et créer un environnement conda pour le projet via la commande suivante : 
 
 ```bash
-    conda create --name <nom-env>
+conda create --name <nom-env>
 ```
 Suivre les indications de créations de l'environnement puis une fois à la racine du projet, activer l'environnement conda : 
 
 ```bash
-    conda activate <nom-env>
+conda activate <nom-env>
 ```
 
 Puis installer toutes les dépendances avec 
 
 ```bash
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Exécution du backend
@@ -99,7 +102,7 @@ Puis installer toutes les dépendances avec
 Créer un fichier **.env** avec la variable suivante :
 
 ```txt
-    PORT=3000
+PORT=3000
 ```
 
 Avant de lancer le backend il est nécessaire de télécharger certaines données nécessaires au bon fonctionnement de l'application, suivre les indications de la partie [Données utilisables via l'application Web](#données-utilisables-via-lapplication-web).
@@ -107,8 +110,7 @@ Avant de lancer le backend il est nécessaire de télécharger certaines donnée
 Afin de lancer le backend, se positionner à la racine du dossier backend et exécuter la commande suivante : 
 
 ```bash
-    python app.py
-
+python app.py
 ```
 
 ## Exécution du frontend
@@ -116,20 +118,20 @@ Afin de lancer le backend, se positionner à la racine du dossier backend et ex�
 Créer un fichier **.env** avec les variables suivantes: 
 
 ```txt
-    REACT_APP_URL_SERVER=http://localhost:3002
-    REACT_APP_PORT_SERVER=3002
+REACT_APP_URL_SERVER=http://localhost:3002
+REACT_APP_PORT_SERVER=3002
 ```
 
 Avant de lancer l'exécution du frontend, il est nécessaire d'installer les dépendances npm via la commande : 
 
 ```bash
-    npm install
+npm install
 ```
 
 Afin de lancer le frontend, exécuter la commande suivante : 
 
 ```bash
-    npm start
+npm start
 ```
 
 
@@ -156,7 +158,7 @@ On peut distinguer deux types de données :
 Les données issues d'une requête WFS à datagrandlyon peuvent être téléchargées directement en exécutant le script **fetch_data.py** situé dans le dossier *score_calculation_it/input_data/*. Il est possible de télécharger une donnée en particulier ou toutes les données d'un coup.  Afin de lancer le téléchargement, exécuter le script dans un terminal **en se plaçant au niveau du script** puis lancer la commande suivante : 
 
 ```bash
-    python fetch_data.py
+python fetch_data.py
 ```
 Puis se laisser guider par les indications dans le terminal.
 
@@ -193,7 +195,7 @@ Cette donnée est indispensable pour la suite (à télécharger en premier lieu 
 **fetch_network.py** à partir de *./score_calculation_it/input_data/* et se laisser guider par les instructions du terminal.
 
 ```bash
-    python fetch_network.py
+python fetch_network.py
 ```
 
 ### Les POIs
@@ -201,13 +203,13 @@ Actuellement les points d'interêts (POI) ne sont pas pris en compte dans la pon
 Afin de lancer les calculs, se placer ici : *./score_calculation_it/* puis exécuter le fichier et se laisser guider par les instructions du temrinal. 
 
 ```bash
-    python poi_preprocessing.py
+python poi_preprocessing.py
 ```
 ### Parcs et Jardins
 Les parcs ont un traitement un peu différents des autres POI, par conséquent, les calculs nécessaire pour le calculateur d'itinéraire peuvent être exécuté via le fichier **parcs_jardins_preprocessing.py** et en se laissant guider par les instructions du terminal.
 
 ```bash
-    python parcs_jardins_preprocessing.py
+python parcs_jardins_preprocessing.py
 ```
 
 ### Eaux
@@ -215,7 +217,7 @@ Les parcs ont un traitement un peu différents des autres POI, par conséquent, 
 Les cours d'eau ont un traitement un peu différents des autres POI, par conséquent, les calculs nécessaire pour le calculateur d'itinéraire peuvent être exécuté via le fichier **eaux_preprocessing.py** et en se laissant guider par les instructions du terminal.
 
 ```bash
-    python eaux_preprocessing.py
+python eaux_preprocessing.py
 ```
 
 ### La végétation
@@ -235,7 +237,7 @@ Cette donnée étant encore trop volumineuse pour être manipulée aisément dan
 Pour mettre à jour cette donnée, exécuter le script **vegetation_preprocessing.py**. en se plaçant ici *./score_calculation_it/* et se laisser guider par les indications du terminal.
 
 ```bash
-    python vegetation_preprocessing.py
+python vegetation_preprocessing.py
 ```
 
 ### La température
@@ -245,14 +247,14 @@ La donnée déjà calculée est disponible à [cette adresse](https://endpoint-m
 Pour relancer le calcul de la température moyenne par segment, exécuter le script **temperature_preprocessing.py**en se plaçant ici *./score_calculation_it/* et suivre les indications du terminal.
 
 ```bash
-    python temperature_preprocessing.py
+python temperature_preprocessing.py
 ```
 ### L'ombre des bâtiments
 La donnée bâtiments est une donnée requêtable en WFS en suivant les instructions de la partie [requete WFS](#requête-wfs). Cependant, c'est la donnée d'ombre calculée à partir de la hauteur des bâtiments qui est utilisée dans le calculateur d'itinéraires. Tous les résultats des calculs intermédiaires pour les ombres sont disponibles [ici](https://minio.projets.erasme.org/browser/fichiers-publics/ZGF0YV9zb3J0b25zX2F1X2ZyYWlzL29tYnJlcy8=), ils sont à placer dans le dossier *score_calculation_it/output_data/ombres/*
 Le calcul est exécutable en se plaçant ici : *./score_calculation_it/* et en exécutant le fichier **ombre_preprocessing.py** et en se laissant guider par le terminal. 
 
 ```bash
-    python ombre_preprocessing.py
+python ombre_preprocessing.py
 ```
 Tel que le script est conçu aujourd'hui, il n'est utile de mettre à jour la donnée que si la donnée des bâtiments ou le réseau piéton est mise à jour. Le script n'est pas conçu pour choisir l'horaire et la date à laquelle faire le calcul. Cependant, ce script peut être assez facilement généralisé. 
 
@@ -260,7 +262,7 @@ Tel que le script est conçu aujourd'hui, il n'est utile de mettre à jour la do
 La pondération du graph ne peut se faire que si l'ensemble des sous-réseaux existent (et ont été mis à jour au besoin). La pondération du graph est à renseigner directement dans le fichier **score_calculation.py** en suivant l'exemple *final_params* puis peut être exécuté via la commande suivante : 
 
 ```bash
-    python score_calculation.py
+python score_calculation.py
 ```
 
 ## Analyse de la pondération

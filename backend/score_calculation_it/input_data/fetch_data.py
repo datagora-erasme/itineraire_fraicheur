@@ -40,7 +40,9 @@ def download_data(params, data_name, wfs, outputFormat):
 
     bbox = wfs.contents[data_key].boundingBoxWGS84
     try:
-        data = wfs.getfeature(typename=data_key, bbox=bbox, outputFormat=outputFormat, filter="sortBy=gid")
+        #FOR NOW BUG WIT bbox for toilettes and fontaines with datagrandlyon, when corrected : replace the following
+        # line by this one : data = wfs.getfeature(typename=data_key, bbox=bbox, outputFormat=outputFormat, filter="sortBy=gid")
+        data = wfs.getfeature(typename=data_key, outputFormat=outputFormat, filter="sortBy=gid")
         print(f"{data_name} fetched with sucess")
     except NameError:
         print(f"Error fetching {data_name}")
@@ -75,7 +77,7 @@ data_grandlyon_wfs = connection_wfs(data_grandlyon_wfs_url, "datagrandlyon", "2.
 
 ## DATA DOWNLOAD ##
 
-fetching_choice = input("\n Voulez-vous télécharger toutes (ALL) les données ou une seule (ONE) ? \n Veuillez entrer ALL ou ONE selon votre choix : ")
+fetching_choice = input("\n Voulez-vous télécharger toutes (ALL) les données, une seule (ONE) ou seulement les données à afficher sur l'application web (WEB_ONLY) ? \n Veuillez entrer ALL, ONE ou WEB_ONLY selon votre choix : ")
 print("Data Download")
 
 if(fetching_choice == "ALL"):
@@ -90,7 +92,10 @@ elif(fetching_choice == "ONE"):
         download_data(data_params, data_choice, data_grandlyon_wfs, geojsonOutputFormat)
     else:
         print("Veuillez entrer un identifiant présent dans la liste")
+elif(fetching_choice == "WEB_ONLY"):
+    data_web = {data_name : data_param for data_name, data_param in data_params.items() if data_param["onMap"] == True}
+    download_all_data(data_web, data_grandlyon_wfs, geojsonOutputFormat)
 else:
-    print("VEUILLEZ entrer un choix valide (ALL ou ONE)")
+    print("VEUILLEZ entrer un choix valide (ALL, ONE ou WEB_ONLY)")
 
 

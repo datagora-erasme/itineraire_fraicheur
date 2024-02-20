@@ -25,7 +25,7 @@ La partie statistique est présente dans le backend de l'application web mais le
 
 Toutes les informations du projet se trouvent sur la page [https://datagora.erasme.org/projets/sortons-au-frais/](https://datagora.erasme.org/projets/sortons-au-frais/)
 
-# Pré-requis et Insallation
+# Pré-requis et Installation
 
 Le projet a été développé dans un environnement conda, si l'application n'est pas exécutée via les images dockers, il est préférable de créer un environnement conda. Les versions utilisées dans le cadre de ce projet sont les suivantes : 
 

@@ -1,0 +1,60 @@
+name: Sonarqube Audit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better analysis relevancy
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # Specify the Node.js version you are using
+          cache: 'npm' # 'yarn' or 'npm'
+
+      - name: Install npm dependencies
+        run: npm install
+        working-directory: ./frontend  
+
+        
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'maquette-augmentee-back'
+          path: './frontend'
+          format: 'HTML'
+          failBuild: true
+
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+          name: Depcheck report
+          path: ${{github.workspace}}/reports/dependency-check-report.html
+
+      - name: Commit Reports
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Add reports to repository
+          branch: ${{ github.ref }}
+          file_pattern: reports/
+          commit_options: '--no-verify'
+          repository: .
+
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        # Uncomment the following lines to fail the job when Quality Gate is red
+        # - uses: sonarsource/sonarqube-quality-gate-action@master
+        #   timeout-minutes: 5
+        #   env:
+        #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

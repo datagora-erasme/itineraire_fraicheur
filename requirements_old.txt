@@ -37,7 +37,7 @@ cryptography @ file:///croot/cryptography_1677533068310/work
 cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
 dash==0.19.0
 dash-core-components==0.14.0
-dash-html-components==0.8.0
+dash-html-components==2.0.0
 dash-renderer==0.11.1
 debugpy @ file:///home/builder/ci_310/debugpy_1640789504635/work
 decorator @ file:///opt/conda/conda-bld/decorator_1643638310831/work

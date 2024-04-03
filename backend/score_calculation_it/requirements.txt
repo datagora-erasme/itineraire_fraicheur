@@ -162,7 +162,7 @@ pathspec @ file:///croot/pathspec_1674681560568/work
 patsy==0.5.3
 pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
 pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
-Pillow==9.4.0
+Pillow==10.3.0
 pipreqs==0.4.13
 platformdirs==3.2.0
 plotly==5.13.1

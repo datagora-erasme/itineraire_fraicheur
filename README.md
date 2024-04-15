@@ -11,6 +11,39 @@
     - [Frontend](#frontend)
 - [Analyse statistique : pondération du réseau piéton](#analyse-statistique--pondération-du-réseau-piéton)
 
+
+# 🚀 Démarrage rapide
+
+copier le fichier **.env.example** et le renommer en **.env** à la racine du projet. 
+```bash
+cp .env.example .env
+```
+
+télécharger les data de opendata lyon
+```bash
+cd score_calculation_it/input_data
+pip i geopandas owslib
+python fetch_data.py
+# Selectionner l'option WEB_ONLY
+```
+
+télécharger le réseau final pré-calculé
+```bash
+mkdir -p score_calculation_it/output_data/network/graph
+cd score_calculation_it/output_data/network/graph
+wget https://endpoint-minio.projets.erasme.org/fichiers-publics/data_sortons_au_frais/final_network_P0_01O5At0_01Ar10C0_01E5Ca.gpkg
+```
+
+lancer le backend et le frontend
+```bash
+docker-compose up
+```
+
+Le frontend est accessible à l'adresse [http://localhost:3000](http://localhost:3000)
+Le backend est accessible à l'adresse [http://localhost:3002](http://localhost:3002)
+
+
+
 # À propos
 
 Le projet Sortons au frais est un projet mené par Erasme (laboratoire d'innovation de la Métropole de Lyon), le service Données Métropolitaines et le service Géomatique de la Métropole de Lyon. Ce projet a été réalisé en partenariat avec les services Géomatiques d'une quinzaine de communes de la métropole de Lyon dans le cadre de la [DatAgora](https://datagora.erasme.org/). 
@@ -37,7 +70,7 @@ Une fois le projet téléchargé via github,
 - se placer à la racine du projet et créer un fichier **.env** avec la variable d'environnement
 ```txt
 REACT_APP_URL_SERVER=http://localhost:3002
-REACT_APP_PORT_SERVER=3002
+**REACT_APP_PORT_SERVER**=3002
 ```
 - se placer à la racine du dossier backend et créer un fichier **.env** avec la variable d'environnement : 
 ```txt

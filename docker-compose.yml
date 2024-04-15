@@ -1,7 +1,7 @@
 version: '3'
 services:
   backend:
-    image: yannisbarba/itineraires_fraicheur_backend
+    image: erasme/itineraires_fraicheur_backend:15-04-2024
     build: backend/
     env_file:
       - .env
@@ -9,11 +9,11 @@ services:
       - "3002:3002"
     #command: "tail -f /dev/null"
   frontend:
-    image: yannisbarba/itineraires_fraicheur_frontend
+    image: erasme/itineraires_fraicheur_frontend:15-04-2024
     build:
       context: frontend
       dockerfile: dev.Dockerfile
     env_file:
       - .env
     ports:
-      - "3001:3000"
+      - "3000:3000"

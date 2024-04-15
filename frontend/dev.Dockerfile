@@ -11,7 +11,4 @@ COPY src/ /app/src
 COPY README.md /app/
 COPY tailwind.config.js /app/
 
-COPY .env /app/.env
-
-
 CMD ["npm", "start"]

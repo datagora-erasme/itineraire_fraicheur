@@ -291,7 +291,7 @@ urllib3==1.26.15
 watchdog @ file:///home/builder/ci_310/watchdog_1640811339391/work
 wcwidth @ file:///Users/ktietz/demo/mc3/conda-bld/wcwidth_1629357192024/work
 webencodings==0.5.1
-Werkzeug==2.2.3
+Werkzeug==3.0.3
 whatthepatch @ file:///opt/conda/conda-bld/whatthepatch_1661795988879/work
 wrapt @ file:///tmp/abs_c335821b-6e43-4504-9816-b1a52d3d3e1eel6uae8l/croots/recipe/wrapt_1657814400492/work
 wurlitzer @ file:///home/builder/ci_310/wurlitzer_1640796026694/work

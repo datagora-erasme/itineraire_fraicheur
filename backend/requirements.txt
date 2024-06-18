@@ -1,6 +1,6 @@
 numpy==1.23.5
 pandas==1.5.3
-scikit_learn==1.2.2
+scikit_learn==1.5.0
 Shapely==2.0.1
 # gdal
 fancyimpute==0.7.0

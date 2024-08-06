@@ -23,7 +23,7 @@ Brotli==1.0.9
 brotlipy==0.7.0
 cachetools==5.3.0
 Cartopy==0.21.1
-certifi==2022.12.7
+certifi==2024.7.4
 cffi @ file:///croot/cffi_1670423208954/work
 chardet @ file:///home/builder/ci_310/chardet_1640804867535/work
 charset-normalizer==3.1.0

@@ -109,7 +109,7 @@ jsonschema @ file:///croot/jsonschema_1676558650973/work
 jupyter_client @ file:///croot/jupyter_client_1676329080601/work
 jupyter_core @ file:///croot/jupyter_core_1676538566912/work
 jupyterlab-pygments @ file:///tmp/build/80754af9/jupyterlab_pygments_1601490720602/work
-keras==2.12.0
+keras==2.13.1
 keyring @ file:///croot/keyring_1678999217139/work
 kiwisolver @ file:///croot/kiwisolver_1672387140495/work
 knnimpute==0.1.0

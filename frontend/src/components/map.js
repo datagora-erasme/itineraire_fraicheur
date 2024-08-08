@@ -362,7 +362,6 @@ function Map(){
                                                     <Marker key={index} position={[coordinates[1], coordinates[0]]} icon={new L.icon(markerOption)} onEachFeature={handleClickMarker}>
                                                         <Popup>
                                                             <div className="flex justify-center items-center">
-                                                                Informations
                                                             </div>
                                                         </Popup>
                                                     </Marker>

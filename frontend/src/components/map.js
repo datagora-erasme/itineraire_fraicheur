@@ -200,7 +200,7 @@ function Map(){
 
     const showDetailsPopupPolygon = (feature, layer) => {
         layer.on({
-            click: handleShowDetailsPopupPolygon
+            //click: handleShowDetailsPopupPolygon
         })
     }
 

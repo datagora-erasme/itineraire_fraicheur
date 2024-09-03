@@ -67,7 +67,7 @@ Fiona==1.8.22
 flake8 @ file:///croot/flake8_1674581792275/work
 Flask==2.2.3
 Flask-Compress==1.13
-Flask-Cors==3.0.10
+Flask-Cors==5.0.0
 flatbuffers==23.3.3
 flit_core @ file:///croot/flit-core_1679397103445/work/source/flit_core
 fonttools==4.25.0

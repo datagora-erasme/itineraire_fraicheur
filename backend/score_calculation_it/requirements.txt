@@ -282,7 +282,7 @@ tomli @ file:///opt/conda/conda-bld/tomli_1657175507142/work
 tomlkit @ file:///tmp/abs_56_0lnnq5x/croots/recipe/tomlkit_1658946880479/work
 toolz==0.12.0
 tornado @ file:///opt/conda/conda-bld/tornado_1662061693373/work
-tqdm==4.65.0
+tqdm==4.66.3
 traitlets @ file:///croot/traitlets_1671143879854/work
 typing_extensions @ file:///croot/typing_extensions_1669924550328/work
 ujson @ file:///opt/conda/conda-bld/ujson_1657544923770/work

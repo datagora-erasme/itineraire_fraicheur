@@ -328,3 +328,6 @@ Il faut compter environ 1h20 de calcul pour obtenir le graphe pondéré et les 1
 L'analyse a ensuite été réalisée à partir du fichier **analyse_pipeline_new.py**. Les fichiers suivants sont des test / brouillons conservés pour la trace de la réflexion : 
 - **acp.py** et **acp.ipynb**
 - **score_analyse_pipeline.ipynb**
+
+
+<!-- Security scan triggered at 2025-09-02 00:09:56 -->
